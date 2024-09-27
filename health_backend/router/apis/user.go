@@ -116,3 +116,46 @@ func UpdatePassword(c *gin.Context) {
 	c.AbortWithStatusJSON(http.StatusOK, resp)
 	return
 }
+
+func Logout(c *gin.Context) {
+	resp := &response.BaseResponse{}
+	token := c.GetHeader("Authorization")
+	if token == "" {
+		resp.Code = 450
+		resp.Msg = "你没登录"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	global.RDB.Set(global.Ctx, token, "revoked", 0) // 将令牌加入黑名单，设置为永不过期
+
+	resp.Code = http.StatusOK
+	resp.Msg = "退出成功"
+	c.AbortWithStatusJSON(http.StatusOK, resp)
+}
+
+func Cancel(c *gin.Context) {
+	resp := &response.BaseResponse{}
+	err := db.CancelUser()
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "注销失败"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	token := c.GetHeader("Authorization")
+	if token == "" {
+		resp.Code = 450
+		resp.Msg = "你没登录"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	global.RDB.Set(global.Ctx, token, "revoked", 0)
+
+	resp.Code = 450
+	resp.Msg = "注销成功"
+	c.AbortWithStatusJSON(http.StatusOK, resp)
+	return
+}

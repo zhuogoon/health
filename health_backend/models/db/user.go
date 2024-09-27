@@ -76,3 +76,7 @@ func GetIdByUsername(username string) (uint, error) {
 func UpdatePassword(password string) error {
 	return global.DB.Model(&models.User{}).Where("id = ?", global.UserId).Update("password", password).Error
 }
+
+func CancelUser() error {
+	return global.DB.Where("id = ?", global.UserId).Delete(&models.User{}).Error
+}
