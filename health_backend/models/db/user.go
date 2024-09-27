@@ -17,7 +17,7 @@ func Register(username, password string) error {
 	user := &models.User{
 		Username: username,
 		Password: string(pwd),
-		Role:     models.Patient,
+		Role:     models.Pat,
 	}
 
 	return global.DB.Model(&models.User{}).Create(&user).Error
@@ -83,4 +83,22 @@ func CancelUser() error {
 
 func Upload(file string) error {
 	return global.DB.Model(&models.User{}).Where("id = ?", global.UserId).Update("avatar", file).Error
+}
+
+func AvatarById() (string, error) {
+	user := models.User{}
+	err := global.DB.Model(&models.User{}).Where("id = ?", global.UserId).First(&user).Error
+	if err != nil {
+		return "", err
+	}
+	return user.Avatar, nil
+}
+
+func GetStatus(id uint) (bool, error) {
+	user := &models.User{}
+	err := global.DB.Model(&models.User{}).Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return false, err
+	}
+	return user.Status, nil
 }

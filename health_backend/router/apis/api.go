@@ -12,10 +12,20 @@ func User(r *gin.RouterGroup) {
 	r.GET("logout", Logout)
 	r.GET("cancel", Cancel)
 	r.POST("upload", Upload)
+	r.GET("avatar", Avatar)
+
+	r.POST("reg", RegLog)
 
 }
 
 func Doctor(r *gin.RouterGroup) {
 
 	r.POST("create", Create)
+	r.POST("update", UpdateDoctorInfo)
+	r.GET("delete", DeleteDoctor)
+}
+
+func Patient(r *gin.RouterGroup) {
+	r.POST("create", CreatePatient)
+	r.GET("info", Info)
 }
