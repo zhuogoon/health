@@ -10,6 +10,7 @@ import (
 	"health_backend/models/request"
 	"health_backend/models/response"
 	"net/http"
+	"os"
 	"path/filepath"
 )
 
@@ -194,6 +195,23 @@ func Upload(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusOK, resp)
 		return
 	}
+	avatar, err := db.AvatarById()
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "获取失败"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	// 删除旧头像
+	oldFilePath := filepath.Join(global.Config.UploadPath, avatar)
+	if avatar != "" {
+		if err := os.Remove(oldFilePath); err != nil {
+			// 如果删除失败，不影响新头像的上传，记录日志即可
+			fmt.Printf("删除旧头像失败: %v\n", err)
+		}
+	}
+
 	err = db.Upload(newFileName)
 	if err != nil {
 		resp.Code = 450
@@ -204,6 +222,34 @@ func Upload(c *gin.Context) {
 
 	resp.Code = http.StatusOK
 	resp.Msg = "更新成功"
+	resp.Data = newFileName
 	c.AbortWithStatusJSON(http.StatusOK, resp)
+	return
+}
+
+func Avatar(c *gin.Context) {
+
+	resp := &response.BaseResponse{}
+	avatar, err := db.AvatarById()
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "获取失败"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	// 使用 filepath.Join 拼接文件路径
+	files := filepath.Join(global.Config.UploadPath, avatar)
+
+	// 检查文件是否存在
+	if _, err := os.Stat(files); os.IsNotExist(err) {
+		resp.Code = 450
+		resp.Msg = "获取失败"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	// 提供文件下载
+	c.File(files)
 	return
 }

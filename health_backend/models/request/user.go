@@ -9,3 +9,7 @@ type UserRegisterReq struct {
 type UserUpdatePassword struct {
 	Password string `json:"password"`
 }
+
+type UserDownloadAvatar struct {
+	Uuid string `json:"uuid"`
+}

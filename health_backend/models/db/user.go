@@ -84,3 +84,12 @@ func CancelUser() error {
 func Upload(file string) error {
 	return global.DB.Model(&models.User{}).Where("id = ?", global.UserId).Update("avatar", file).Error
 }
+
+func AvatarById() (string, error) {
+	user := models.User{}
+	err := global.DB.Model(&models.User{}).Where("id = ?", global.UserId).First(&user).Error
+	if err != nil {
+		return "", err
+	}
+	return user.Avatar, nil
+}

@@ -12,6 +12,7 @@ func User(r *gin.RouterGroup) {
 	r.GET("logout", Logout)
 	r.GET("cancel", Cancel)
 	r.POST("upload", Upload)
+	r.GET("avatar", Avatar)
 
 }
 
