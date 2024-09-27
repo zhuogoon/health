@@ -69,3 +69,21 @@ func FindIdByUserId() (uint, error) {
 	}
 	return d.ID, nil
 }
+
+func DeleteDoctor() error {
+	err := global.DB.Transaction(func(tx *gorm.DB) error {
+		err := tx.Model(&models.Doctor{}).Where("user_id = ?", global.UserId).Delete(&models.Doctor{}).Error
+		if err != nil {
+			return err
+		}
+		err = tx.Model(&models.User{}).Where("id = ?", global.UserId).Delete(&models.User{}).Error
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}

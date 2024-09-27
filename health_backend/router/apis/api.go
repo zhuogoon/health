@@ -20,4 +20,5 @@ func Doctor(r *gin.RouterGroup) {
 
 	r.POST("create", Create)
 	r.POST("update", UpdateDoctorInfo)
+	r.GET("delete", DeleteDoctor)
 }
