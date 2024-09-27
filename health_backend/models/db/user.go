@@ -71,3 +71,8 @@ func GetIdByUsername(username string) (uint, error) {
 	}
 	return user.ID, nil
 }
+
+// UpdatePassword 更新密码
+func UpdatePassword(password string) error {
+	return global.DB.Model(&models.User{}).Where("id = ?", global.UserId).Update("password", password).Error
+}
