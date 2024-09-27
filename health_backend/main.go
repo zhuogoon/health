@@ -29,7 +29,7 @@ func main() {
 	r.Use(middleware.Cors())
 
 	// jwt权限认证
-	//r.Use(middleware.JwtParse())
+	r.Use(middleware.JwtParse())
 
 	// 路由抽取
 	router.Router(r)

@@ -9,7 +9,7 @@ import (
 )
 
 // Register 注册
-func Register(username, password string, role models.Role) error {
+func Register(username, password string) error {
 	pwd, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
@@ -17,7 +17,7 @@ func Register(username, password string, role models.Role) error {
 	user := &models.User{
 		Username: username,
 		Password: string(pwd),
-		Role:     role,
+		Role:     models.Patient,
 	}
 
 	return global.DB.Model(&models.User{}).Create(&user).Error
@@ -48,4 +48,26 @@ func IsPassword(username, password string) error {
 		return err
 	}
 	return nil
+}
+
+// FindRole 查询用户的身份
+func FindRole(username string) (models.Role, error) {
+	user := models.User{}
+
+	err := global.DB.Model(&models.User{}).Where("username = ?", username).First(&user).Error
+	if err != nil {
+		return "", err
+	}
+	return user.Role, nil
+}
+
+// GetIdByUsername 查询用户id
+func GetIdByUsername(username string) (uint, error) {
+	user := models.User{}
+
+	err := global.DB.Model(&models.User{}).Where("username = ?", username).First(&user).Error
+	if err != nil {
+		return 0, err
+	}
+	return user.ID, nil
 }

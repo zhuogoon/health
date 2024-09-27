@@ -2,6 +2,7 @@ package apis
 
 import (
 	"github.com/gin-gonic/gin"
+	"health_backend/middleware"
 	"health_backend/models/db"
 	"health_backend/models/request"
 	"health_backend/models/response"
@@ -20,7 +21,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	err = db.Register(req.Username, req.Password, req.Role)
+	err = db.Register(req.Username, req.Password)
 	if err != nil {
 		resp.Code = 450
 		resp.Msg = "参数错误"
@@ -66,6 +67,16 @@ func Login(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusOK, resp)
 		return
 	}
+
+	jwt, err := middleware.Jwt(req.Username)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "构造token失败"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	c.Header("jwt", jwt)
 
 	resp.Code = 200
 	resp.Msg = "登录成功"

@@ -5,6 +5,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 	"health_backend/config"
+	"health_backend/models"
 )
 
 var (
@@ -12,6 +13,7 @@ var (
 	DB     *gorm.DB
 	UserId uint
 	RDB    *redis.Client
+	Role   models.Role
 )
 var Sign = []byte("zhuogoon")
 
