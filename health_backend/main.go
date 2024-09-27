@@ -16,6 +16,9 @@ func main() {
 	// 初始化数据库
 	core.InitDatabase()
 
+	// 数据库自动迁移
+	core.InitCreateDB()
+
 	// 初始化redis连接
 	core.InitRedis()
 

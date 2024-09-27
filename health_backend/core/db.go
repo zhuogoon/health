@@ -6,6 +6,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"health_backend/global"
+	"health_backend/models"
 )
 
 func InitDatabase() {
@@ -22,4 +23,13 @@ func InitDatabase() {
 	}
 	global.DB = db
 	logrus.Info("mysql 连接成功")
+}
+
+func InitCreateDB() {
+	err := global.DB.AutoMigrate(&models.User{})
+	if err != nil {
+		logrus.Error("表自动迁移失败")
+		return
+	}
+	logrus.Info("表自动迁移成功")
 }
