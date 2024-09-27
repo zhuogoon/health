@@ -14,6 +14,129 @@ import (
 	"path/filepath"
 )
 
+func RegLog(c *gin.Context) {
+	req := &request.UserRegisterReq{}
+	resp := &response.BaseResponse{}
+
+	err := c.ShouldBindBodyWithJSON(req)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "参数错误"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+	b, err := db.IsUsername(req.Username)
+	if b == false {
+		if err != nil {
+			resp.Code = 450
+			resp.Msg = "参数错误"
+			c.AbortWithStatusJSON(http.StatusOK, resp)
+			return
+		}
+		err = db.Register(req.Username, req.Password)
+		if err != nil {
+			resp.Code = 450
+			resp.Msg = "参数错误"
+			c.AbortWithStatusJSON(http.StatusOK, resp)
+			return
+		}
+		err = db.IsPassword(req.Username, req.Password)
+		if err != nil {
+			resp.Code = 450
+			resp.Msg = "参数错误"
+			c.AbortWithStatusJSON(http.StatusOK, resp)
+			return
+		}
+
+		jwt, err := middleware.Jwt(req.Username)
+		if err != nil {
+			resp.Code = 450
+			resp.Msg = "构造token失败"
+			c.AbortWithStatusJSON(http.StatusOK, resp)
+			return
+		}
+
+		c.Header("jwt", jwt)
+
+		id, err := db.GetIdByUsername(req.Username)
+		if err != nil {
+			resp.Code = 450
+			resp.Msg = "未注册"
+			c.AbortWithStatusJSON(http.StatusOK, resp)
+			return
+		}
+
+		status, err := db.GetStatus(id)
+		if err != nil {
+			resp.Code = 450
+			resp.Msg = "未注册"
+			c.AbortWithStatusJSON(http.StatusOK, resp)
+			return
+		}
+
+		userresp := response.User{
+			Id:       id,
+			Username: req.Username,
+			Jwt:      jwt,
+			Status:   status,
+		}
+
+		resp.Code = 200
+		resp.Msg = "注册并且登录成功"
+		resp.Data = userresp
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	err = db.IsPassword(req.Username, req.Password)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "参数错误"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	jwt, err := middleware.Jwt(req.Username)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "构造token失败"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	c.Header("jwt", jwt)
+
+	id, err := db.GetIdByUsername(req.Username)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "未注册"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	status, err := db.GetStatus(id)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "未注册"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	userresp := response.User{
+		Id:       id,
+		Username: req.Username,
+		Jwt:      jwt,
+		Status:   status,
+	}
+
+	resp.Code = 200
+	resp.Msg = "登录成功"
+	resp.Data = userresp
+	c.AbortWithStatusJSON(http.StatusOK, resp)
+	return
+
+}
+
 // Register 用户注册
 func Register(c *gin.Context) {
 	req := &request.UserRegisterReq{}
@@ -83,8 +206,18 @@ func Login(c *gin.Context) {
 
 	c.Header("jwt", jwt)
 
-	userresp := response.User{}
-	userresp.Jwt = jwt
+	id, err := db.GetIdByUsername(req.Username)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "未注册"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+	userresp := response.User{
+		Id:       id,
+		Username: req.Username,
+		Jwt:      jwt,
+	}
 
 	resp.Code = 200
 	resp.Msg = "登录成功"

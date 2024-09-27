@@ -93,3 +93,12 @@ func AvatarById() (string, error) {
 	}
 	return user.Avatar, nil
 }
+
+func GetStatus(id uint) (bool, error) {
+	user := &models.User{}
+	err := global.DB.Model(&models.User{}).Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return false, err
+	}
+	return user.Status, nil
+}
