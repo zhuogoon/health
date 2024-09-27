@@ -16,6 +16,9 @@ func main() {
 	// 初始化数据库
 	core.InitDatabase()
 
+	// 数据库自动迁移
+	core.InitCreateDB()
+
 	// 初始化redis连接
 	core.InitRedis()
 
@@ -26,7 +29,7 @@ func main() {
 	r.Use(middleware.Cors())
 
 	// jwt权限认证
-	//r.Use(middleware.JwtParse())
+	r.Use(middleware.JwtParse())
 
 	// 路由抽取
 	router.Router(r)
