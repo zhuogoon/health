@@ -34,7 +34,7 @@ func main() {
 	// 路由抽取
 	router.Router(r)
 
-	err := r.Run()
+	err := r.Run(":8080")
 	if err != nil {
 		logrus.Error("项目启动失败")
 		return
