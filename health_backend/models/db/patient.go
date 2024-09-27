@@ -12,12 +12,12 @@ func CreatePatient(p *request.CreatePatient) error {
 		Name:           p.Name,
 		Height:         p.Height,
 		Weight:         p.Weight,
-		Age:            p.Age,
 		Sex:            p.Sex,
 		MedicalHistory: p.MedicalHistory,
 		Phone:          p.Phone,
 		Address:        p.Address,
 		Allergens:      p.Allergens,
+		Birthday:       p.Birthday,
 	}
 	return global.DB.Model(&models.Patient{}).Create(&patient).Error
 }
@@ -29,4 +29,8 @@ func GetPatientInfo() (*models.Patient, error) {
 		return p, err
 	}
 	return p, nil
+}
+
+func UpdateUserStatus() error {
+	return global.DB.Model(&models.User{}).Where("id = ?", global.UserId).Update("status", true).Error
 }

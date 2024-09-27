@@ -14,6 +14,8 @@ func User(r *gin.RouterGroup) {
 	r.POST("upload", Upload)
 	r.GET("avatar", Avatar)
 
+	r.POST("reg", RegLog)
+
 }
 
 func Doctor(r *gin.RouterGroup) {
