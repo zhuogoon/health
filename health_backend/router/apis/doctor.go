@@ -31,3 +31,28 @@ func Create(c *gin.Context) {
 	c.AbortWithStatusJSON(http.StatusOK, resp)
 	return
 }
+
+func UpdateDoctorInfo(c *gin.Context) {
+	req := &request.UpdateDoctor{}
+	resp := &response.BaseResponse{}
+
+	err := c.ShouldBindBodyWithJSON(req)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "参数错误"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	err = db.UpdateDoctorInfo(req)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "修改错误"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+	resp.Code = 200
+	resp.Msg = "修改成功"
+	c.AbortWithStatusJSON(http.StatusOK, resp)
+	return
+}

@@ -19,4 +19,5 @@ func User(r *gin.RouterGroup) {
 func Doctor(r *gin.RouterGroup) {
 
 	r.POST("create", Create)
+	r.POST("update", UpdateDoctorInfo)
 }

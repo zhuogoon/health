@@ -43,3 +43,29 @@ func CreateDoctor(d *request.Doctor) error {
 	}
 	return nil
 }
+
+func UpdateDoctorInfo(d *request.UpdateDoctor) error {
+	id, err := FindIdByUserId()
+	if err != nil {
+		return err
+	}
+
+	doctor := &models.Doctor{
+		UserId:   d.UserId,
+		Name:     d.Name,
+		Honor:    d.Honor,
+		JobTitle: d.JobTitle,
+		JobType:  d.JobType,
+		Phone:    d.Phone,
+	}
+	return global.DB.Model(&models.Doctor{}).Where("id = ?", id).Updates(&doctor).Error
+}
+
+func FindIdByUserId() (uint, error) {
+	d := &models.Doctor{}
+	err := global.DB.Model(&models.Doctor{}).Where("user_id = ?", global.UserId).First(&d).Error
+	if err != nil {
+		return 0, err
+	}
+	return d.ID, nil
+}
