@@ -13,3 +13,8 @@ func User(r *gin.RouterGroup) {
 	r.GET("cancel", Cancel)
 
 }
+
+func Doctor(r *gin.RouterGroup) {
+
+	r.POST("create", Create)
+}

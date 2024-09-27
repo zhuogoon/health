@@ -14,5 +14,5 @@ type Role string
 const (
 	Admin   Role = "admin"
 	Patient Role = "patient"
-	Doctor  Role = "doctor"
+	Doc     Role = "doctor"
 )
