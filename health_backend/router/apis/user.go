@@ -79,8 +79,12 @@ func Login(c *gin.Context) {
 
 	c.Header("jwt", jwt)
 
+	userresp := response.User{}
+	userresp.Jwt = jwt
+
 	resp.Code = 200
 	resp.Msg = "登录成功"
+	resp.Data = userresp
 	c.AbortWithStatusJSON(http.StatusOK, resp)
 	return
 
