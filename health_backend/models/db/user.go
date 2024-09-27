@@ -80,3 +80,7 @@ func UpdatePassword(password string) error {
 func CancelUser() error {
 	return global.DB.Where("id = ?", global.UserId).Delete(&models.User{}).Error
 }
+
+func Upload(file string) error {
+	return global.DB.Model(&models.User{}).Where("id = ?", global.UserId).Update("avatar", file).Error
+}
