@@ -10,3 +10,5 @@ redis:
   host: 127.0.0.1:6379
   password: ""
   DB: 0
+
+upload_path: D:\codeProject\godocter\health\health_backend\uploads

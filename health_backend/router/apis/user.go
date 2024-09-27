@@ -1,13 +1,16 @@
 package apis
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"health_backend/global"
 	"health_backend/middleware"
 	"health_backend/models/db"
 	"health_backend/models/request"
 	"health_backend/models/response"
 	"net/http"
+	"path/filepath"
 )
 
 // Register 用户注册
@@ -160,6 +163,47 @@ func Cancel(c *gin.Context) {
 
 	resp.Code = 450
 	resp.Msg = "注销成功"
+	c.AbortWithStatusJSON(http.StatusOK, resp)
+	return
+}
+
+func Upload(c *gin.Context) {
+
+	resp := &response.BaseResponse{}
+	file, err := c.FormFile("file")
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "文件错误"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	// 生成 UUID
+	uniqueID := uuid.New().String()
+	// 获取文件扩展名
+	ext := filepath.Ext(file.Filename)
+	// 创建新的文件名
+	newFileName := fmt.Sprintf("%s%s", uniqueID, ext)
+
+	dst := filepath.Join(global.Config.UploadPath, newFileName)
+
+	err = c.SaveUploadedFile(file, dst)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "保存错误"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+	err = db.Upload(newFileName)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "更新错误"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	resp.Code = http.StatusOK
+	resp.Msg = "更新成功"
 	c.AbortWithStatusJSON(http.StatusOK, resp)
 	return
 }

@@ -25,8 +25,9 @@ func InitDatabase() {
 	logrus.Info("mysql 连接成功")
 }
 
+// InitCreateDB 自动迁移
 func InitCreateDB() {
-	err := global.DB.AutoMigrate(&models.User{})
+	err := global.DB.AutoMigrate(&models.User{}, &models.Doctor{})
 	if err != nil {
 		logrus.Error("表自动迁移失败")
 		return

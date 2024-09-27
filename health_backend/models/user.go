@@ -7,6 +7,7 @@ type User struct {
 	Username string `gorm:"username;size:20;not null" json:"username"`
 	Password string `gorm:"password;size:100;not null" json:"password"`
 	Role     Role   `gorm:"type:ENUM('admin', 'patient', 'doctor');not null"`
+	Avatar   string `gorm:"avatar;size:64" json:"avatar"`
 }
 
 type Role string
@@ -14,5 +15,5 @@ type Role string
 const (
 	Admin   Role = "admin"
 	Patient Role = "patient"
-	Doctor  Role = "doctor"
+	Doc     Role = "doctor"
 )
