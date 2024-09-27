@@ -17,7 +17,7 @@ func Register(username, password string) error {
 	user := &models.User{
 		Username: username,
 		Password: string(pwd),
-		Role:     models.Patient,
+		Role:     models.Pat,
 	}
 
 	return global.DB.Model(&models.User{}).Create(&user).Error

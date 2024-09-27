@@ -4,16 +4,16 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"username;size:20;not null" json:"username"`
-	Password string `gorm:"password;size:100;not null" json:"password"`
-	Role     Role   `gorm:"type:ENUM('admin', 'patient', 'doctor');not null"`
-	Avatar   string `gorm:"avatar;size:64" json:"avatar"`
+	Username string `gorm:"column:username;size:20;not null" json:"username"`
+	Password string `gorm:"column:password;size:100;not null" json:"password"`
+	Role     Role   `gorm:"column:role;type:ENUM('admin', 'patient', 'doctor');not null"`
+	Avatar   string `gorm:"column:avatar;size:64" json:"avatar"`
 }
 
 type Role string
 
 const (
-	Admin   Role = "admin"
-	Patient Role = "patient"
-	Doc     Role = "doctor"
+	Adm Role = "admin"
+	Pat Role = "patient"
+	Doc Role = "doctor"
 )

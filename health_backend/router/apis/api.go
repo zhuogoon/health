@@ -19,4 +19,11 @@ func User(r *gin.RouterGroup) {
 func Doctor(r *gin.RouterGroup) {
 
 	r.POST("create", Create)
+	r.POST("update", UpdateDoctorInfo)
+	r.GET("delete", DeleteDoctor)
+}
+
+func Patient(r *gin.RouterGroup) {
+	r.POST("create", CreatePatient)
+	r.GET("info", Info)
 }
