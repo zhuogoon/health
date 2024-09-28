@@ -61,6 +61,14 @@ func Info(c *gin.Context) {
 		age--
 	}
 
+	user, err := db.GetInfoById()
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "获取失败"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
 	pat := &response.PatientInfo{
 		Id:             patient.ID,
 		UserId:         patient.UserID,
@@ -73,6 +81,9 @@ func Info(c *gin.Context) {
 		Address:        patient.Address,
 		Allergens:      patient.Allergens,
 		Age:            age,
+		Role:           user.Role,
+		Avatar:         user.Avatar,
+		Username:       user.Username,
 	}
 	resp.Code = 200
 	resp.Msg = "获取成功"

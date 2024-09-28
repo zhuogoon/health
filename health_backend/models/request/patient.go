@@ -1,6 +1,8 @@
 package request
 
-import "time"
+import (
+	"time"
+)
 
 type CreatePatient struct {
 	Name           string     `json:"name"`

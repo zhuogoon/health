@@ -34,3 +34,12 @@ func GetPatientInfo() (*models.Patient, error) {
 func UpdateUserStatus() error {
 	return global.DB.Model(&models.User{}).Where("id = ?", global.UserId).Update("status", true).Error
 }
+
+func GetInfoById() (*models.User, error) {
+	user := &models.User{}
+	err := global.DB.Model(&models.User{}).Where("id = ?", global.UserId).First(&user).Error
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
