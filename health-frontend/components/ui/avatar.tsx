@@ -9,7 +9,7 @@ export const Avatar: React.FC = () => {
 
   return (
     <div className="flex gap-3 justify-end items-center">
-      <div className="text-right">
+      <div className="text-right space-y-0.5">
         <div className="flex justify-center items-center gap-2">
           <div className="text-zinc-700 font-mono">{data.name}</div>
           <div

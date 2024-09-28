@@ -75,9 +75,9 @@ export function CustomForm() {
 
   return (
     <div className="mr-20 shadow-sm ml-3 ">
-      <div className="text-2xl text-zinc-800 font-semibold mt-16 mb-14">
+      <div className="text-2xl text-zinc-800 font-semibold mt-16 mb-14 dark:text-zinc-200">
         让我们快速开始
-        <span className="text-sm text-zinc-600">
+        <span className="text-sm text-zinc-600 dark:text-zinc-400">
           （如果您第一次使用,这将会为您创建一个账号）
         </span>
       </div>
@@ -127,7 +127,7 @@ export function CustomForm() {
 
       <div className="flex justify-between items-center mt-10">
         <div className="text-zinc-600">©2024 智慧医疗系统</div>
-        <Link href="/admin" className=" text-teal-500">
+        <Link href="/?admin=true" className=" text-teal-500">
           Admin
         </Link>
       </div>

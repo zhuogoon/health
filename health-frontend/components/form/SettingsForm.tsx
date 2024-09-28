@@ -58,7 +58,7 @@ export const formSchema = z.object({
   medical_history: z.string(),
 });
 
-export function RegisterForm() {
+export function SettingsForm() {
   const Router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -308,7 +308,7 @@ export function RegisterForm() {
             type="submit"
             className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-400 duration-300  w-full bg-teal-600"
           >
-            🚀 快速开始
+            📄保存信息
           </Button>
 
           <button type="submit">Submit</button>
@@ -317,9 +317,6 @@ export function RegisterForm() {
 
       <div className="flex justify-between items-center mt-10">
         <div className="text-zinc-600">©2024 智慧医疗系统</div>
-        <Link href="/admin" className=" text-teal-500">
-          Admin
-        </Link>
       </div>
     </div>
   );

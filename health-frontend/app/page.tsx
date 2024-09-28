@@ -1,10 +1,21 @@
 import { CustomForm } from "@/components/form/CustomForm";
 import { ModeToggle } from "@/components/ui/modeToggle";
+import PassKeyModal from "@/components/ui/PassKeyModal";
 import Image from "next/image";
 
-export default function Home() {
+interface SearchParamsProps {
+  searchParams: {
+    admin: string;
+  };
+}
+
+export default function Home({ searchParams }: SearchParamsProps) {
+  const isAdmin = searchParams.admin === "true";
+
   return (
     <div className="flex h-screen">
+      {isAdmin && <PassKeyModal />}
+
       <div className="flex-1 p-3">
         <div className="icon flex items-center gap-2 ">
           <Image
@@ -21,7 +32,9 @@ export default function Home() {
             <div className="text-4xl font-semibold mt-16 ml-4">
               Hi,欢迎使用智慧医疗系统 👋
             </div>
-            <div className="text-zinc-600 ml-4 mt-3">开始你的智能医疗体验</div>
+            <div className="text-zinc-600 ml-4 mt-3 dark:text-zinc-400">
+              开始你的智能医疗体验
+            </div>
             <CustomForm />
           </div>
         </div>
