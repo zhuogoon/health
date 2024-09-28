@@ -22,16 +22,10 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Patient Info</h1>
-      <ul>
-        {data &&
-          Object.entries(data).map(([key, value]) => (
-            <li key={key}>
-              <strong>{key}:</strong> {(value as any).toString()}
-            </li>
-          ))}
-      </ul>
+    <div className="flex h-full justify-center items-center">
+      <div className="flex-1 h-full bg-red-300"></div>
+      <div className="flex-1 h-full bg-red-400"></div>
+      <div className="flex-1 h-full bg-red-500"></div>
     </div>
   );
 };

@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -22,18 +21,11 @@ import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { E164Number } from "libphonenumber-js/core";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-// height double 身高
-
-// weight double 体重
-
-// age integer 年龄
-
-// sex bool 性别
-
-// medical history longtext 过往病史 phone varchar(20) 电话 address varchar(128) 地址 allergens varchar(255) 过敏源
-
-const formSchema = z.object({
+export const formSchema = z.object({
   name: z.string().min(2, {
     message: "用户名必须至少拥有2个字符.",
   }),
@@ -125,11 +117,11 @@ export function RegisterForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="">用户名</FormLabel>
+                  <FormLabel className="">真实姓名</FormLabel>
                   <FormControl>
-                    <Input placeholder="用户名..." {...field} />
+                    <Input placeholder="真实姓名..." {...field} />
                   </FormControl>
-                  <FormDescription>请在这里输入您的用户名</FormDescription>
+                  <FormDescription>请在这里输入您的真实姓名</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -148,7 +140,7 @@ export function RegisterForm() {
                       international
                       withCountryCallingCode
                       value={field.value as E164Number | undefined}
-                      className="text-zinc-500 h-8 rounded-md dark:text-zinc-200 dark:border-gray-700"
+                      className="text-zinc-500 h-8 rounded-md dark:text-zinc-200 dark:border-gray-700 border border-zinc-200"
                     />
                   </FormControl>
                   <FormDescription>请在这里输入您的电话号码</FormDescription>
@@ -177,10 +169,13 @@ export function RegisterForm() {
               control={form.control}
               name="sex"
               render={({ field }) => (
-                <FormItem className="space-y-3">
+                <FormItem className="space-y-2">
                   <FormLabel>性别</FormLabel>
                   <FormControl>
-                    <RadioGroup onValueChange={field.onChange} className="flex">
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      className="flex px-3 gap-3"
+                    >
                       <FormItem className="flex items-center space-x-3 space-y-0 border p-2 rounded-lg">
                         <FormControl>
                           <RadioGroupItem value="1" />
@@ -205,6 +200,31 @@ export function RegisterForm() {
                 </FormItem>
               )}
             />
+          </div>
+          <div>
+            <div className="flex items-center gap-1 rounded-md border border-zinc-200 w-[45%] h-9">
+              <Image
+                src="/icons/calendar.svg"
+                height={20}
+                width={20}
+                alt="calendar"
+                className="ml-2 filter-black"
+              />
+              <FormField
+                control={form.control}
+                name="birthday"
+                render={({ field }) => (
+                  <DatePicker
+                    selected={field.value}
+                    onChange={(date) => field.onChange(date as Date)}
+                    className=" border-none text-zinc-600 dark:bg-zinc-900 dark:text-zinc-200"
+                    dateFormat="yyyy-MM-dd"
+                    timeInputLabel="Time:"
+                    wrapperClassName=""
+                  />
+                )}
+              />
+            </div>
           </div>
 
           <section className="text-2xl text-zinc-800 font-semibold mb-4 dark:text-zinc-200">
