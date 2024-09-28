@@ -1,26 +1,29 @@
 import Image from "next/image";
+import { usePatientContext } from "@/context/PatientContext";
 
-interface AvatarProps {
-  avatar: string;
-  name: string;
-  phone: string;
-  role: string;
-}
+export const Avatar: React.FC = () => {
+  const { data } = usePatientContext();
+  if (!data) {
+    return <div>Loading...</div>;
+  }
 
-export function Avatar({ avatar, name, phone, role }: AvatarProps) {
   return (
     <div className="flex gap-3 justify-end items-center">
       <div className="text-right">
-        <div className="flex justify-center items-center gap-1">
-          <div className="text-zinc-700">{name}</div>
-          <div className="text-sm bg-zinc-800 text-white px-1.5 rounded-full">
-            {role}
+        <div className="flex justify-center items-center gap-2">
+          <div className="text-zinc-700 font-mono">{data.name}</div>
+          <div
+            className={`"text-sm ${
+              data.role === "admin" ? "bg-zinc-800" : "bg-teal-500"
+            } text-white px-1.5 rounded-full font-mono"`}
+          >
+            {data.role ? data.role : "user"}
           </div>
         </div>
-        <div className="text-zinc-500 text-sm">{phone}</div>
+        <div className="text-zinc-500 text-sm">{data.phone}</div>
       </div>
       <Image
-        src={avatar}
+        src={data.avatar}
         alt="avatar"
         height={200}
         width={200}
@@ -28,4 +31,4 @@ export function Avatar({ avatar, name, phone, role }: AvatarProps) {
       />
     </div>
   );
-}
+};

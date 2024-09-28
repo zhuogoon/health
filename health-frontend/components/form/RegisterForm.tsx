@@ -21,7 +21,7 @@ import { Textarea } from "../ui/textarea";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { E164Number } from "libphonenumber-js/core";
-import router from "next/navigation";
+import { useRouter } from "next/navigation";
 
 // height double 身高
 
@@ -34,7 +34,7 @@ import router from "next/navigation";
 // medical history longtext 过往病史 phone varchar(20) 电话 address varchar(128) 地址 allergens varchar(255) 过敏源
 
 const formSchema = z.object({
-  username: z.string().min(2, {
+  name: z.string().min(2, {
     message: "用户名必须至少拥有2个字符.",
   }),
   height: z.preprocess(
@@ -59,32 +59,54 @@ const formSchema = z.object({
     message: "地址必须至少拥有2个字符.",
   }),
   sex: z.preprocess(
-    (val) => (val === "1" ? 1 : val === "0" ? 0 : val),
-    z.union([z.literal(1), z.literal(0), z.string()])
+    (val) => (val === "1" ? true : val === "0" ? false : val),
+    z.union([z.literal(true), z.literal(false), z.string()])
   ),
   allergens: z.string(),
   medical_history: z.string(),
 });
 
 export function RegisterForm() {
+  const Router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      name: "",
       height: 0,
       weight: 0,
       birthday: new Date(2000, 1, 1),
-      sex: 0,
+      sex: true,
       phone: "",
       address: "",
       allergens: "",
       medical_history: "",
     },
   });
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const jwt = localStorage.getItem("jwt");
+    try {
+      const response = await fetch("http://localhost:8080/api/patient/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify(data),
+      });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-    console.log(12);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const result = await response.json();
+      if (result.code !== 200) {
+        console.error("Error:", result);
+        return;
+      }
+      console.log("Success:", result);
+      Router.push(`/home`);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -100,7 +122,7 @@ export function RegisterForm() {
           <div className="flex justify-between">
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="">用户名</FormLabel>

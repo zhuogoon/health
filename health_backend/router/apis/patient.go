@@ -16,7 +16,7 @@ func CreatePatient(c *gin.Context) {
 	err := c.ShouldBindBodyWithJSON(req)
 	if err != nil {
 		resp.Code = 450
-		resp.Msg = "数据错误"
+		resp.Msg = err.Error()
 		c.AbortWithStatusJSON(http.StatusOK, resp)
 		return
 	}

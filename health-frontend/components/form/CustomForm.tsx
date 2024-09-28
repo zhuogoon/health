@@ -42,9 +42,34 @@ export function CustomForm() {
   }
 
   const Router = useRouter();
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    Router.push("/patient/1/register");
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const response = await fetch("http://localhost:8080/api/user/reg", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      const userid = result.data.id;
+      const jwt = result.data.jwt;
+
+      localStorage.setItem("jwt", jwt);
+      if (result.data.status) {
+        Router.push("/home");
+      } else {
+        Router.push(`/patient/${userid}/register`);
+      }
+      console.log("Success:", result);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
   // ...
 
