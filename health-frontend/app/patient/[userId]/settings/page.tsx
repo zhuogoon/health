@@ -1,11 +1,14 @@
 "use client";
 
-import { formSchema } from "@/components/form/RegisterForm";
-import { get } from "@/net";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import "react-phone-number-input/style.css";
+import "react-datepicker/dist/react-datepicker.css";
+import { useEffect, useState } from "react";
+import { formSchema } from "@/components/form/RegisterForm";
+import { get } from "@/net";
+import { SettingsForm } from "@/components/form/SettingsForm";
 
 interface PatientInfo {
   name: string;
@@ -35,30 +38,24 @@ const Settings = () => {
     fetchData();
   }, []);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: data?.name,
-      height: data?.height,
-      weight: data?.weight,
-      birthday: data?.birthday ? new Date(data.birthday) : undefined,
-      sex: data?.sex,
-      phone: data?.phone,
-      address: data?.address,
-      allergens: data?.allergens,
-      medical_history: data?.medical_history,
-    },
-  });
-
   return (
-    <div className="h-full flex flex-col">
-      <div>
-        <h1 className="text-4xl font-semibold ml-8">设置</h1>
-        <div className="ml-8 text-zinc-600 mt-2">请在这里设置您的个人信息</div>
+    <div className="flex h-full gap-3">
+      <div className="flex-1 mx-3 overflow-y-auto custom-scrollbar border border-zinc-200 dark:border-zinc-800 shadow-md rounded-xl">
+        <div className="flex justify-center items-center">
+          <div className="w-[90%] h-[94%] overflow-y-auto custom-scrollbar">
+            <div className="text-4xl font-semibold mt-16 ml-4">
+              设置
+              <span className="text-teal-400">个人信息📄</span>
+            </div>
+            <div className="text-zinc-600 ml-4 mt-3">
+              这里可以修改您之前的设置
+            </div>
+            <SettingsForm />
+          </div>
+        </div>
       </div>
-      <div className="flex h-hull flex-grow">
-        <div className="flex-1 bg-red-300 h-full"></div>
-        <div className="flex-1 bg-red-400 h-full"></div>
+      <div className="flex-1 bg-cover flex  p-3 overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-md rounded-xl">
+        Test
       </div>
     </div>
   );

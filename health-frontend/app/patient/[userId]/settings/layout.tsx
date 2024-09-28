@@ -33,7 +33,9 @@ export default function RootLayout({
           </PatientProvider>
         </div>
       </div>
-      <div className="flex-grow bg-red-50">{children}</div>
+      <div className="flex-grow " style={{ height: "calc(100vh - 5rem)" }}>
+        {children}
+      </div>
     </div>
   );
 }
