@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -40,8 +41,10 @@ export function CustomForm() {
     password: string;
   }
 
+  const Router = useRouter();
   const onSubmit = (data: FormValues) => {
     console.log(data);
+    Router.push("/patient/1/register");
   };
   // ...
 
