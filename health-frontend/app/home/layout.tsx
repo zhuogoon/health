@@ -1,6 +1,9 @@
+"use client";
+
 import { Avatar } from "@/components/ui/avatar";
 import { ModeToggle } from "@/components/ui/modeToggle";
 import { NavigationMenuDemo } from "@/components/ui/navbarMenu";
+import { PatientProvider } from "@/context/PatientContext";
 import Image from "next/image";
 
 export default function RootLayout({
@@ -9,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-screen">
       <div className="flex justify-between px-3 py-3">
         <div className="flex items-center gap-2">
           <Image
@@ -25,15 +28,12 @@ export default function RootLayout({
         <NavigationMenuDemo />
         <div className="flex items-center gap-6">
           <ModeToggle />
-          <Avatar
-            avatar="/images/avatar.png"
-            name="Beiebi"
-            role="User"
-            phone="123123123"
-          />
+          <PatientProvider>
+            <Avatar />
+          </PatientProvider>
         </div>
       </div>
-      <div className="flex-grow bg-black">{children}</div>
+      <div className="flex-grow bg-red-50">{children}</div>
     </div>
   );
 }

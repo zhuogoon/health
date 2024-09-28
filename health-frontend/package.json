@@ -27,6 +27,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
     "react-phone-number-input": "^3.4.8",
+    "react-router-dom": "^6.26.2",
     "tailwind-animation": "^0.0.1-alpha.2",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
