@@ -1,4 +1,5 @@
 import { CustomForm } from "@/components/form/CustomForm";
+import { RegisterForm } from "@/components/form/RegisterForm";
 import { ModeToggle } from "@/components/ui/modeToggle";
 import Image from "next/image";
 
@@ -19,10 +20,12 @@ export default function Home() {
         <div className=" flex justify-center items-center">
           <div className="w-[90%] h-[94%] ">
             <div className="text-4xl font-semibold mt-16 ml-4">
-              Hi,欢迎使用智慧医疗系统 👋
+              让我们更加了解你
             </div>
-            <div className="text-zinc-600 ml-4 mt-3">开始你的智能医疗体验</div>
-            <CustomForm />
+            <div className="text-zinc-600 ml-4 mt-3">
+              请在下方完善您的个人信息，以便我们为您提供更好的服务
+            </div>
+            <RegisterForm />
           </div>
         </div>
       </div>
