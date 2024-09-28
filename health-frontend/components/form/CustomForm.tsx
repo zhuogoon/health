@@ -23,7 +23,7 @@ const formSchema = z.object({
     message: "用户名必须至少拥有2个字符.",
   }),
   password: z.string().min(8, {
-    message: "用户名必须至少拥有8个字符.",
+    message: "密码必须至少拥有8个字符.",
   }),
 });
 
