@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-// CreatePatient 创建患者
-func CreatePatient(c *gin.Context) {
+// UpdatePatientInfo 修改患者信息
+func UpdatePatientInfo(c *gin.Context) {
 	req := &request.CreatePatient{}
 	resp := &response.BaseResponse{}
 
@@ -21,15 +21,7 @@ func CreatePatient(c *gin.Context) {
 		return
 	}
 
-	err = db.CreatePatient(req)
-	if err != nil {
-		resp.Code = 450
-		resp.Msg = "创建失败"
-		c.AbortWithStatusJSON(http.StatusOK, resp)
-		return
-	}
-
-	err = db.UpdateUserStatus()
+	err = db.UpdatePatient(req)
 	if err != nil {
 		resp.Code = 450
 		resp.Msg = "修改失败"
@@ -37,8 +29,8 @@ func CreatePatient(c *gin.Context) {
 		return
 	}
 
-	resp.Code = 200
-	resp.Msg = "创建成功"
+	resp.Code = http.StatusOK
+	resp.Msg = "修改成功"
 	c.AbortWithStatusJSON(http.StatusOK, resp)
 	return
 }

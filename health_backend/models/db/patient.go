@@ -43,3 +43,7 @@ func GetInfoById() (*models.User, error) {
 	}
 	return user, nil
 }
+
+func UpdatePatient(p *request.CreatePatient) error {
+	return global.DB.Model(&models.Patient{}).Where("user_id = ?", global.UserId).Updates(&p).Error
+}
