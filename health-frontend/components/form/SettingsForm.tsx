@@ -59,7 +59,13 @@ export const formSchema = z.object({
   medical_history: z.string(),
 });
 
-export function SettingsForm({ data }: { data: PatientInfo | null }) {
+export function SettingsForm({
+  data,
+  onSuccess,
+}: {
+  data: PatientInfo | null;
+  onSuccess: () => void;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -91,10 +97,9 @@ export function SettingsForm({ data }: { data: PatientInfo | null }) {
     }
   }, [data, form]);
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    // const jwt = localStorage.getItem("jwt");
     try {
-      const result = post("/api/patient/info", data);
-      console.log("Success:", result);
+      const result = await post("/api/patient/update", data);
+      onSuccess(); // 调用回调函数
     } catch (error) {
       console.error("Error:", error);
     }
@@ -139,7 +144,7 @@ export function SettingsForm({ data }: { data: PatientInfo | null }) {
                       international
                       withCountryCallingCode
                       value={field.value as E164Number | undefined}
-                      className="text-zinc-500 h-8 rounded-md dark:text-zinc-200 dark:border-gray-700 border border-zinc-200"
+                      className="text-zinc-500 h-8 rounded-md dark:text-zinc-200 dark:border-gray-700 border border-zinc-200 font-mono"
                     />
                   </FormControl>
                   <FormDescription>请在这里输入您的电话号码</FormDescription>
@@ -216,7 +221,7 @@ export function SettingsForm({ data }: { data: PatientInfo | null }) {
                   <DatePicker
                     selected={field.value}
                     onChange={(date) => field.onChange(date as Date)}
-                    className=" border-none text-zinc-600 dark:bg-zinc-900 dark:text-zinc-200"
+                    className=" border-none text-zinc-600 dark:bg-zinc-900 dark:text-zinc-200 font-mono"
                     dateFormat="yyyy-MM-dd"
                     timeInputLabel="Time:"
                     wrapperClassName=""
@@ -239,6 +244,7 @@ export function SettingsForm({ data }: { data: PatientInfo | null }) {
                   <FormControl>
                     <Input
                       type="number"
+                      className="font-mono text-md"
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
@@ -256,6 +262,7 @@ export function SettingsForm({ data }: { data: PatientInfo | null }) {
                   <FormControl>
                     <Input
                       type="number"
+                      className="font-mono text-md"
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />

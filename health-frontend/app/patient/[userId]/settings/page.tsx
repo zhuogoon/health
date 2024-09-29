@@ -25,17 +25,16 @@ const Settings = () => {
   const [data, setData] = useState<PatientInfo | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await get("/api/patient/info");
-        setData(result);
-        console.log(result);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const result = await get("/api/patient/info");
+      setData(result);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -78,6 +77,10 @@ const Settings = () => {
     }
   };
 
+  const formatDate = (date: Date) => {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  };
+
   return (
     <div className="flex h-full gap-3">
       <div className="flex-1 mx-3 overflow-y-auto custom-scrollbar border border-zinc-200 dark:border-zinc-800 shadow-md rounded-xl">
@@ -90,7 +93,7 @@ const Settings = () => {
             <div className="text-zinc-600 ml-4 mt-3">
               这里可以修改您之前的设置
             </div>
-            <SettingsForm data={data} />
+            <SettingsForm data={data} onSuccess={fetchData} />
           </div>
         </div>
       </div>
@@ -149,7 +152,9 @@ const Settings = () => {
                     height={24}
                     alt="phone"
                   />
-                  <span className="text-zinc-700 text-lg">{data?.phone}</span>
+                  <span className="text-zinc-700 text-lg font-mono">
+                    {data?.phone}
+                  </span>
                 </div>
                 <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
                   <Image
@@ -163,7 +168,16 @@ const Settings = () => {
               </div>
               <div className="flex h-[40px] gap-3">
                 <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
-                  <span className="text-zinc-700 text-lg">{data?.age} 岁</span>
+                  <Image
+                    src="/icons/日历.png"
+                    width={24}
+                    height={24}
+                    alt="birthday"
+                  />
+                  <span className="text-zinc-700 text-lg font-mono">
+                    {" "}
+                    {data?.birthday ? formatDate(new Date(data.birthday)) : ""}
+                  </span>
                 </div>
                 <div className="flex-1 bg-zinc-100/90 rounded-lg"></div>
               </div>
@@ -181,7 +195,7 @@ const Settings = () => {
                     height={24}
                     alt="身高"
                   />
-                  <span className="text-zinc-700 text-lg">
+                  <span className="text-zinc-700 text-lg font-mono">
                     {data?.height}cm
                   </span>
                 </div>
@@ -192,25 +206,25 @@ const Settings = () => {
                     height={24}
                     alt="体重"
                   />
-                  <span className="text-zinc-700 text-lg">
+                  <span className="text-zinc-700 text-lg font-mono">
                     {data?.weight}kg
                   </span>
                 </div>
               </div>
               <div className="flex h-[40px] gap-3 flex-grow">
-                <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
-                  过敏源
-                  <span className="text-zinc-700 text-lg">
+                <div className="flex-1 bg-zinc-200 rounded-lg p-2 gap-2">
+                  过敏源 😣:
+                  <div className="text-zinc-700 line-clamp-3">
                     {data?.allergens ? data.allergens : "还没有信息哦"}
-                  </span>
+                  </div>
                 </div>
-                <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
-                  过往病史
-                  <span className="text-zinc-700 text-lg">
+                <div className="flex-1 bg-zinc-200 rounded-lg p-2 gap-2">
+                  过往病史 📄:
+                  <div className="text-zinc-700 line-clamp-3">
                     {data?.medical_history
                       ? data.medical_history
                       : "还没有信息哦"}
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
