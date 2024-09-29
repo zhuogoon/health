@@ -11,4 +11,4 @@ redis:
   password: ""
   DB: 0
 
-upload_path: D:\codeProject\godocter\health\health_backend\uploads
+upload_path: D:\实训\health\health_backend\uploads

@@ -310,8 +310,6 @@ export function RegisterForm() {
           >
             🚀 快速开始
           </Button>
-
-          <button type="submit">Submit</button>
         </form>
       </Form>
 
