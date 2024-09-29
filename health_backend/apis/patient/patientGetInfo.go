@@ -46,6 +46,7 @@ func Info(c *gin.Context) {
 		Phone:          patient.Phone,
 		Address:        patient.Address,
 		Allergens:      patient.Allergens,
+		Birthday:       patient.Birthday,
 		Age:            age,
 		Role:           user.Role,
 		Avatar:         user.Avatar,
