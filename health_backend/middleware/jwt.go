@@ -49,6 +49,8 @@ func JwtParse() gin.HandlerFunc {
 			"/api/user/register",
 			"/api/doctor/create",
 			"/api/user/reg",
+			"/api/admin/getkey",
+			"/api/admin/login",
 		}
 
 		for _, path := range allowedPaths {
