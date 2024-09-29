@@ -1,6 +1,9 @@
 package response
 
-import "health_backend/models"
+import (
+	"health_backend/models"
+	"time"
+)
 
 type PatientInfo struct {
 	Id             uint        `json:"id"`
@@ -17,4 +20,5 @@ type PatientInfo struct {
 	Role           models.Role `json:"role"`
 	Avatar         string      `json:"avatar"`
 	Username       string      `json:"username"`
+	Birthday       *time.Time  `json:"birthday"`
 }
