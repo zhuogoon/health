@@ -29,3 +29,8 @@ func Patient(r *gin.RouterGroup) {
 	r.POST("create", CreatePatient)
 	r.GET("info", Info)
 }
+
+func Admin(r *gin.RouterGroup) {
+	r.GET("getkey", AdminGetKey)
+	r.POST("login", AdminLog)
+}
