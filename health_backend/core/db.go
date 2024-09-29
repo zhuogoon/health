@@ -27,7 +27,13 @@ func InitDatabase() {
 
 // InitCreateDB 自动迁移
 func InitCreateDB() {
-	err := global.DB.AutoMigrate(&models.User{}, &models.Doctor{}, &models.Patient{})
+	err := global.DB.AutoMigrate(
+		&models.User{},
+		&models.Doctor{},
+		&models.Patient{},
+		&models.CheckProject{},
+		&models.Check{},
+	)
 	if err != nil {
 		logrus.Error("表自动迁移失败")
 		return

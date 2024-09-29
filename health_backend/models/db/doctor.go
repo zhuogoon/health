@@ -87,3 +87,12 @@ func DeleteDoctor() error {
 	}
 	return nil
 }
+
+func AddCheck(ch *request.AddCheck) error {
+	c := &models.Check{
+		PatientId:      ch.PatientId,
+		DoctorId:       ch.DoctorId,
+		CheckProjectId: ch.CheckProjectId,
+	}
+	return global.DB.Model(&models.Check{}).Create(&c).Error
+}
