@@ -10,6 +10,7 @@ import (
 	"net/http"
 )
 
+// AdminGetKey 获取管理员登录密钥
 func AdminGetKey(c *gin.Context) {
 	resp := &response.BaseResponse{}
 
@@ -28,6 +29,7 @@ func AdminGetKey(c *gin.Context) {
 	return
 }
 
+// AdminLog 管理员登录
 func AdminLog(c *gin.Context) {
 	req := &request.AdminLog{}
 	resp := &response.BaseResponse{}
@@ -69,7 +71,8 @@ func AdminLog(c *gin.Context) {
 	return
 }
 
-func AddCheck(c *gin.Context) {
+// AddCheckProject 添加收费项
+func AddCheckProject(c *gin.Context) {
 	req := &request.CheckProject{}
 	resp := &response.BaseResponse{}
 
@@ -81,7 +84,7 @@ func AddCheck(c *gin.Context) {
 		return
 	}
 
-	err = db.AddCheck(req.Name, req.Room)
+	err = db.AddCheckProject(req.Name, req.Room)
 	if err != nil {
 		resp.Code = 450
 		resp.Msg = "添加失败"
@@ -95,6 +98,7 @@ func AddCheck(c *gin.Context) {
 	return
 }
 
+// UpdateCheck 更新收费项
 func UpdateCheck(c *gin.Context) {
 	req := &request.UpdateCheckProject{}
 	resp := &response.BaseResponse{}
@@ -121,6 +125,7 @@ func UpdateCheck(c *gin.Context) {
 	return
 }
 
+// DeleteCheck 删除收费项
 func DeleteCheck(c *gin.Context) {
 	req := &request.DeleteCheck{}
 	resp := &response.BaseResponse{}
@@ -147,6 +152,7 @@ func DeleteCheck(c *gin.Context) {
 	return
 }
 
+// GetCheckInfo 获取收费项信息
 func GetCheckInfo(c *gin.Context) {
 	resp := &response.BaseResponse{}
 

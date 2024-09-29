@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// CreatePatient 创建患者
 func CreatePatient(c *gin.Context) {
 	req := &request.CreatePatient{}
 	resp := &response.BaseResponse{}
@@ -43,6 +44,7 @@ func CreatePatient(c *gin.Context) {
 	return
 }
 
+// Info 获取患者信息
 func Info(c *gin.Context) {
 	resp := &response.BaseResponse{}
 

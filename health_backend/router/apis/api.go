@@ -6,8 +6,6 @@ import (
 
 func User(r *gin.RouterGroup) {
 
-	r.POST("register", Register)
-	r.POST("login", Login)
 	r.POST("update", UpdatePassword)
 	r.GET("logout", Logout)
 	r.GET("cancel", Cancel)
@@ -23,6 +21,7 @@ func Doctor(r *gin.RouterGroup) {
 	r.POST("create", Create)
 	r.POST("update", UpdateDoctorInfo)
 	r.GET("delete", DeleteDoctor)
+	r.POST("add", AddCheck)
 }
 
 func Patient(r *gin.RouterGroup) {
@@ -33,7 +32,7 @@ func Patient(r *gin.RouterGroup) {
 func Admin(r *gin.RouterGroup) {
 	r.GET("getkey", AdminGetKey)
 	r.POST("login", AdminLog)
-	r.POST("add", AddCheck)
+	r.POST("add", AddCheckProject)
 	r.POST("update", UpdateCheck)
 	r.POST("delete", DeleteCheck)
 	r.GET("info", GetCheckInfo)

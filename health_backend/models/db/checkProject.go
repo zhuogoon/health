@@ -6,7 +6,7 @@ import (
 	"health_backend/models/response"
 )
 
-func AddCheck(name, room string) error {
+func AddCheckProject(name, room string) error {
 	ch := &models.CheckProject{
 		Name: name,
 		Room: room,
