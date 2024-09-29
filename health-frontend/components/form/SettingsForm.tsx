@@ -14,16 +14,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Textarea } from "../ui/textarea";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { E164Number } from "libphonenumber-js/core";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { PatientInfo } from "@/app/patient/[userId]/settings/page";
+import { useEffect } from "react";
+import { post } from "@/net";
 
 export const formSchema = z.object({
   name: z.string().min(2, {
@@ -58,15 +59,14 @@ export const formSchema = z.object({
   medical_history: z.string(),
 });
 
-export function SettingsForm() {
-  const Router = useRouter();
+export function SettingsForm({ data }: { data: PatientInfo | null }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       height: 0,
       weight: 0,
-      birthday: new Date(2000, 1, 1),
+      birthday: new Date(),
       sex: true,
       phone: "",
       address: "",
@@ -74,28 +74,27 @@ export function SettingsForm() {
       medical_history: "",
     },
   });
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const jwt = localStorage.getItem("jwt");
-    try {
-      const response = await fetch("http://localhost:8080/api/patient/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: JSON.stringify(data),
-      });
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const result = await response.json();
-      if (result.code !== 200) {
-        console.error("Error:", result);
-        return;
-      }
+  useEffect(() => {
+    if (data) {
+      form.reset({
+        name: data.name,
+        height: data.height,
+        weight: data.weight,
+        birthday: data.birthday ? new Date(data.birthday) : new Date(),
+        sex: data.sex,
+        phone: data.phone,
+        address: data.address,
+        allergens: data.allergens,
+        medical_history: data.medical_history,
+      });
+    }
+  }, [data, form]);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    // const jwt = localStorage.getItem("jwt");
+    try {
+      const result = post("/api/patient/info", data);
       console.log("Success:", result);
-      Router.push(`/home`);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -310,8 +309,6 @@ export function SettingsForm() {
           >
             📄保存信息
           </Button>
-
-          <button type="submit">Submit</button>
         </form>
       </Form>
 

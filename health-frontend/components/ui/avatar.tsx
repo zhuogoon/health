@@ -23,7 +23,7 @@ export const Avatar: React.FC = () => {
         <div className="text-zinc-500 text-sm">{data.phone}</div>
       </div>
       <Image
-        src={data.avatar}
+        src="http://localhost:8080/api/user/avatar"
         alt="avatar"
         height={200}
         width={200}
