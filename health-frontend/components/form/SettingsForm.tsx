@@ -91,7 +91,7 @@ export function SettingsForm({ data }: { data: PatientInfo | null }) {
     }
   }, [data, form]);
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const jwt = localStorage.getItem("jwt");
+    // const jwt = localStorage.getItem("jwt");
     try {
       const result = post("/api/patient/info", data);
       console.log("Success:", result);

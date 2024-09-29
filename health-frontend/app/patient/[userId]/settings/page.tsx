@@ -3,9 +3,10 @@
 import "react-phone-number-input/style.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { useEffect, useRef, useState } from "react";
-import { get, post } from "@/net";
+import { get } from "@/net";
 import { SettingsForm } from "@/components/form/SettingsForm";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export interface PatientInfo {
   name: string;
@@ -22,7 +23,6 @@ export interface PatientInfo {
 
 const Settings = () => {
   const [data, setData] = useState<PatientInfo | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -51,8 +51,9 @@ const Settings = () => {
       fileInputRef.current.click();
     }
   };
-  const jwt = localStorage.getItem("jwt");
+
   const uploadAvatar = async (file: File) => {
+    const jwt = localStorage.getItem("jwt");
     const formData = new FormData();
     formData.append("file", file);
 
@@ -93,13 +94,13 @@ const Settings = () => {
           </div>
         </div>
       </div>
-      <div className="flex-1 mx-3 bg-cover flex p-3 overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-md rounded-xl">
+      <div className="flex-1 mx-3 flex p-3 custom-scrollbar overflow-y-auto border border-zinc-200 dark:border-zinc-800 shadow-md rounded-xl">
         <div className="flex flex-col items-center w-full mt-4">
           <img
             width={64}
             height={64}
-            src="/images/avatar.png"
-            alt="doctor"
+            src="http://localhost:8080/api/user/avatar"
+            alt="avatar"
             className="w-16 h-16 rounded-full"
           />
           <input
@@ -115,7 +116,7 @@ const Settings = () => {
             修改头像
           </Button>
           <div className="w-[80%] border-t-2 border-zinc-200 pt-4 mt-2 flex flex-col">
-            <div className="space-x-1 mb-2">
+            <div className="space-x-1 m-3">
               <span className="text-2xl font-semibold">🧑</span>
               <span className="text-2xl font-semibold">个人信息</span>
             </div>
@@ -142,33 +143,77 @@ const Settings = () => {
               </div>
               <div className="flex h-[40px] gap-3">
                 <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
-                  电话
-                  <span className="text-teal-400">{data?.phone}</span>
+                  <Image
+                    src="/icons/phone.svg"
+                    width={24}
+                    height={24}
+                    alt="phone"
+                  />
+                  <span className="text-zinc-700 text-lg">{data?.phone}</span>
                 </div>
                 <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
-                  地址
-                  <span className="text-teal-400">{data?.address}</span>
+                  <Image
+                    src="/icons/address.svg"
+                    width={24}
+                    height={24}
+                    alt="address"
+                  />
+                  <span className="text-zinc-700 text-lg">{data?.address}</span>
                 </div>
               </div>
               <div className="flex h-[40px] gap-3">
                 <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
-                  年龄
-                  <span className="text-teal-400">{data?.age}</span>
+                  <span className="text-zinc-700 text-lg">{data?.age} 岁</span>
                 </div>
                 <div className="flex-1 bg-zinc-100/90 rounded-lg"></div>
               </div>
             </div>
-            {/* 身高: <span className="text-teal-400">{data?.height}</span>
-            体重: <span className="text-teal-400">{data?.weight}</span>
-            生日: <span className="text-teal-400">{data?.birthday}</span>
-            电话: <span className="text-teal-400">{data?.phone}</span>
-            <span className="text-teal-400">
-              {data?.allergens ? data?.allergens : "无数据哦"}
-            </span>
-            病史:{" "}
-            <span className="text-teal-400">
-              {data?.medical_history ? data?.medical_history : "无数据哦"}
-            </span> */}
+
+            <div className="w-full h-[240px] mt-5 p-2 rounded-xl shadow-md bg-zinc-100/90 flex flex-col gap-4">
+              <div className="text-zinc-600 text-lg font-semibold">
+                医疗信息
+              </div>
+              <div className="flex h-[40px] gap-3">
+                <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
+                  <Image
+                    src="/icons/身高.svg"
+                    width={24}
+                    height={24}
+                    alt="身高"
+                  />
+                  <span className="text-zinc-700 text-lg">
+                    {data?.height}cm
+                  </span>
+                </div>
+                <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
+                  <Image
+                    src="/icons/体重.svg"
+                    width={24}
+                    height={24}
+                    alt="体重"
+                  />
+                  <span className="text-zinc-700 text-lg">
+                    {data?.weight}kg
+                  </span>
+                </div>
+              </div>
+              <div className="flex h-[40px] gap-3 flex-grow">
+                <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
+                  过敏源
+                  <span className="text-zinc-700 text-lg">
+                    {data?.allergens ? data.allergens : "还没有信息哦"}
+                  </span>
+                </div>
+                <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
+                  过往病史
+                  <span className="text-zinc-700 text-lg">
+                    {data?.medical_history
+                      ? data.medical_history
+                      : "还没有信息哦"}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
