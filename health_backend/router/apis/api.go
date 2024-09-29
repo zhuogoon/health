@@ -33,4 +33,8 @@ func Patient(r *gin.RouterGroup) {
 func Admin(r *gin.RouterGroup) {
 	r.GET("getkey", AdminGetKey)
 	r.POST("login", AdminLog)
+	r.POST("add", AddCheck)
+	r.POST("update", UpdateCheck)
+	r.POST("delete", DeleteCheck)
+	r.GET("info", GetCheckInfo)
 }
