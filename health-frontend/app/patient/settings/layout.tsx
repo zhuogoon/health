@@ -42,7 +42,9 @@ export default function RootLayout({
           </PatientProvider>
         </div>
       </div>
-      <div className="flex-grow bg-zinc-100 dark:bg-zinc-950">{children}</div>
+      <div className="flex-grow " style={{ height: "calc(100vh - 5rem)" }}>
+        {children}
+      </div>
     </div>
   );
 }

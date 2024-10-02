@@ -28,7 +28,7 @@ func Jwt(username string) (string, error) {
 	jwts := &JwtStruct{}
 	jwts.Username = username
 	jwts.Role = r
-	jwts.ExpiresAt = jwt.NewNumericDate(time.Now().Add(time.Hour * 2))
+	jwts.ExpiresAt = jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7))
 	jwts.IssuedAt = jwt.NewNumericDate(time.Now())
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwts)
