@@ -33,7 +33,9 @@ export default function RootLayout({
           </PatientProvider>
         </div>
       </div>
-      <div className="flex-grow bg-zinc-100 dark:bg-zinc-950">{children}</div>
+      <div className="flex-grow bg-red-50 overflow-y-auto custom-scrollbar">
+        {children}
+      </div>
     </div>
   );
 }
