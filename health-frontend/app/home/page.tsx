@@ -9,8 +9,13 @@ import { Button } from "@/components/ui/button";
 
 const Home = () => {
   const Router = useRouter();
-  const [data, setData] = useState(null);
+  interface PatientInfo {
+    id: string;
+    // Add other properties as needed
+  }
 
+  const [data, setData] = useState<PatientInfo | null>(null);
+  const id = data?.id;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -62,7 +67,7 @@ const Home = () => {
         </div>
         <a
           className="absolute bottom-8 right-12 h-10 text-teal-400 hover:text-teal-500 dark:text-teal-500 dark:hover:text-teal-600 cursor-pointer"
-          onClick={() => Router.push("/patient/case")}
+          onClick={() => Router.push(`/cases/${id}/list`)}
         >
           查看更多 →
         </a>

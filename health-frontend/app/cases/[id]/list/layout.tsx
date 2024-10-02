@@ -5,16 +5,19 @@ import { ModeToggle } from "@/components/ui/modeToggle";
 import { NavigationMenuDemo } from "@/components/ui/navbarMenu";
 import { PatientProvider } from "@/context/PatientContext";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const router = useRouter();
   return (
     <div className="flex flex-col h-screen">
       <div className="flex justify-between px-3 py-3">
-        <div className="flex items-center gap-2">
+        <Link href="/home" className="flex items-center gap-2 cursor-pointer">
           <Image
             src="/images/icon.png"
             width={100}
@@ -22,8 +25,14 @@ export default function RootLayout({
             alt="icon"
             className="w-10 h-10 rounded-2xl"
           />
-          <div className="text-2xl font-semibold">智慧医疗系统</div>
-        </div>
+          <a
+            href="/home"
+            className="text-2xl font-semibold"
+            onClick={() => router.push("/home")}
+          >
+            智慧医疗系统
+          </a>
+        </Link>
 
         <NavigationMenuDemo />
         <div className="flex items-center gap-6">
