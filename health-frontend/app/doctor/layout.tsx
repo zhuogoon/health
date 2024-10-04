@@ -5,6 +5,7 @@ import { PatientProvider } from "@/context/PatientContext";
 import { ModeToggle } from "@/components/ui/modeToggle";
 import { Avatar } from "@/components/ui/avatar";
 import { DoctorNavbar } from "@/components/ui/DoctorNavbar";
+import Link from "next/link";
 
 // DoctorLayout 组件
 export default function DoctorLayout({
@@ -15,7 +16,7 @@ export default function DoctorLayout({
   return (
     <div className="flex flex-col h-screen">
       <div className="flex justify-between px-3 py-3">
-        <div className="flex items-center gap-2">
+        <Link href={"/home"} className="flex items-center gap-2">
           <Image
             src="/images/icon.png"
             width={100}
@@ -24,7 +25,7 @@ export default function DoctorLayout({
             className="w-10 h-10 rounded-2xl"
           />
           <div className="text-2xl font-semibold">智慧医疗系统</div>
-        </div>
+        </Link>
 
         <DoctorNavbar />
         <div className="flex items-center gap-6">
@@ -34,7 +35,7 @@ export default function DoctorLayout({
           </PatientProvider>
         </div>
       </div>
-      <div className="flex-grow bg-red-200">{children}</div>
+      <div className="flex-grow bg-zinc-50/50">{children}</div>
     </div>
   );
 }

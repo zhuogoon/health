@@ -11,12 +11,12 @@ const DocgtorHomePage = () => {
   return (
     <div className="flex w-full h-full">
       <div className="flex-1 bg-yellow-500"></div>
-      <div className="flex flex-1 bg-green-600">
+      <div className="flex flex-1">
         <div className="flex-1 bg-blue-400"></div>
         <div className="flex flex-col flex-1">
           <div
             style={stylewxhq}
-            className="flex bg-cover  flex-1 items-center justify-center"
+            className="flex bg-cover flex-1 items-center justify-center"
           >
             <div className="flex flex-col items-center w-40 h-40 justify-center bg-black border-2 border-white rounded-full">
               <div className="text-3xl text-white mb-2">
