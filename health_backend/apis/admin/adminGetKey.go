@@ -2,6 +2,7 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"health_backend/models/response"
 	"health_backend/utils"
 	"net/http"
@@ -19,6 +20,7 @@ func GetKey(c *gin.Context) {
 		return
 	}
 
+	logrus.Info(key)
 	resp.Code = 200
 	resp.Msg = "获取登录码成功"
 	resp.Data = key

@@ -12,4 +12,5 @@ func Admin(r *gin.RouterGroup) {
 	r.POST("update", admin.UpdateCheck)
 	r.POST("delete", admin.DeleteCheck)
 	r.GET("info", admin.GetCheckInfo)
+	r.GET("count", admin.GetCount)
 }
