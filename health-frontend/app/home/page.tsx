@@ -10,23 +10,23 @@ import { url } from "inspector";
 
 const Home = () => {
   const Router = useRouter();
-  interface PatientInfo {
-    id: string;
-  }
+  // interface PatientInfo {
+  //   id: string;
+  // }
 
-  const [data, setData] = useState<PatientInfo | null>(null);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await get("/api/patient/info");
-        setData(result);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+  // const [data, setData] = useState<PatientInfo | null>(null);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const result = await get("/api/patient/info");
+  //       setData(result);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   return (
     <div

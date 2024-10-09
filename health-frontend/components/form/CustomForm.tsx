@@ -109,7 +109,7 @@ export function CustomForm() {
               <FormItem>
                 <FormLabel className="">密码</FormLabel>
                 <FormControl>
-                  <Input placeholder="密码..." {...field} />
+                  <Input type="password" placeholder="密码..." {...field} />
                 </FormControl>
                 <FormDescription>请在这里输入您的密码</FormDescription>
                 <FormMessage />
@@ -127,7 +127,15 @@ export function CustomForm() {
 
       <div className="flex justify-between items-center mt-10">
         <div className="text-zinc-600">©2024 智慧医疗系统</div>
-        <Link href="/?admin=true" className=" text-teal-500">
+        <Link
+          onClick={() => {
+            const res = fetch("http://localhost:8080/api/admin/getkey", {
+              method: "GET",
+            });
+          }}
+          href="/?admin=true"
+          className=" text-teal-500"
+        >
           Admin
         </Link>
       </div>

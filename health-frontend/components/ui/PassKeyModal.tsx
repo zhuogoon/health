@@ -3,18 +3,15 @@
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useEffect, useState } from "react";
@@ -32,6 +29,7 @@ export default function PassKeyModal() {
     router.push("/");
   };
   const jwt = typeof window !== "undefined" && localStorage.getItem("jwt");
+
   useEffect(() => {
     const accessKey = jwt && "123456";
 
@@ -44,12 +42,21 @@ export default function PassKeyModal() {
       }
     }
   }, [jwt]);
-  const validatePasskey = (
+  const validatePasskey = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    if (passkey === "123456") {
-      const jwt = "123456";
+    const res = await fetch("http://localhost:8080/api/admin/login", {
+      method: "POST",
+      body: JSON.stringify({
+        username: "admin",
+        key: passkey,
+      }),
+    });
+    const data = await res.json();
+    console.log(res);
+    if (data.code === 200) {
+      const jwt = data.data;
       localStorage.setItem("jwt", jwt);
       setOpen(false);
     } else {
@@ -118,7 +125,7 @@ export default function PassKeyModal() {
               onClick={(e) => validatePasskey(e)}
               className="w-full "
             >
-              输入管理员密钥
+              验证动态密钥
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

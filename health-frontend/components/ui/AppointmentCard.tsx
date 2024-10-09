@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const AppointmentCard = () => {
   return (
-    <div className=" bg-zinc-200 p-2 rounded-xl shadow">
+    <div className=" bg-zinc-50 p-2 rounded-xl shadow">
       <div className="flex justify-between items-center">
         <div className="flex gap-2 items-center">
           <div>
@@ -16,9 +16,13 @@ const AppointmentCard = () => {
               className="w-9 h-9 rounded-2xl"
             />
           </div>
-          <div>李卓</div>
+          <div className="text-lg">李卓</div>
         </div>
         <div className="flex gap-2 items-end text-sm text-zinc-600">
+          <div className="flex gap-1 items-center text-zinc-600">
+            <div className="bg-green-400 h-2 w-2 rounded-full"></div>
+            已完成
+          </div>
           <Image
             src={"/icons/日历.png"}
             width={100}
