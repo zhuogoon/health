@@ -14,7 +14,7 @@ func GetKey(c *gin.Context) {
 	key, err := utils.GenerateRandomKey()
 	if err != nil {
 		resp.Code = 450
-		resp.Msg = "获取登录码错误"
+		resp.Msg = err.Error()
 		c.AbortWithStatusJSON(http.StatusOK, resp)
 		return
 	}
