@@ -35,15 +35,18 @@ func Info(c *gin.Context) {
 		return
 	}
 
+	phone := patient.Phone
+	if len(phone) > 11 {
+		phone = phone[len(phone)-11:] // 保留最后 11 位
+	}
 	pat := &response.PatientInfo{
 		Id:             patient.ID,
 		UserId:         patient.UserID,
 		Name:           patient.Name,
 		Height:         patient.Height,
 		Weight:         patient.Weight,
-		Sex:            patient.Sex,
 		MedicalHistory: patient.MedicalHistory,
-		Phone:          patient.Phone,
+		Phone:          phone,
 		Address:        patient.Address,
 		Allergens:      patient.Allergens,
 		Birthday:       patient.Birthday,
@@ -51,6 +54,11 @@ func Info(c *gin.Context) {
 		Role:           user.Role,
 		Avatar:         user.Avatar,
 		Username:       user.Username,
+	}
+	if patient.Sex == true {
+		pat.Sex = "男"
+	} else {
+		pat.Sex = "女"
 	}
 	resp.Code = 200
 	resp.Msg = "获取成功"

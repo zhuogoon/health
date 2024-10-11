@@ -12,7 +12,7 @@ type PatientInfo struct {
 	Height         float32     `json:"height"`
 	Weight         float32     `json:"weight"`
 	Age            int         `json:"age"`
-	Sex            bool        `json:"sex"`
+	Sex            string      `json:"sex"`
 	MedicalHistory string      `json:"medical_history"`
 	Phone          string      `json:"phone"`
 	Address        string      `json:"address"`

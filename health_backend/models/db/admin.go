@@ -30,3 +30,15 @@ func GetCount() (*response.GetCount, error) {
 	count.CheckProjectCount = checkCount
 	return count, nil
 }
+
+func DoctorInfo() ([]response.DoctorInfo, error) {
+	var d []response.DoctorInfo
+	err := global.DB.Model(&models.Doctor{}).Select("id,name,honor,job_title,job_type,phone").Find(&d).Error
+	return d, err
+}
+
+func PatientInfo() ([]models.Patient, error) {
+	var p []models.Patient
+	err := global.DB.Model(&models.Patient{}).Find(&p).Error
+	return p, err
+}
