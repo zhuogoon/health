@@ -4,6 +4,7 @@ import (
 	"health_backend/global"
 	"health_backend/models"
 	"health_backend/models/request"
+	"health_backend/models/response"
 )
 
 func CreatePatient(p *request.CreatePatient) error {
@@ -46,4 +47,12 @@ func GetInfoById() (*models.User, error) {
 
 func UpdatePatient(p *request.CreatePatient) error {
 	return global.DB.Model(&models.Patient{}).Where("user_id = ?", global.UserId).Updates(&p).Error
+}
+
+func GetPatientInfoById(id uint) ([]response.GetInfoByIdResp, error) {
+	var p []response.GetInfoByIdResp
+	if err := global.DB.Model(&models.Patient{}).Select("phone,address,height,weight,medical_history,allergens").Where("id = ?", id).Find(&p).Error; err != nil {
+		return nil, err
+	}
+	return p, nil
 }
