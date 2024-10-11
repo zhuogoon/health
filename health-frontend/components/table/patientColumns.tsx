@@ -11,7 +11,7 @@ export type Patient = {
   name: string;
   height: number;
   weight: number;
-  sex: string;
+  sex: string; // 修改性别属性为布尔值
   phone: string;
   address: string;
 };
@@ -50,7 +50,7 @@ export const columns: ColumnDef<Patient>[] = [
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            检查项目
+            姓名
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         </div>

@@ -13,7 +13,7 @@ export type Item = {
 };
 
 const handleEdit = (item: Item) => {
-  // 处理修改逻辑，例如打开一个编辑对话框
+  // 处理编辑逻辑，例如打开编辑弹窗
   console.log("Editing item:", item);
 };
 

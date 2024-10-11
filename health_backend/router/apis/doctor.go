@@ -11,4 +11,8 @@ func Doctor(r *gin.RouterGroup) {
 	r.POST("update", doctor.UpdateDoctorInfo)
 	r.GET("delete", doctor.DeleteDoctor)
 	r.POST("add", doctor.AddCheck)
+	r.GET("jobtype", doctor.GetDoctorJobType)
+	r.POST("name", doctor.GetDoctorByName)
+	r.POST("job", doctor.GetByJobType)
+	r.POST("namejobtype", doctor.GetByNameJobType)
 }

@@ -9,8 +9,10 @@ import { Button } from "../ui/button";
 export type Doctor = {
   id: number;
   name: string;
+  honor: string;
   job_title: string;
   job_type: string;
+  phone: string;
 };
 
 const handleEdit = (item: Doctor) => {

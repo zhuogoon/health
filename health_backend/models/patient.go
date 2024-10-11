@@ -18,3 +18,11 @@ type Patient struct {
 	Allergens      string     `json:"allergens" gorm:"column:allergens;size:255;comment:'过敏史'"`
 	Birthday       *time.Time `json:"birthday" gorm:"column:birthday"`
 }
+
+// GenderString 返回性别的字符串表示
+func (u *Patient) GenderString() string {
+	if u.Sex {
+		return "男"
+	}
+	return "女"
+}
