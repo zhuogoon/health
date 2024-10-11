@@ -25,3 +25,16 @@ type AddCheck struct {
 	CheckProjectId uint `json:"check_project_id"`
 	PatientId      uint `json:"patient_id"`
 }
+
+type GetByName struct {
+	Name string `json:"name"`
+}
+
+type GetByJobType struct {
+	JobType string `json:"job_type"`
+}
+
+type GetByNameJobType struct {
+	Name    string `json:"name"`
+	JobType string `json:"job_type"`
+}
