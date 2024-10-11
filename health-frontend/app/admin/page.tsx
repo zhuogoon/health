@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/table/DataTable";
 import { columns } from "@/components/table/columns";
-import { get } from "@/net";
+// import { get } from "@/net";
 
 interface Item {
   id: number;
