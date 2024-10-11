@@ -10,9 +10,14 @@ func Router(r *gin.Engine) {
 	doctor := r.Group("/api/doctor")
 	patient := r.Group("/api/patient")
 	admin := r.Group("/api/admin")
+	cases := r.Group("/api/cases")
+	appointment := r.Group("/api/appointment")
 
 	apis.User(user)
 	apis.Doctor(doctor)
 	apis.Patient(patient)
 	apis.Admin(admin)
+	apis.Appointment(appointment)
+	apis.Cases(cases)
+
 }

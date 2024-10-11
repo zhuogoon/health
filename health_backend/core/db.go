@@ -34,6 +34,8 @@ func InitCreateDB() {
 		&models.Patient{},
 		&models.CheckProject{},
 		&models.Check{},
+		&models.Case{},
+		&models.Appointment{},
 	)
 	if err != nil {
 		logrus.Error("表自动迁移失败")
