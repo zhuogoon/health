@@ -3,7 +3,7 @@ package models
 import "gorm.io/gorm"
 
 type Appointment struct {
-	//预约表
+	//预约表2
 	gorm.Model
 	TimeID    int
 	PatientID uint     `gorm:"index;uniqueIndex:patient_doctor_time_idx"`
