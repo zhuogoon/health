@@ -9,7 +9,7 @@ import (
 
 // GenerateRandomKey 生成随机 6 位密钥
 func GenerateRandomKey() (string, error) {
-	const charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	const charset = "0123456789"
 	result := make([]byte, 6)
 	for i := range result {
 		num, _ := rand.Int(rand.Reader, big.NewInt(int64(len(charset))))

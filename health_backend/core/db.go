@@ -9,6 +9,7 @@ import (
 	"health_backend/models"
 )
 
+// InitDatabase 初始化数据库
 func InitDatabase() {
 	if global.Config.Mysql.Host == "" {
 		logrus.Warn("未配置Mysql，取消连接")

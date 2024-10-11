@@ -25,16 +25,13 @@ export default function RootLayout({
             alt="icon"
             className="w-10 h-10 rounded-2xl"
           />
-          <div
+          <a
+            href="/home"
             className="text-2xl font-semibold"
             onClick={() => router.push("/home")}
           >
-            <div className="text-3xl font-semibold">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-teal-500">
-                智慧医疗系统
-              </span>
-            </div>
-          </div>
+            智慧医疗系统
+          </a>
         </Link>
 
         <NavigationMenuDemo />
@@ -45,7 +42,9 @@ export default function RootLayout({
           </PatientProvider>
         </div>
       </div>
-      <div className="flex-grow bg-blue-50/50 dark:bg-zinc-950">{children}</div>
+      <div className="flex-grow " style={{ height: "calc(100vh - 5rem)" }}>
+        {children}
+      </div>
     </div>
   );
 }
