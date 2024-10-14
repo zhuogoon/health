@@ -56,3 +56,11 @@ func GetPatientInfoById(id uint) ([]response.GetInfoByIdResp, error) {
 	}
 	return p, nil
 }
+
+func GetPatientIdByUserId() (uint, error) {
+	p := &models.Patient{}
+	if err := global.DB.Model(&models.Patient{}).Where("user_id = ?", global.UserId).First(&p).Error; err != nil {
+		return 0, err
+	}
+	return p.ID, nil
+}
