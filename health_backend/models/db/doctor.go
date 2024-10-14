@@ -6,6 +6,7 @@ import (
 	"health_backend/global"
 	"health_backend/models"
 	"health_backend/models/request"
+	"health_backend/models/response"
 )
 
 func CreateDoctor(d *request.Doctor) error {
@@ -95,4 +96,38 @@ func AddCheck(ch *request.AddCheck) error {
 		CheckProjectId: ch.CheckProjectId,
 	}
 	return global.DB.Model(&models.Check{}).Create(&c).Error
+}
+
+func GetDoctorJobType() ([]string, error) {
+	var job []string
+	if err := global.DB.Model(&models.Doctor{}).Select("job_type").Find(&job).Error; err != nil {
+		return nil, err
+	}
+	return job, nil
+}
+
+func GetDoctorByName(name string) ([]response.DoctorByName, error) {
+	var d []response.DoctorByName
+	if err := global.DB.Model(&models.Doctor{}).Select("name,honor,job_title,job_type,phone").Where("name = ?", name).Find(&d).Error; err != nil {
+		return nil, err
+	}
+	return d, nil
+
+}
+
+func GetDoctorByJobType(jobType string) ([]response.DoctorByName, error) {
+	var d []response.DoctorByName
+	if err := global.DB.Model(&models.Doctor{}).Select("name,honor,job_title,job_type,phone").Where("job_type = ?", jobType).Find(&d).Error; err != nil {
+		return nil, err
+	}
+	return d, nil
+
+}
+
+func GetByNameJobType(name, jobType string) ([]response.DoctorByName, error) {
+	var d []response.DoctorByName
+	if err := global.DB.Model(&models.Doctor{}).Select("name,honor,job_title,job_type,phone").Where("name = ? AND job_type = ?", name, jobType).Find(&d).Error; err != nil {
+		return nil, err
+	}
+	return d, nil
 }

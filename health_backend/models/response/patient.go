@@ -12,7 +12,7 @@ type PatientInfo struct {
 	Height         float32     `json:"height"`
 	Weight         float32     `json:"weight"`
 	Age            int         `json:"age"`
-	Sex            bool        `json:"sex"`
+	Sex            string      `json:"sex"`
 	MedicalHistory string      `json:"medical_history"`
 	Phone          string      `json:"phone"`
 	Address        string      `json:"address"`
@@ -21,4 +21,16 @@ type PatientInfo struct {
 	Avatar         string      `json:"avatar"`
 	Username       string      `json:"username"`
 	Birthday       *time.Time  `json:"birthday"`
+}
+
+type GetInfoByIdResp struct {
+	Phone          string `json:"phone"`
+	Address        string `json:"address"`
+	Height         string `json:"height"`
+	Weight         string `json:"weight"`
+	MedicalHistory string `json:"medical_history"`
+	Allergens      string `json:"allergens"`
+}
+type GetAppointmentInfoByIdResp struct {
+	TimeId int64 `json:"time_id"`
 }

@@ -7,7 +7,7 @@ import (
 
 type Patient struct {
 	gorm.Model
-	UserID         uint       `json:"user_id" gorm:"column:user_id;not null"`
+	UserID         uint       `json:"user_id" gorm:"column:user_id;not null;unique_index"`
 	Name           string     `json:"name" gorm:"column:name;size:64;not null"`
 	Height         float32    `json:"height" gorm:"column:height;type:double"`
 	Weight         float32    `json:"weight" gorm:"column:weight;type:double"`
@@ -17,4 +17,12 @@ type Patient struct {
 	Address        string     `json:"address" gorm:"column:address;size:128"`
 	Allergens      string     `json:"allergens" gorm:"column:allergens;size:255;comment:'过敏史'"`
 	Birthday       *time.Time `json:"birthday" gorm:"column:birthday"`
+}
+
+// GenderString 返回性别的字符串表示
+func (u *Patient) GenderString() string {
+	if u.Sex {
+		return "男"
+	}
+	return "女"
 }

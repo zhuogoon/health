@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"health_backend/global"
-	"health_backend/models"
 	"health_backend/models/db"
 	"health_backend/models/response"
 	"net/http"
@@ -14,8 +13,8 @@ import (
 
 type JwtStruct struct {
 	jwt.RegisteredClaims
-	Username string      `json:"username"`
-	Role     models.Role `json:"role"`
+	Username string `json:"username"`
+	//Role     models.Role `json:"role"`
 }
 
 // Jwt 添加jwt
@@ -110,16 +109,16 @@ func JwtParse() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusOK, resp)
 			return
 		}
-		role, err := db.FindRole(claims.Username)
-		if err != nil {
-			resp.Code = http.StatusOK
-			resp.Msg = "你没登录"
-			c.AbortWithStatusJSON(http.StatusOK, resp)
-			return
-		}
-
-		c.Set("role", role)
-		global.Role = role
+		//role, err := db.FindRole(claims.Username)
+		//if err != nil {
+		//	resp.Code = http.StatusOK
+		//	resp.Msg = "你没登录"
+		//	c.AbortWithStatusJSON(http.StatusOK, resp)
+		//	return
+		//}
+		//
+		//c.Set("role", role)
+		//global.Role = role
 		c.Set("userid", id)
 		global.UserId = id
 	}

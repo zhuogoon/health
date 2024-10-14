@@ -15,3 +15,7 @@ type CreatePatient struct {
 	Allergens      string     `json:"allergens"`
 	Birthday       *time.Time `json:"birthday"`
 }
+
+type GetInfoById struct {
+	Id uint `json:"id"`
+}
