@@ -67,7 +67,7 @@ export function NavigationMenuDemo() {
                   </Link>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/docs" title="查看我的预约">
+              <ListItem href="/appointment/list" title="查看我的预约">
                 在这里你可以找到你的所有预约信息
               </ListItem>
               <ListItem href="/appointment" title="就诊预约">

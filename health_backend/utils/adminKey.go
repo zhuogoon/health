@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/rand"
+	"github.com/sirupsen/logrus"
 	"health_backend/global"
 	"math/big"
 	"time"
@@ -38,5 +39,6 @@ func VerifyKey(inputKey string) bool {
 	if err != nil {
 		return false
 	}
+	logrus.Error(err)
 	return storedKey == inputKey
 }

@@ -35,7 +35,12 @@ export default function DoctorLayout({
           </PatientProvider>
         </div>
       </div>
-      <div className="flex-grow bg-zinc-50/50">{children}</div>
+      <div
+        className="flex-grow bg-zinc-50/50"
+        style={{ height: "calc(100vh - 5rem)" }}
+      >
+        {children}
+      </div>
     </div>
   );
 }

@@ -20,14 +20,14 @@ type JwtStruct struct {
 
 // Jwt 添加jwt
 func Jwt(username string) (string, error) {
-	r, err := db.FindRole(username)
-	if err != nil {
-		return "", err
-	}
+	//r, err := db.FindRole(username)
+	//if err != nil {
+	//	return "", err
+	//}
 
 	jwts := &JwtStruct{}
 	jwts.Username = username
-	jwts.Role = r
+	//jwts.Role = r
 	jwts.ExpiresAt = jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7))
 	jwts.IssuedAt = jwt.NewNumericDate(time.Now())
 
