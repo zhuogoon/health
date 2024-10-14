@@ -22,3 +22,15 @@ type PatientInfo struct {
 	Username       string      `json:"username"`
 	Birthday       *time.Time  `json:"birthday"`
 }
+
+type GetInfoByIdResp struct {
+	Phone          string `json:"phone"`
+	Address        string `json:"address"`
+	Height         string `json:"height"`
+	Weight         string `json:"weight"`
+	MedicalHistory string `json:"medical_history"`
+	Allergens      string `json:"allergens"`
+}
+type GetAppointmentInfoByIdResp struct {
+	TimeId int64 `json:"time_id"`
+}

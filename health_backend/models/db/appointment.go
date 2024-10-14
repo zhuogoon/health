@@ -3,20 +3,12 @@ package db
 import (
 	"health_backend/global"
 	"health_backend/models"
+	"health_backend/models/response"
 )
 
 // Increase 操作数据库：添加方法
-func Increase(time_id int, patientID uint, doctorID uint) error {
-	aot := &models.Appointment{}
-	aot.TimeID = time_id
-	aot.PatientID = patientID
-	aot.DoctorID = doctorID
-	err := global.DB.Create(&aot).Error
-	if err != nil {
-		return err
-	}
-	return nil
-
+func Increase(appointment *models.Appointment) error {
+	return global.DB.Create(&appointment).Error
 }
 
 // List 获取所有预约
@@ -45,4 +37,13 @@ func Update(id uint, timeID int) error {
 		return err
 	}
 	return nil
+}
+
+// GetAppointmentInfoById 通过id拿到预约信息
+func GetAppointmentInfoById(id uint) ([]response.GetAppointmentInfoByIdResp, error) {
+	var d []response.GetAppointmentInfoByIdResp
+	if err := global.DB.Model(&models.Appointment{}).Select("time_id").Where("patient_id = ?", id).Find(&d).Error; err != nil {
+		return nil, err
+	}
+	return d, nil
 }

@@ -7,7 +7,7 @@ import (
 
 type Patient struct {
 	gorm.Model
-	UserID         uint       `json:"user_id" gorm:"column:user_id;not null"`
+	UserID         uint       `json:"user_id" gorm:"column:user_id;not null;unique_index"`
 	Name           string     `json:"name" gorm:"column:name;size:64;not null"`
 	Height         float32    `json:"height" gorm:"column:height;type:double"`
 	Weight         float32    `json:"weight" gorm:"column:weight;type:double"`
