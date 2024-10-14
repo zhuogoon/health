@@ -1,4 +1,7 @@
 "use client";
+import AppointmentInfoCard from "@/components/ui/AppointmentInfoCard";
+import HomeCalendar from "@/components/ui/HomeCalendar";
+import TodoCaseCard from "@/components/ui/TodoCaseCard";
 import Image from "next/image";
 
 const DocgtorHomePage = () => {
@@ -75,12 +78,35 @@ const DocgtorHomePage = () => {
           </div>
         </div>
       </div>
-      <div className="w-2/3 bg-blue-200 h-full">
-        <div className="h-1/2 w-full bg-slate-200">
-          <div className="h-full w-2/3 bg-green-200"></div>
-          <div className="h-full w-1/3"></div>
+      <div className="w-2/3 h-full flex flex-col gap-4">
+        <div className="h-1/2 w-full flex">
+          <div className="h-full w-2/3 bg-zinc-100 p-4 rounded-xl">
+            <div className="text-xl font-semibold text-teal-400">
+              今日预约患者信息
+            </div>
+            <div className="space-y-3 mt-2 overflow-y-auto custom-scrollbar h-[90%]">
+              <AppointmentInfoCard />
+              <AppointmentInfoCard />
+            </div>
+          </div>
+          <div className="h-full w-1/3 flex justify-center p-4">
+            <HomeCalendar />
+          </div>
         </div>
-        <div className="h-1/2 w-full bg-teal-200"></div>
+        <div className="h-1/2 w-full bg-zinc-100 rounded-xl">
+          <div className="text-xl font-semibold text-teal-400 p-3">
+            待完成病例
+          </div>
+          <div className="h-[260px] w-full grid grid-cols-2 gap-3 overflow-y-auto custom-scrollbar px-4">
+            <TodoCaseCard name="黄志远" age={21} sex="1" date="2024-04-11" />
+            <TodoCaseCard name="黄志远" age={21} sex="1" date="2024-04-11" />
+            <TodoCaseCard name="黄志远" age={21} sex="1" date="2024-04-11" />
+            <TodoCaseCard name="黄志远" age={21} sex="1" date="2024-04-11" />
+            <TodoCaseCard name="黄志远" age={21} sex="1" date="2024-04-11" />
+            <TodoCaseCard name="黄志远" age={21} sex="1" date="2024-04-11" />
+            <TodoCaseCard name="黄志远" age={21} sex="1" date="2024-04-11" />
+          </div>
+        </div>
       </div>
     </div>
   );

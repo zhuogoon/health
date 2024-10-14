@@ -31,7 +31,7 @@ func Log(c *gin.Context) {
 	b := utils.VerifyKey(req.Key)
 	if b == false {
 		resp.Code = 450
-		resp.Msg = "登录码错误"
+		resp.Msg = "sad"
 		c.AbortWithStatusJSON(http.StatusOK, resp)
 		return
 	}
@@ -39,7 +39,7 @@ func Log(c *gin.Context) {
 	jwt, err := middleware.Jwt(req.Username)
 	if err != nil {
 		resp.Code = 450
-		resp.Msg = "登录码错误"
+		resp.Msg = err.Error()
 		c.AbortWithStatusJSON(http.StatusOK, resp)
 		return
 	}

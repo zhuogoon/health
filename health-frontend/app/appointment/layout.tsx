@@ -46,7 +46,7 @@ export default function RootLayout({
         </div>
       </div>
       <div
-        className="flex-grow  bg-zinc-100 dark:bg-zinc-950"
+        className="flex-grow  dark:bg-zinc-950"
         style={{ height: "calc(100vh - 5rem)" }}
       >
         {children}

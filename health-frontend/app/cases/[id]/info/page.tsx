@@ -20,7 +20,7 @@ const CaseInfo = () => {
     <div className="h-screen w-screen bg-zinc-200 flex flex-col">
       <div className="flex justify-between items-center p-3">
         <div>
-          <Link className="text-teal-400 text-lg" href="/home">
+          <Link className="text-teal-400 text-lg" href="/cases/list">
             ◀ 返回病例列表
           </Link>
         </div>
