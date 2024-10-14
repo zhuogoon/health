@@ -31,3 +31,6 @@ type GetInfoByIdResp struct {
 	MedicalHistory string `json:"medical_history"`
 	Allergens      string `json:"allergens"`
 }
+type GetAppointmentInfoByIdResp struct {
+	TimeId int64 `json:"time_id"`
+}
