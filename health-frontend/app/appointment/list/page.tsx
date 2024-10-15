@@ -5,27 +5,70 @@ import { Button } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import Image from "next/image";
 import TypeCombobox from "@/components/ui/TypeCombobox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
+import { get, post } from "@/net";
+import { Appointment } from "../page";
 
 const AppointmentListPage = () => {
+  const [appointment, setAppointment] = useState<Appointment[]>([]);
   const [selectedDate, setSelectedDate] = useState<DateRange | undefined>(
     undefined
   );
 
   const handleDateChange = (date: DateRange | undefined) => {
+    query.from = date?.from?.toISOString() || "";
+    query.to = date?.to?.toISOString() || "";
     setSelectedDate(date);
   };
 
-  const handleSearch = () => {
-    console.log(selectedDate);
+  const query = {
+    from: "",
+    to: "",
+    status: false,
   };
+
+  const getAppointment = async () => {
+    const data = get("/api/appointment/list");
+    setAppointment(await data);
+  };
+
+  const handleSearch = () => {
+    const data = post(`/api/appointment/query`, query);
+    console.log(data);
+  };
+
+  const updateStatus = (newStatus: boolean) => {
+    query.status = newStatus;
+  };
+
+  const getLastestAppointment = () => {
+    const data = get("/api/appointment/latest");
+    console.log(data);
+  };
+
+  const deleteAppointment = (id: string) => {
+    const data = get(`/api/appointment/delete?id=${id}`);
+    console.log(data);
+  };
+
+  const getAppointList = () => {
+    const data = get("/api/appointment/list");
+    console.log(data);
+  };
+
+  useEffect(() => {
+    getLastestAppointment();
+    getAppointList();
+    getAppointment();
+  }, []);
+
   return (
     <div className="bg-slate-100 h-full flex">
       <div className="w-1/3 flex justify-center">
         <div className="w-[90%] flex flex-col items-center bg-blue-200 mt-2 rounded-xl shadow-md">
           <div className="w-[90%] mt-8">
-            <TypeCombobox />
+            <TypeCombobox updateStatus={updateStatus} />
             <div className="flex justify-between items-end">
               <DatePickerWithRange
                 className="w-max-[70%] mt-3"
@@ -83,15 +126,19 @@ const AppointmentListPage = () => {
           我的<span className="text-teal-400 ml-1">预约</span>
         </div>
         <div className="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
-          <AppointmentCard />
-          <AppointmentCard />
-          <AppointmentCard />
-          <AppointmentCard />
-          <AppointmentCard />
-          <AppointmentCard />
-          <AppointmentCard />
-          <AppointmentCard />
-          <AppointmentCard />
+          {appointment.map((appointment) => (
+            <AppointmentCard
+              key={appointment.id}
+              id={appointment.id}
+              doctorName={appointment.doctor_name}
+              doctorImg={appointment.doctor_avatar}
+              date={appointment.date}
+              status={appointment.status}
+              type={appointment.doctor_type}
+              title={appointment.doctor_title}
+              deleteAppointment={deleteAppointment}
+            />
+          ))}
         </div>
       </div>
     </div>

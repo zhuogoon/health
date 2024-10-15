@@ -5,6 +5,8 @@ import Link from "next/link";
 import CheckInfoCard from "@/components/ui/CheckInfoCard";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
+import { get } from "@/net";
+import { log } from "console";
 
 const formatDate = (date: Date) => {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -13,7 +15,13 @@ const formatDate = (date: Date) => {
 const CaseInfo = () => {
   const params = useParams();
   const { id } = params; // 获取动态路由参数
+
+  const getInfo = () => {
+    const data = get("/api/cases/details?case_id=1");
+    console.log(data);
+  };
   useEffect(() => {
+    getInfo();
     console.log("id:", id);
   }, []);
   return (

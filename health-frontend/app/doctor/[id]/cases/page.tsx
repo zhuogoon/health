@@ -1,6 +1,6 @@
 "use client";
 
-import AddCheckCard from "@/components/ui/AddCheckCard";
+import { AddCheckCard } from "@/components/ui/AddCheckCard";
 import { Button } from "@/components/ui/button";
 import CheckInfoCard from "@/components/ui/CheckInfoCard";
 import { Textarea } from "@/components/ui/textarea";

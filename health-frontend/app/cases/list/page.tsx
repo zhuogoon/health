@@ -4,8 +4,9 @@ import CaseCard from "@/components/ui/CaseCard";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
+import { get, post } from "@/net";
 
 const CaseList = () => {
   const [selectedDate, setSelectedDate] = useState<DateRange | undefined>(
@@ -19,6 +20,33 @@ const CaseList = () => {
   const handleSearch = () => {
     console.log(selectedDate);
   };
+
+  const getCaseList = () => {
+    const data = get("/api/cases/list");
+    console.log(data);
+  };
+
+  const getLastestCase = () => {
+    const data = get("/api/cases/latest");
+    console.log(data);
+  };
+
+  const query = {
+    from: null,
+    to: null,
+    title: "",
+  };
+
+  const queryCase = () => {
+    const data = post("/api/cases/query", query);
+    console.log(data);
+  };
+
+  useEffect(() => {
+    // getCaseList();
+    // getLastestCase();
+    queryCase();
+  });
 
   return (
     <div className="bg-slate-100 h-full flex">

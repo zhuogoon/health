@@ -47,7 +47,7 @@ const DocgtorHomePage = () => {
           </div>
         </div>
 
-        <div className="w-full h-[240px] mt-5 p-2 rounded-xl shadow-md bg-zinc-100/90 flex flex-col gap-4">
+        <div className="w-full h-[300px] mt-5 p-2 rounded-xl shadow-md bg-zinc-100/90 flex flex-col gap-4">
           <div className="text-zinc-600 text-lg font-semibold">医疗信息</div>
           <div className="flex h-[40px] gap-3">
             <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">

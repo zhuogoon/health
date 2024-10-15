@@ -25,6 +25,7 @@ import {
 import { format, addDays } from "date-fns";
 import AppointTimeCard from "../ui/AppointTimeCard";
 import { useState } from "react";
+import { post } from "@/net";
 
 interface DoctorInfo {
   id: string;
@@ -32,27 +33,28 @@ interface DoctorInfo {
 }
 
 interface SelectedInfo {
-  doctorId: string | null;
-  timeId: number | null;
+  doctor_id: string | null;
+  time_id: number | null;
   time: string | null;
 }
 
 export function AppointSheet({ id, name }: DoctorInfo) {
   const [selectedVal, setSelectedVal] = useState<number | null>(null);
   const [selectedInfo, setSelectedInfo] = useState<SelectedInfo>({
-    timeId: null,
-    doctorId: id,
+    time_id: null,
+    doctor_id: id,
     time: null,
   });
 
   const submit = () => {
+    const data = post("/api/appointment/increase", selectedInfo);
     console.log(selectedInfo);
     setSelectedVal(null);
   };
 
   const handleSelect = (val: number | null) => {
     setSelectedVal(val);
-    setSelectedInfo((prev) => ({ ...prev, timeId: val }));
+    setSelectedInfo((prev) => ({ ...prev, time_id: val }));
   };
   const handleDateChange = (date: string) => {
     setSelectedVal(null);

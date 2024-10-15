@@ -33,15 +33,14 @@ func CaseList() ([]models.Case, error) {
 	return cases, nil
 }
 
-// CaseIdList 根据id获取病例
-func CaseIdList(id uint) (*models.Case, error) {
+// CaseById 根据id获取病例
+func CaseById(id string) (*models.Case, error) {
 	var cases = &models.Case{}
 	err := global.DB.Where("id = ?", id).Preload("Patient").Preload("Doctor").First(&cases).Error
 	if err != nil {
 		return cases, err
 	}
 	return cases, nil
-
 }
 
 // CaseDelete 3.删除病例

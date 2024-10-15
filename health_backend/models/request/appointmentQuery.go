@@ -1,4 +1,4 @@
-package appointment
+package request
 
 import "time"
 

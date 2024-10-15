@@ -1,4 +1,4 @@
-package cases
+package appointment
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,11 +8,11 @@ import (
 	"net/http"
 )
 
-func GetLatestCaseByUserID(c *gin.Context) {
-	userID := global.UserId
-	resp := response.BaseResponse{}
+func GetLatestAppointmentByPatientID(c *gin.Context) {
+	uid := global.UserId
+	var resp response.BaseResponse
 
-	latestCase, err := db.GetLatestCaseByUserID(userID)
+	appointment, err := db.GetLatestAppointmentByPatientID(uid)
 	if err != nil {
 		resp.Code = 450
 		resp.Msg = "Query failed"
@@ -20,8 +20,8 @@ func GetLatestCaseByUserID(c *gin.Context) {
 		return
 	}
 
-	resp.Code = 200
+	resp.Code = http.StatusOK
 	resp.Msg = "Query successful"
-	resp.Data = latestCase
+	resp.Data = appointment
 	c.AbortWithStatusJSON(http.StatusOK, resp)
 }

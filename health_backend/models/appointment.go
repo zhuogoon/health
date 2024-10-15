@@ -11,4 +11,5 @@ type Appointment struct {
 	Year      string `gorm:"column:year" json:"year"`
 	Month     string `gorm:"column:month" json:"month"`
 	Day       string `gorm:"column:day" json:"day"`
+	Status    bool   `gorm:"column:status" json:"status" default:"false"`
 }

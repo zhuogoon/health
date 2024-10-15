@@ -106,28 +106,37 @@ func GetDoctorJobType() ([]string, error) {
 	return job, nil
 }
 
-func GetDoctorByName(name string) ([]response.DoctorByName, error) {
-	var d []response.DoctorByName
-	if err := global.DB.Model(&models.Doctor{}).Select("name,honor,job_title,job_type,phone").Where("name = ?", name).Find(&d).Error; err != nil {
-		return nil, err
-	}
-	return d, nil
+func GetDoctorByQuery(name, jobType string) ([]response.DoctorCard, error) {
+	var doctors []response.DoctorCard
+	query := global.DB.Table("doctors").
+		Select("doctors.id, doctors.name, doctors.honor, doctors.job_title, doctors.job_type, doctors.phone, users.avatar").
+		Joins("left join users on users.id = doctors.user_id")
 
+	if name != "" {
+		query = query.Where("doctors.name LIKE ?", "%"+name+"%")
+	}
+	if jobType != "" {
+		query = query.Where("doctors.job_type LIKE ?", "%"+jobType+"%")
+	}
+
+	err := query.Find(&doctors).Error
+	return doctors, err
 }
-
-func GetDoctorByJobType(jobType string) ([]response.DoctorByName, error) {
-	var d []response.DoctorByName
-	if err := global.DB.Model(&models.Doctor{}).Select("name,honor,job_title,job_type,phone").Where("job_type = ?", jobType).Find(&d).Error; err != nil {
+func GetLatestCaseByUserID(userID uint) (*models.Case, error) {
+	var patientID uint
+	err := global.DB.Table("patients").Select("id").Where("user_id = ?", userID).Scan(&patientID).Error
+	if err != nil {
 		return nil, err
 	}
-	return d, nil
 
-}
-
-func GetByNameJobType(name, jobType string) ([]response.DoctorByName, error) {
-	var d []response.DoctorByName
-	if err := global.DB.Model(&models.Doctor{}).Select("name,honor,job_title,job_type,phone").Where("name = ? AND job_type = ?", name, jobType).Find(&d).Error; err != nil {
+	var latestCase models.Case
+	err = global.DB.Table("cases").
+		Where("patient_id = ?", patientID).
+		Order("created_at DESC").
+		Limit(1).
+		Scan(&latestCase).Error
+	if err != nil {
 		return nil, err
 	}
-	return d, nil
+	return &latestCase, nil
 }
