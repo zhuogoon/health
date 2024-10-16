@@ -94,6 +94,7 @@ const AppointmentPage = () => {
                   doctor_name: e.target.value,
                 }))
               } // 在输入框变化时更新 query.doctor_name
+
             />
             <div className="h-20 mt-3 m-10 flex w-[90%] justify-between">
               <DoctorCombobox query={query} setQuery={setQuery} />
@@ -120,6 +121,7 @@ const AppointmentPage = () => {
           </div>
         </div>
         <div className="w-1/4 bg-gradient-to-r from-teal-500 to-green-300 flex flex-col rounded-lg shadow-lg">
+
           <h1 className="text-2xl font-bold text-left w-[90%] mb-2 mt-4 text-zinc-50 ml-4">
             我的预约
             <div className="mb-4 text-sm text-zinc-100 font-normal mt-2">
@@ -141,6 +143,7 @@ const AppointmentPage = () => {
                 deleteAppointment={deleteAppointment}
               />
             ))}
+
           </div>
         </div>
       </div>
