@@ -57,6 +57,7 @@ const AppointmentCard = ({
           <div className="font-mono max-w-[100px]">
             {date ? date : "2000-01-01"}
           </div>
+
         </div>
       </div>
       <div className="flex justify-between items-end">

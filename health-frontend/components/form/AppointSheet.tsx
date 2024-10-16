@@ -28,6 +28,7 @@ import { useEffect, useState } from "react";
 import { post } from "@/net";
 import { useRouter } from "next/navigation";
 
+
 interface DoctorInfo {
   id: string;
   name: string;
@@ -87,6 +88,7 @@ export function AppointSheet({ id, name }: DoctorInfo) {
     } catch (error) {
       console.error("Error submitting appointment:", error);
     }
+
   };
 
   const handleSelect = (val: number | null) => {
@@ -99,6 +101,7 @@ export function AppointSheet({ id, name }: DoctorInfo) {
   useEffect(() => {
     console.log(appointmentTime);
   }, [appointmentTime]);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -150,6 +153,7 @@ export function AppointSheet({ id, name }: DoctorInfo) {
                 isSelected={selectedVal === time.val}
               />
             ))}
+
           </div>
         </div>
         <SheetFooter>
