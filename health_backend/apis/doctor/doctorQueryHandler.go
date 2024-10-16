@@ -8,11 +8,11 @@ import (
 	"net/http"
 )
 
-func GetDoctorByName(c *gin.Context) {
-	req := &request.GetByName{}
+func GetDoctorByQuery(c *gin.Context) {
+	req := &request.DoctorQuery{}
 	resp := &response.BaseResponse{}
 
-	err := c.ShouldBindBodyWithJSON(&req)
+	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		resp.Code = 450
 		resp.Msg = "参数错误"
@@ -20,17 +20,16 @@ func GetDoctorByName(c *gin.Context) {
 		return
 	}
 
-	d, err := db.GetDoctorByName(req.Name)
+	doctors, err := db.GetDoctorByQuery(req.DoctorName, req.DoctorType)
 	if err != nil {
 		resp.Code = 450
-		resp.Msg = "无"
+		resp.Msg = "查询失败"
 		c.AbortWithStatusJSON(http.StatusOK, resp)
 		return
 	}
 
 	resp.Code = http.StatusOK
-	resp.Msg = "获取成功"
-	resp.Data = d
+	resp.Msg = "查询成功"
+	resp.Data = doctors
 	c.AbortWithStatusJSON(http.StatusOK, resp)
-	return
 }

@@ -40,6 +40,7 @@
     "tailwind-animation": "^0.0.1-alpha.2",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

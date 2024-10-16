@@ -10,6 +10,7 @@ interface AppointmentCardProps {
   status: boolean;
   type: string;
   title: string;
+  deleteAppointment: (id: string) => void;
 }
 
 const AppointmentCard = ({
@@ -20,6 +21,7 @@ const AppointmentCard = ({
   status,
   type,
   title,
+  deleteAppointment,
 }: AppointmentCardProps) => {
   return (
     <div className=" bg-zinc-50 p-2 rounded-xl shadow">
@@ -36,7 +38,7 @@ const AppointmentCard = ({
           </div>
           <div className="text-lg">{doctorName}</div>
         </div>
-        <div className="flex gap-2 items-end text-sm text-zinc-600">
+        <div className="flex gap-2 items-center text-sm text-zinc-600 justify-end">
           <div className="flex gap-1 items-center text-zinc-600">
             <div
               className={`${
@@ -52,7 +54,10 @@ const AppointmentCard = ({
             alt="doctor"
             className="w-5 h-5"
           />
-          <div className="font-mono">{date ? date : "2000-01-01"}</div>
+          <div className="font-mono max-w-[100px]">
+            {date ? date : "2000-01-01"}
+          </div>
+
         </div>
       </div>
       <div className="flex justify-between items-end">
@@ -62,7 +67,7 @@ const AppointmentCard = ({
         </div>
         <div
           onClick={() => {
-            console.log(id);
+            deleteAppointment(id);
           }}
           className="text-teal-400 cursor-pointer hover:text-teal-500"
         >

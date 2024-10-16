@@ -21,22 +21,29 @@ import {
 
 const frameworks = [
   {
-    value: "已完成",
+    value: true,
     label: "已完成",
   },
   {
-    value: "未完成",
+    value: false,
     label: "未完成",
-  },
-  {
-    value: "已取消",
-    label: "已取消",
   },
 ];
 
-export function TypeCombobox() {
+interface TypeComboboxProps {
+  updateStatus: (newStatus: number) => void;
+}
+
+const TypeCombobox: React.FC<TypeComboboxProps> = ({ updateStatus }) => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState<boolean | null>(null);
+
+  const handleSelect = (frameworkValue: boolean) => {
+    const newValue = frameworkValue === value ? null : frameworkValue;
+    setValue(newValue);
+    setOpen(false);
+    updateStatus(newValue !== null ? Number(newValue) : 1);
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -47,7 +54,7 @@ export function TypeCombobox() {
           aria-expanded={open}
           className="w-full justify-between text-zinc-500"
         >
-          {value
+          {value !== null
             ? frameworks.find((framework) => framework.value === value)?.label
             : "选择状态筛选..."}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -61,12 +68,9 @@ export function TypeCombobox() {
             <CommandGroup>
               {frameworks.map((framework) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
+                  key={framework.label}
+                  value={framework.value.toString()}
+                  onSelect={() => handleSelect(framework.value)}
                 >
                   {framework.label}
                   <CheckIcon
@@ -83,6 +87,6 @@ export function TypeCombobox() {
       </PopoverContent>
     </Popover>
   );
-}
+};
 
 export default TypeCombobox;

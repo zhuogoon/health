@@ -39,7 +39,11 @@ const CheckInfoCard = ({
           />
         </div>
         <div className="flex justify-between space-x-2 items-center relative -top-10">
-          <span className="h-2 w-2 rounded-full bg-green-400"></span>
+          <span
+            className={`h-2 w-2 rounded-full ${
+              status === "未检查" ? "bg-red-500" : "bg-green-400"
+            }`}
+          ></span>
           <span>{status}</span>
         </div>
       </div>

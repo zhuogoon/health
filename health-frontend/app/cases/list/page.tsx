@@ -4,21 +4,61 @@ import CaseCard from "@/components/ui/CaseCard";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
+import { get, post } from "@/net";
+
+interface Case {
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string;
+  ID: string;
+  check_id: string;
+  content: string;
+  doctor_id: string;
+  patient_id: string;
+  status: boolean;
+  title: string;
+}
 
 const CaseList = () => {
+  const [caseList, setCaseList] = useState<Case[]>([]);
+  const [LatestCase, setLatestCase] = useState<Case>();
   const [selectedDate, setSelectedDate] = useState<DateRange | undefined>(
     undefined
   );
 
   const handleDateChange = (date: DateRange | undefined) => {
+    query.from = date?.from ?? null;
+    query.to = date?.to ?? null;
     setSelectedDate(date);
   };
 
   const handleSearch = () => {
-    console.log(selectedDate);
+    queryCase();
+    console.log(query);
   };
+
+  const getLastestCase = async () => {
+    const data = await get("/api/cases/latest");
+    setLatestCase(data);
+  };
+
+  const query: { from: Date | null; to: Date | null; title: string } = {
+    from: null,
+    to: null,
+    title: "",
+  };
+
+  const queryCase = async () => {
+    const data = await post("/api/cases/query", query);
+    setCaseList(data);
+  };
+
+  useEffect(() => {
+    getLastestCase();
+    queryCase();
+  }, []);
 
   return (
     <div className="bg-slate-100 h-full flex">
@@ -28,6 +68,9 @@ const CaseList = () => {
             <Input
               className="h-12 bg-slate-50 rounded-lg"
               placeholder="搜索..."
+              onChange={(e) =>
+                (query.title = (e.target as HTMLInputElement).value)
+              }
             />
             <div className="flex justify-between items-end">
               <DatePickerWithRange
@@ -42,22 +85,32 @@ const CaseList = () => {
               <div className="text-teal-400 text-xl font-semibold flex justify-between">
                 <span>上次就诊结果</span>
                 <span className="flex gap-2 items-center">
-                  <div className="h-2 w-2 bg-green-400 rounded-full"></div>
-                  <span className="text-zinc-500 text-sm">已出结果</span>
+                  <div
+                    className={`h-2 w-2 ${
+                      LatestCase?.status ? "bg-green-400" : "bg-red-500"
+                    } rounded-full`}
+                  ></div>
+                  <span className="text-zinc-500 text-sm">
+                    {LatestCase?.status ? "已出结果" : "未出结果"}
+                  </span>
                 </span>
               </div>
-              <div className="mt-3 text-xl">感冒</div>
-              <div className="mt-4">
+              {LatestCase?.status && (
                 <div>
-                  <span className="text-lg">医嘱:</span>
+                  <div className="mt-3 text-xl">{LatestCase?.title}</div>
+                  <div className="mt-4">
+                    <div>
+                      <span className="text-lg">医嘱:</span>
+                    </div>
+                    <div className="line-clamp-3 text-justify underline underline-offset-4 indent-8">
+                      {LatestCase?.content}
+                    </div>
+                  </div>
                 </div>
-                <div className="line-clamp-3 text-justify underline underline-offset-4 indent-8">
-                  的急啊离开五角大楼文件的兰卡威大家为了扩大急啊离开我的就的垃圾狄拉克我到家了大家为了肯德基暗恋我
-                </div>
-              </div>
+              )}
             </div>
             <div className="text-right font-mono text-sm text-zinc-500 mt-1">
-              更新于 2024-04-11
+              更新于 {LatestCase?.UpdatedAt}
             </div>
           </div>
 
@@ -76,36 +129,15 @@ const CaseList = () => {
         <div className="text-3xl font-semibold pt-5 pl-1">
           我的<span className="text-teal-400 ml-1">病例单</span>
         </div>
-        <CaseCard
-          cid="1"
-          name="感冒"
-          date="2024-04-11"
-          doctor_say="的瓦赫空间打开今晚的骄傲会玩空间的哈健康网大家安静和我打完打开居委会大王带个无敌概括的大卫杜"
-        />
-        <CaseCard
-          cid="1"
-          name="感冒"
-          date="2024-04-11"
-          doctor_say="的瓦赫空间打开今晚的骄傲会玩空间的哈健康网大家安静和我打完打开居委会大王带个无敌概括的大卫杜"
-        />
-        <CaseCard
-          cid="1"
-          name="感冒"
-          date="2024-04-11"
-          doctor_say="的瓦赫空间打开今晚的骄傲会玩空间的哈健康网大家安静和我打完打开居委会大王带个无敌概括的大卫杜"
-        />
-        <CaseCard
-          cid="1"
-          name="感冒"
-          date="2024-04-11"
-          doctor_say="的瓦赫空间打开今晚的骄傲会玩空间的哈健康网大家安静和我打完打开居委会大王带个无敌概括的大卫杜"
-        />
-        <CaseCard
-          cid="1"
-          name="感冒"
-          date="2024-04-11"
-          doctor_say="的瓦赫空间打开今晚的骄傲会玩空间的哈健康网大家安静和我打完打开居委会大王带个无敌概括的大卫杜"
-        />
+        {caseList.map((c) => (
+          <CaseCard
+            key={c.ID}
+            cid={c.ID}
+            name={c.title}
+            date={c.CreatedAt}
+            doctor_say={c.content}
+          />
+        ))}
       </div>
     </div>
   );

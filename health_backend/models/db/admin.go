@@ -31,9 +31,12 @@ func GetCount() (*response.GetCount, error) {
 	return count, nil
 }
 
-func DoctorInfo() ([]response.DoctorInfo, error) {
-	var d []response.DoctorInfo
-	err := global.DB.Model(&models.Doctor{}).Select("id,name,honor,job_title,job_type,phone").Find(&d).Error
+func DoctorInfo() ([]response.DoctorCard, error) {
+	var d []response.DoctorCard
+	err := global.DB.Table("doctors").
+		Select("doctors.id, doctors.name, doctors.honor, doctors.job_title, doctors.job_type, doctors.phone, users.avatar").
+		Joins("left join users on users.id = doctors.user_id").
+		Find(&d).Error
 	return d, err
 }
 

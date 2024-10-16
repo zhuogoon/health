@@ -3,22 +3,14 @@ package cases
 import (
 	"github.com/gin-gonic/gin"
 	"health_backend/models/db"
-	"health_backend/models/request"
 	"health_backend/models/response"
 	"net/http"
 )
 
 func CaseIdList(c *gin.Context) {
-	id := &request.CaseDeleteTimeId{}
+	id := c.Query("id")
 	resp := &response.BaseResponse{}
-	err := c.ShouldBindBodyWithJSON(id)
-	if err != nil {
-		resp.Code = 450
-		resp.Msg = "失败"
-		c.AbortWithStatusJSON(http.StatusOK, resp)
-		return
-	}
-	list, err := db.CaseIdList(id.Id)
+	list, err := db.CaseById(id)
 	if err != nil {
 		resp.Code = 450
 		resp.Msg = "失败"
