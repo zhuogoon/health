@@ -19,14 +19,13 @@ export interface Appointment {
   time_id: number;
 }
 
+export interface Doctor {
+  id: string;
+  name: string;
+  job_type: string;
+  job_title: string;
+}
 const AppointmentPage = () => {
-  interface Doctor {
-    id: string;
-    name: string;
-    job_type: string;
-    job_title: string;
-  }
-
   const [doctorList, setDoctorList] = useState<Doctor[]>([]);
   const [appointment, setAppointment] = useState<Appointment[]>([]);
   const [query, setQuery] = useState({
@@ -128,19 +127,23 @@ const AppointmentPage = () => {
           </h1>
 
           <div className="flex-grow w-full bg-zinc-100 rounded-lg overflow-y-auto custom-scrollbar p-4 flex flex-col gap-2">
-            {appointment.map((appointment) => (
-              <AppointmentCard
-                key={appointment.id}
-                id={appointment.id}
-                doctorName={appointment.doctor_name}
-                doctorImg={appointment.doctor_avatar}
-                date={appointment.date}
-                status={appointment.status}
-                type={appointment.doctor_type}
-                title={appointment.doctor_title}
-                deleteAppointment={deleteAppointment}
-              />
-            ))}
+            {appointment ? (
+              appointment.map((appointment) => (
+                <AppointmentCard
+                  key={appointment.id}
+                  id={appointment.id}
+                  doctorName={appointment.doctor_name}
+                  doctorImg={appointment.doctor_avatar}
+                  date={appointment.date}
+                  status={appointment.status}
+                  type={appointment.doctor_type}
+                  title={appointment.doctor_title}
+                  deleteAppointment={deleteAppointment}
+                />
+              ))
+            ) : (
+              <>当前还没有预约哦</>
+            )}
           </div>
         </div>
       </div>

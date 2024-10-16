@@ -15,4 +15,5 @@ func Appointment(r *gin.RouterGroup) {
 	r.GET("latest", appointment.GetLatestAppointmentByPatientID)
 	r.POST("choose", appointment.GetAppointmentsByDoctorID)
 	r.GET("nonfinished", appointment.NonFinishedList)
+	r.GET("sum", appointment.CountAppointmentsIncludingDeleted)
 }

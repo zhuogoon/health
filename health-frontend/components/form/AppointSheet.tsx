@@ -26,6 +26,7 @@ import { format, addDays } from "date-fns";
 import AppointTimeCard from "../ui/AppointTimeCard";
 import { useEffect, useState } from "react";
 import { post } from "@/net";
+import { useRouter } from "next/navigation";
 
 interface DoctorInfo {
   id: string;
@@ -57,6 +58,7 @@ export function AppointSheet({ id, name }: DoctorInfo) {
     doctor_id: doctor_id,
     date: selectedDate,
   };
+  const Router = useRouter();
 
   const getAppointment = async () => {
     try {
@@ -81,6 +83,7 @@ export function AppointSheet({ id, name }: DoctorInfo) {
       console.log(data);
       setSelectedVal(null);
       setAppointmentTime([]);
+      Router.push("/patient/1/new-appointment/success");
     } catch (error) {
       console.error("Error submitting appointment:", error);
     }

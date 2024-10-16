@@ -118,6 +118,7 @@ func GetLatestAppointmentByPatientID(uid uint) (*response.LastAppointment, error
 		return nil, err
 	}
 	logrus.Info(userID)
+
 	var latestAppointment response.LastAppointment
 	err = global.DB.Table("appointments").
 		Select(`doctors.name as doctor_name, doctors.job_type as doctor_type, users.avatar as doctor_img, appointments.updated_at as update_time, appointments.year, appointments.month, appointments.day, appointments.time_id`).
@@ -130,6 +131,12 @@ func GetLatestAppointmentByPatientID(uid uint) (*response.LastAppointment, error
 	if err != nil {
 		return nil, err
 	}
+
+	// Check if no appointment was found
+	if latestAppointment.Year == 0 && latestAppointment.Month == 0 && latestAppointment.Day == 0 {
+		return nil, nil
+	}
+
 	// Construct the date string based on year, month, day, and time_id
 	latestAppointment.Date = constructDate(
 		latestAppointment.Year,

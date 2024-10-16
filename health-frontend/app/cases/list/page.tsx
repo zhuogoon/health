@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { get, post } from "@/net";
+import { late } from "zod";
 
-interface Case {
+export interface Case {
   CreatedAt: string;
   UpdatedAt: string;
   DeletedAt: string;
@@ -84,16 +85,22 @@ const CaseList = () => {
             <div className="p-4 bg-zinc-100 rounded-lg mt-6 shadow">
               <div className="text-teal-400 text-xl font-semibold flex justify-between">
                 <span>上次就诊结果</span>
-                <span className="flex gap-2 items-center">
-                  <div
-                    className={`h-2 w-2 ${
-                      LatestCase?.status ? "bg-green-400" : "bg-red-500"
-                    } rounded-full`}
-                  ></div>
-                  <span className="text-zinc-500 text-sm">
-                    {LatestCase?.status ? "已出结果" : "未出结果"}
+                {LatestCase?.status ? (
+                  <span className="flex gap-2 items-center">
+                    <div
+                      className={`h-2 w-2 ${
+                        LatestCase?.status ? "bg-green-400" : "bg-red-500"
+                      } rounded-full`}
+                    ></div>
+                    <span className="text-zinc-500 text-sm">
+                      {LatestCase?.status ? "已出结果" : "未出结果"}
+                    </span>
                   </span>
-                </span>
+                ) : (
+                  <div className="text-sm text-zinc-600 font-medium">
+                    暂无病例记录哦
+                  </div>
+                )}
               </div>
               {LatestCase?.status && (
                 <div>
@@ -109,9 +116,11 @@ const CaseList = () => {
                 </div>
               )}
             </div>
-            <div className="text-right font-mono text-sm text-zinc-500 mt-1">
-              更新于 {LatestCase?.UpdatedAt}
-            </div>
+            {LatestCase && (
+              <div className="text-right font-mono text-sm text-zinc-500 mt-1">
+                更新于 {LatestCase?.UpdatedAt}
+              </div>
+            )}
           </div>
 
           <div className="bg-zinc-50 shadow-sm w-[90%] rounded-lg flex-grow p-4 mt-3">
@@ -129,15 +138,19 @@ const CaseList = () => {
         <div className="text-3xl font-semibold pt-5 pl-1">
           我的<span className="text-teal-400 ml-1">病例单</span>
         </div>
-        {caseList.map((c) => (
-          <CaseCard
-            key={c.ID}
-            cid={c.ID}
-            name={c.title}
-            date={c.CreatedAt}
-            doctor_say={c.content}
-          />
-        ))}
+        {caseList.length > 0 ? (
+          caseList.map((c) => (
+            <CaseCard
+              key={c.ID}
+              cid={c.ID}
+              name={c.title}
+              date={c.CreatedAt}
+              doctor_say={c.content}
+            />
+          ))
+        ) : (
+          <div className="m-2 text-zinc-600">目前还没有病例信息哦</div>
+        )}
       </div>
     </div>
   );

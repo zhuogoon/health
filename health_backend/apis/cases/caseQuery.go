@@ -10,14 +10,21 @@ import (
 )
 
 func QueryCases(c *gin.Context) {
+	UserID := global.UserId
 	var caseQuery request.CaseQuery
 	if err := c.ShouldBindJSON(&caseQuery); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	var patientID uint
+	if err := global.DB.Table("patients").Select("id").Where("user_id = ?", UserID).Scan(&patientID).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve patient ID"})
+		return
+	}
+
 	var cases []models.Case
-	query := global.DB.Table("cases")
+	query := global.DB.Table("cases").Where("patient_id = ?", patientID)
 
 	if !caseQuery.From.IsZero() {
 		query = query.Where("created_at >= ?", caseQuery.From)
