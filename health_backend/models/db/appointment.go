@@ -15,14 +15,14 @@ func Increase(appointment *models.Appointment) error {
 }
 
 // List 获取所有预约
-func List() ([]response.AppointmentCard, error) {
+func List(userID uint) ([]response.AppointmentCard, error) {
 	var appointmentCards []response.AppointmentCard
 	err := global.DB.Table("appointments").
 		Select(`appointments.id, doctors.name as doctor_name, doctors.job_title as doctor_title, doctors.job_type as doctor_type, 
         users.avatar as doctor_avatar, appointments.year, appointments.month, appointments.day, appointments.time_id, appointments.status`).
 		Joins("left join doctors on doctors.id = appointments.doctor_id").
 		Joins("left join users on users.id = doctors.user_id").
-		Where("appointments.deleted_at IS NULL").
+		Where("appointments.deleted_at IS NULL AND appointments.patient_id = ?", userID).
 		Scan(&appointmentCards).Error
 	if err != nil {
 		return nil, err
@@ -64,14 +64,20 @@ func GetAppointmentInfoById(id uint) ([]response.GetAppointmentInfoByIdResp, err
 	return d, nil
 }
 
-func QueryAppointments(from, to time.Time) ([]response.AppointmentCard, error) {
+func QueryAppointments(userID uint, from, to time.Time, status uint) ([]response.AppointmentCard, error) {
+	var patientID uint
+	err := global.DB.Table("patients").Select("id").Where("user_id = ?", userID).Scan(&patientID).Error
+	if err != nil {
+		return nil, err
+	}
+
 	var appointmentCards []response.AppointmentCard
-	err := global.DB.Table("appointments").
+	err = global.DB.Table("appointments").
 		Select(`appointments.id, doctors.name as doctor_name, doctors.job_title as doctor_title, doctors.job_type as doctor_type,
 			users.avatar as doctor_avatar, appointments.year, appointments.month, appointments.day, appointments.time_id, appointments.status`).
 		Joins("left join doctors on doctors.id = appointments.doctor_id").
 		Joins("left join users on users.id = doctors.user_id").
-		Where("appointments.created_at BETWEEN ? AND ?", from, to).
+		Where("appointments.created_at BETWEEN ? AND ? AND appointments.deleted_at IS NULL AND appointments.patient_id = ? AND appointments.status = ?", from, to, patientID, status).
 		Scan(&appointmentCards).Error
 	if err != nil {
 		return nil, err

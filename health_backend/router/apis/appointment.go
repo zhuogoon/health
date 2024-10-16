@@ -13,4 +13,6 @@ func Appointment(r *gin.RouterGroup) {
 	r.POST("getinfobyid", appointment.GetInfoByID)
 	r.POST("query", appointment.QueryAppointments)
 	r.GET("latest", appointment.GetLatestAppointmentByPatientID)
+	r.POST("choose", appointment.GetAppointmentsByDoctorID)
+	r.GET("nonfinished", appointment.NonFinishedList)
 }

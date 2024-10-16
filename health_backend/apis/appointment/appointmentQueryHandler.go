@@ -2,6 +2,7 @@ package appointment
 
 import (
 	"github.com/gin-gonic/gin"
+	"health_backend/global"
 	"health_backend/models/db"
 	"health_backend/models/request"
 	"health_backend/models/response"
@@ -19,7 +20,7 @@ func QueryAppointments(c *gin.Context) {
 		return
 	}
 
-	appointments, err := db.QueryAppointments(req.From, req.To)
+	appointments, err := db.QueryAppointments(global.UserId, req.From, req.To, req.Status)
 	if err != nil {
 		resp.Code = 450
 		resp.Msg = "Query failed"

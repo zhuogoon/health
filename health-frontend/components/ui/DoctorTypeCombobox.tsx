@@ -37,54 +37,40 @@ const frameworks = [
     label: "泌尿科",
   },
   {
-    value: "男科",
-    label: "男科",
-  },
-  {
-    value: "next.js",
-    label: "心内科",
-  },
-  {
-    value: "sveltekit",
-    label: "介入科",
-  },
-  {
-    value: "nuxt.js",
-    label: "肛肠科",
-  },
-  {
-    value: "remix",
-    label: "泌尿科",
-  },
-  {
-    value: "astro",
-    label: "男科",
-  },
-  {
-    value: "next.js",
-    label: "心内科",
-  },
-  {
-    value: "sveltekit",
-    label: "介入科",
-  },
-  {
-    value: "nuxt.js",
-    label: "肛肠科",
-  },
-  {
-    value: "remix",
-    label: "泌尿科",
-  },
-  {
-    value: "astro",
-    label: "男科",
+    value: "内科",
+    label: "内科",
   },
 ];
 
-export function DoctorCombobox() {
+interface DoctorComboboxProps {
+  query: {
+    doctor_name: string;
+
+    doctor_type: string;
+  };
+
+  setQuery: React.Dispatch<
+    React.SetStateAction<{
+      doctor_name: string;
+
+      doctor_type: string;
+    }>
+  >;
+}
+
+const DoctorCombobox: React.FC<DoctorComboboxProps> = ({ query, setQuery }) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+
+  const handleTypeChange = (currentValue: string) => {
+    const newValue = currentValue === value ? "" : currentValue;
+    setValue(newValue);
+    setQuery((prevQuery: any) => ({
+      ...prevQuery,
+      doctor_type: newValue,
+    }));
+    setOpen(false);
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -103,18 +89,15 @@ export function DoctorCombobox() {
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
+          <CommandInput placeholder="搜索科室..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>未找到科室.</CommandEmpty>
             <CommandGroup>
               {frameworks.map((framework) => (
                 <CommandItem
                   key={framework.value}
                   value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
+                  onSelect={handleTypeChange}
                 >
                   {framework.label}
                   <CheckIcon
@@ -131,6 +114,6 @@ export function DoctorCombobox() {
       </PopoverContent>
     </Popover>
   );
-}
+};
 
 export default DoctorCombobox;

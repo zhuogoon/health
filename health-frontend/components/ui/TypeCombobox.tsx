@@ -31,7 +31,7 @@ const frameworks = [
 ];
 
 interface TypeComboboxProps {
-  updateStatus: (newStatus: boolean) => void;
+  updateStatus: (newStatus: number) => void;
 }
 
 const TypeCombobox: React.FC<TypeComboboxProps> = ({ updateStatus }) => {
@@ -42,7 +42,7 @@ const TypeCombobox: React.FC<TypeComboboxProps> = ({ updateStatus }) => {
     const newValue = frameworkValue === value ? null : frameworkValue;
     setValue(newValue);
     setOpen(false);
-    updateStatus(newValue !== null ? newValue : false);
+    updateStatus(newValue !== null ? Number(newValue) : 1);
   };
 
   return (

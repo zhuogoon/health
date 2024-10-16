@@ -15,6 +15,9 @@ const AppointmentListPage = () => {
   const [selectedDate, setSelectedDate] = useState<DateRange | undefined>(
     undefined
   );
+  const [latestAppointment, setLatestAppointment] = useState<
+    Appointment | undefined
+  >(undefined);
 
   const handleDateChange = (date: DateRange | undefined) => {
     query.from = date?.from?.toISOString() || "";
@@ -25,7 +28,7 @@ const AppointmentListPage = () => {
   const query = {
     from: "",
     to: "",
-    status: false,
+    status: 0,
   };
 
   const getAppointment = async () => {
@@ -33,18 +36,20 @@ const AppointmentListPage = () => {
     setAppointment(await data);
   };
 
-  const handleSearch = () => {
-    const data = post(`/api/appointment/query`, query);
+  const handleSearch = async () => {
+    const data = await post(`/api/appointment/query`, query);
+    setAppointment(data);
     console.log(data);
   };
 
-  const updateStatus = (newStatus: boolean) => {
+  const updateStatus = (newStatus: number) => {
     query.status = newStatus;
+    console.log(query);
   };
 
-  const getLastestAppointment = () => {
-    const data = get("/api/appointment/latest");
-    console.log(data);
+  const getLastestAppointment = async () => {
+    const data = await get("/api/appointment/latest");
+    setLatestAppointment(data);
   };
 
   const deleteAppointment = (id: string) => {
@@ -52,14 +57,8 @@ const AppointmentListPage = () => {
     console.log(data);
   };
 
-  const getAppointList = () => {
-    const data = get("/api/appointment/list");
-    console.log(data);
-  };
-
   useEffect(() => {
     getLastestAppointment();
-    getAppointList();
     getAppointment();
   }, []);
 
@@ -85,7 +84,7 @@ const AppointmentListPage = () => {
                     近期预约
                   </span>
                   <span className="text-zinc-400 text-sm">
-                    2024-04-11 10:00-11:00
+                    {latestAppointment?.date}
                   </span>
                 </div>
                 <div className="flex items-center mt-2 justify-between">
@@ -98,15 +97,17 @@ const AppointmentListPage = () => {
                       alt="doctor"
                     />
                     <div className="text-zinc-600 font-semibold dark:text-zinc-300">
-                      李卓
+                      {latestAppointment?.doctor_name}
                     </div>
                   </div>
-                  <div className="dark:text-zinc-200 text-zinc-600">消化科</div>
+                  <div className="dark:text-zinc-200 text-zinc-600">
+                    {latestAppointment?.doctor_type}
+                  </div>
                 </div>
               </div>
             </div>
             <div className="text-right font-mono text-sm text-zinc-500 mt-1">
-              更新于 2024-04-11
+              更新于 {latestAppointment?.date}
             </div>
           </div>
 
@@ -126,19 +127,21 @@ const AppointmentListPage = () => {
           我的<span className="text-teal-400 ml-1">预约</span>
         </div>
         <div className="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
-          {appointment.map((appointment) => (
-            <AppointmentCard
-              key={appointment.id}
-              id={appointment.id}
-              doctorName={appointment.doctor_name}
-              doctorImg={appointment.doctor_avatar}
-              date={appointment.date}
-              status={appointment.status}
-              type={appointment.doctor_type}
-              title={appointment.doctor_title}
-              deleteAppointment={deleteAppointment}
-            />
-          ))}
+          {appointment
+            ? appointment.map((appointment) => (
+                <AppointmentCard
+                  key={appointment.id}
+                  id={appointment.id}
+                  doctorName={appointment.doctor_name}
+                  doctorImg={appointment.doctor_avatar}
+                  date={appointment.date}
+                  status={appointment.status}
+                  type={appointment.doctor_type}
+                  title={appointment.doctor_title}
+                  deleteAppointment={deleteAppointment}
+                />
+              ))
+            : ""}
         </div>
       </div>
     </div>

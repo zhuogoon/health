@@ -29,6 +29,10 @@ const AppointmentPage = () => {
 
   const [doctorList, setDoctorList] = useState<Doctor[]>([]);
   const [appointment, setAppointment] = useState<Appointment[]>([]);
+  const [query, setQuery] = useState({
+    doctor_name: "",
+    doctor_type: "",
+  });
 
   const getDoctor = async () => {
     try {
@@ -41,21 +45,17 @@ const AppointmentPage = () => {
 
   const getAppointment = async () => {
     try {
-      const data = await get("/api/appointment/list");
+      const data = await get("/api/appointment/nonfinished");
       setAppointment(data);
     } catch (error) {
       console.error("Failed to fetch appointments:", error);
     }
   };
 
-  const query = {
-    doctor_name: "",
-    doctor_type: "",
-  };
-
   const getDoctorByQuery = async () => {
     try {
       const data = await post(`/api/doctor/query`, query);
+      setDoctorList(data);
       console.log(data);
     } catch (error) {
       console.error("Failed to fetch doctors by query:", error);
@@ -87,9 +87,16 @@ const AppointmentPage = () => {
             <Input
               placeholder="搜索医生姓名..."
               className="bg-zinc-50 h-16 w-[90%]"
+              value={query.doctor_name} // 绑定输入框的值到 query.doctor_name
+              onChange={(e) =>
+                setQuery((prevQuery) => ({
+                  ...prevQuery,
+                  doctor_name: e.target.value,
+                }))
+              } // 在输入框变化时更新 query.doctor_name
             />
             <div className="h-20 mt-3 m-10 flex w-[90%] justify-between">
-              <DoctorCombobox />
+              <DoctorCombobox query={query} setQuery={setQuery} />
               <Button
                 className="bg-teal-400 w-20 hover:bg-teal-500"
                 onClick={getDoctorByQuery}

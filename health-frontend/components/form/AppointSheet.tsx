@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { format, addDays } from "date-fns";
 import AppointTimeCard from "../ui/AppointTimeCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { post } from "@/net";
 
 interface DoctorInfo {
@@ -38,6 +38,11 @@ interface SelectedInfo {
   time: string | null;
 }
 
+interface AppointmentTime {
+  val: number;
+  status: number;
+}
+
 export function AppointSheet({ id, name }: DoctorInfo) {
   const [selectedVal, setSelectedVal] = useState<number | null>(null);
   const [selectedInfo, setSelectedInfo] = useState<SelectedInfo>({
@@ -45,22 +50,52 @@ export function AppointSheet({ id, name }: DoctorInfo) {
     doctor_id: id,
     time: null,
   });
+  const [appointmentTime, setAppointmentTime] = useState<AppointmentTime[]>([]);
+  const [selectedDate, setSelectedDate] = useState("");
+  const doctor_id = id.toString();
+  const chooseProp = {
+    doctor_id: doctor_id,
+    date: selectedDate,
+  };
 
-  const submit = () => {
-    const data = post("/api/appointment/increase", selectedInfo);
-    console.log(selectedInfo);
-    setSelectedVal(null);
+  const getAppointment = async () => {
+    try {
+      const data = await post("/api/appointment/choose", chooseProp);
+      setAppointmentTime(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching appointment:", error);
+    }
+  };
+
+  const handleDateChange = (date: string) => {
+    setSelectedDate(date);
+    setSelectedInfo((prev) => ({ ...prev, time: date }));
+    chooseProp.date = date;
+    getAppointment();
+  };
+
+  const submit = async () => {
+    try {
+      const data = await post("/api/appointment/increase", selectedInfo);
+      console.log(data);
+      setSelectedVal(null);
+      setAppointmentTime([]);
+    } catch (error) {
+      console.error("Error submitting appointment:", error);
+    }
   };
 
   const handleSelect = (val: number | null) => {
     setSelectedVal(val);
     setSelectedInfo((prev) => ({ ...prev, time_id: val }));
   };
-  const handleDateChange = (date: string) => {
-    setSelectedVal(null);
-    setSelectedInfo((prev) => ({ ...prev, time: date }));
-  };
+
   const dates = Array.from({ length: 3 }, (_, i) => addDays(new Date(), i));
+
+  useEffect(() => {
+    console.log(appointmentTime);
+  }, [appointmentTime]);
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -72,7 +107,7 @@ export function AppointSheet({ id, name }: DoctorInfo) {
         <SheetHeader>
           <SheetTitle>确认您的预约时间</SheetTitle>
           <SheetDescription>
-            在这里确认和医生的预约时间，请选择绿色标识表示可以该医生有空闲时间.
+            在这里确认和医生的预约时间，请选择绿色标识表示该医生有空闲时间.
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
@@ -103,54 +138,15 @@ export function AppointSheet({ id, name }: DoctorInfo) {
             </Select>
           </div>
           <div className="mt-2 grid grid-cols-2 gap-3">
-            <AppointTimeCard
-              val={1}
-              status="1"
-              onSelect={handleSelect}
-              isSelected={selectedVal === 1}
-            />
-            <AppointTimeCard
-              val={2}
-              status="0"
-              onSelect={handleSelect}
-              isSelected={selectedVal === 2}
-            />
-            <AppointTimeCard
-              val={3}
-              status="1"
-              onSelect={handleSelect}
-              isSelected={selectedVal === 3}
-            />
-            <AppointTimeCard
-              val={4}
-              status="0"
-              onSelect={handleSelect}
-              isSelected={selectedVal === 4}
-            />
-            <AppointTimeCard
-              val={5}
-              status="0"
-              onSelect={handleSelect}
-              isSelected={selectedVal === 5}
-            />
-            <AppointTimeCard
-              val={6}
-              status="1"
-              onSelect={handleSelect}
-              isSelected={selectedVal === 6}
-            />
-            <AppointTimeCard
-              val={7}
-              status="0"
-              onSelect={handleSelect}
-              isSelected={selectedVal === 7}
-            />
-            <AppointTimeCard
-              val={8}
-              status="1"
-              onSelect={handleSelect}
-              isSelected={selectedVal === 8}
-            />
+            {appointmentTime.map((time) => (
+              <AppointTimeCard
+                key={time.val}
+                val={time.val}
+                status={time.status.toString()}
+                onSelect={handleSelect}
+                isSelected={selectedVal === time.val}
+              />
+            ))}
           </div>
         </div>
         <SheetFooter>
