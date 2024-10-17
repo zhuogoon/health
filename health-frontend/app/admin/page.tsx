@@ -20,28 +20,34 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const getData = async () => {
+    try {
+      const res = await get("/api/admin/info");
+      setData(res);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError("无法获取数据");
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const res = await get("/api/admin/info");
-        setData(res);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError("无法获取数据");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     getData();
   }, []);
-
+  const handleDataUpdate = async () => {
+    await getData();
+  };
   if (loading) return <div>加载中...</div>;
   if (error) return <div>错误: {error}</div>;
 
   return (
     <div className="flex w-full h-full">
-      <DataTable columns={columns} data={data} location="/" />
+      <DataTable
+        columns={columns}
+        data={data}
+        location="/"
+        onDataUpdate={handleDataUpdate}
+      />
     </div>
   );
 };

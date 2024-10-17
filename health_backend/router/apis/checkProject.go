@@ -7,4 +7,5 @@ import (
 
 func CheckProject(r *gin.RouterGroup) {
 	r.GET("list", checkProject.GetAllCheckProjects)
+	r.POST("/create", checkProject.CreateCheckProject)
 }

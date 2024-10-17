@@ -155,7 +155,7 @@ const CasePage = () => {
           <div className="mt-4">
             <Textarea
               value={patientInfo.title}
-              onChange={handleContentChange}
+              onChange={handleTitleChange}
               placeholder="请在这里填写病情"
             />
           </div>
@@ -163,7 +163,7 @@ const CasePage = () => {
           <div className="mt-4">
             <Textarea
               value={patientInfo.content}
-              onChange={handleTitleChange}
+              onChange={handleContentChange}
               placeholder="请在这里填写医嘱"
             />
           </div>

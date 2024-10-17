@@ -86,7 +86,7 @@ const Home = () => {
       <div className="flex-1 flex h-full justify-center items-center relative">
         <div className="w-[90%] h-[96%] bg-zinc-200/50 dark:bg-zinc-700/40 p-4 rounded-lg shadow backdrop-blur-sm">
           <div className="text-2xl font-semibold text-teal-400">我的病例单</div>
-          <div className="flex flex-col gap-4 mt-5">
+          <div className="flex flex-col gap-4 mt-5 overflow-y-auto custom-scrollbar">
             {caseList.length > 0 ? (
               caseList.map((item, _) => (
                 <div className="bg-zinc-50 p-2 shadow-md rounded-md dark:bg-zinc-700/30">
@@ -98,7 +98,7 @@ const Home = () => {
                   </div>
                   <div className="mt-2">
                     <div className="text-lg">{item.title}</div>
-                    <div className="text-zinc-400 dark:text-zinc-300">
+                    <div className="text-zinc-400 dark:text-zinc-300  line-clamp-3">
                       {item.content}
                     </div>
                   </div>

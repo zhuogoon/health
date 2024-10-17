@@ -18,7 +18,6 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,7 +27,22 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { post } from "@/net";
 
-const DoctorformSchema = z.object({
+export const CheckProjectformSchema = z.object({
+  name: z
+    .string()
+    .min(2, {
+      message: "检查项名称必须至少拥有2个字符.",
+    })
+    .max(50),
+  room: z
+    .string()
+    .min(2, {
+      message: "检查室名称必须至少拥有2个字符.",
+    })
+    .max(50),
+});
+
+export const DoctorformSchema = z.object({
   username: z
     .string()
     .min(2, {
@@ -74,6 +88,21 @@ const AddInfoCard = ({ path, onDataUpdate }: AddInfoProp) => {
     },
   });
 
+  const checkform = useForm<z.infer<typeof CheckProjectformSchema>>({
+    resolver: zodResolver(CheckProjectformSchema),
+    defaultValues: {
+      name: "",
+      room: "",
+    },
+  });
+
+  async function createCheckProject(
+    values: z.infer<typeof CheckProjectformSchema>
+  ) {
+    await post("/api/checkProject/create", values);
+    onDataUpdate(); // 通知父组件更新数据
+  }
+
   async function onSubmit(values: z.infer<typeof DoctorformSchema>) {
     await post("/api/doctor/create", values);
     onDataUpdate(); // 通知父组件更新数据
@@ -94,113 +123,157 @@ const AddInfoCard = ({ path, onDataUpdate }: AddInfoProp) => {
             <AlertDialogTitle>{`添加更多${
               path === "/" ? "检查项" : "医生"
             }信息`}</AlertDialogTitle>
-            <AlertDialogDescription>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-2"
-                >
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>用户名</FormLabel>
-                        <FormControl>
-                          <Input placeholder="zhansan" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>密码</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>真实姓名</FormLabel>
-                        <FormControl>
-                          <Input placeholder="张三" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="honor"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>荣誉</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="job_title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>职称</FormLabel>
-                        <FormControl>
-                          <Input placeholder="主治医师" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="job_type"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>科室</FormLabel>
-                        <FormControl>
-                          <Input placeholder="内科" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>电话</FormLabel>
-                        <FormControl>
-                          <Input placeholder="1231231231" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+            {path === "/" ? (
+              <AlertDialogDescription>
+                <Form {...checkform}>
+                  <form
+                    onSubmit={checkform.handleSubmit(createCheckProject)}
+                    className="space-y-2"
+                  >
+                    <FormField
+                      control={checkform.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>检查名称</FormLabel>
+                          <FormControl>
+                            <Input placeholder="心电图..." {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={checkform.control}
+                      name="room"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>诊室</FormLabel>
+                          <FormControl>
+                            <Input placeholder="心电图A室..." {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>取消</AlertDialogCancel>
+                      <AlertDialogAction asChild>
+                        <Button type="submit">提交</Button>
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </form>
+                </Form>
+              </AlertDialogDescription>
+            ) : (
+              <AlertDialogDescription>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-2"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>用户名</FormLabel>
+                          <FormControl>
+                            <Input placeholder="zhansan" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>密码</FormLabel>
+                          <FormControl>
+                            <Input placeholder="" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>真实姓名</FormLabel>
+                          <FormControl>
+                            <Input placeholder="张三" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="honor"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>荣誉</FormLabel>
+                          <FormControl>
+                            <Input placeholder="" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="job_title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>职称</FormLabel>
+                          <FormControl>
+                            <Input placeholder="主治医师" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="job_type"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>科室</FormLabel>
+                          <FormControl>
+                            <Input placeholder="内科" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>电话</FormLabel>
+                          <FormControl>
+                            <Input placeholder="1231231231" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>取消</AlertDialogCancel>
-                    <AlertDialogAction asChild>
-                      <Button type="submit">提交</Button>
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </form>
-              </Form>
-            </AlertDialogDescription>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>取消</AlertDialogCancel>
+                      <AlertDialogAction asChild>
+                        <Button type="submit">提交</Button>
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </form>
+                </Form>
+              </AlertDialogDescription>
+            )}
           </AlertDialogHeader>
         </AlertDialogContent>
       </AlertDialog>

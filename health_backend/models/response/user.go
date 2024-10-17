@@ -5,4 +5,5 @@ type User struct {
 	Username string `json:"username"`
 	Jwt      string `json:"jwt"`
 	Status   bool   `json:"status"`
+	Role     string `json:"role"`
 }

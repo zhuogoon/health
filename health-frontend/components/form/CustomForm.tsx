@@ -61,8 +61,10 @@ export function CustomForm() {
       const jwt = result.data.jwt;
 
       localStorage.setItem("jwt", jwt);
-      if (result.data.status) {
+      if (result.data.status && result.data.role === "patient") {
         Router.push("/home");
+      } else if (result.data.status && result.data.role === "doctor") {
+        Router.push(`/doctor/home`);
       } else {
         Router.push(`/patient/${userid}/register`);
       }
