@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"health_backend/apis/file"
 	"health_backend/router/apis"
 )
 
@@ -23,4 +24,6 @@ func Router(r *gin.Engine) {
 	apis.Cases(cases)
 	apis.CheckProject(checkProject)
 	apis.Check(check)
+
+	r.GET("/api/file", file.GetFile)
 }

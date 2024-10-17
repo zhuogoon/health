@@ -237,7 +237,7 @@ const Home = () => {
                   <div className="flex items-center gap-2">
                     <Image
                       className="rounded-full h-8 w-8 shadow-sm border-2 border-slate-200"
-                      src="/images/avatar.png"
+                      src="/images/dr-remirez.png"
                       width={20}
                       height={20}
                       alt="doctor"

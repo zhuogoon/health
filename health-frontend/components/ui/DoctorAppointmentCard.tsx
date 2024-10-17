@@ -20,7 +20,7 @@ const DoctorAppointmentCard = ({
         <div className="flex gap-2 items-center">
           <div>
             <Image
-              src="/images/avatar.png"
+              src="/images/dr-remirez.png"
               width={100}
               height={100}
               alt="doctor"

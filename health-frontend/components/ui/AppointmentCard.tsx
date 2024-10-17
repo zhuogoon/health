@@ -29,7 +29,11 @@ const AppointmentCard = ({
         <div className="flex gap-2 items-center">
           <div>
             <Image
-              src={doctorImg ? doctorImg : `/images/avatar.png`}
+              src={
+                doctorImg
+                  ? `http://localhost:8080/api/file?img=${doctorImg}`
+                  : `/images/avatar.png`
+              }
               width={100}
               height={100}
               alt="doctor"
@@ -57,7 +61,6 @@ const AppointmentCard = ({
           <div className="font-mono max-w-[100px]">
             {date ? date : "2000-01-01"}
           </div>
-
         </div>
       </div>
       <div className="flex justify-between items-end">

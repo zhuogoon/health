@@ -85,7 +85,7 @@ const CaseList = () => {
             <div className="p-4 bg-zinc-100 rounded-lg mt-6 shadow">
               <div className="text-teal-400 text-xl font-semibold flex justify-between">
                 <span>上次就诊结果</span>
-                {LatestCase?.status ? (
+                {LatestCase ? (
                   <span className="flex gap-2 items-center">
                     <div
                       className={`h-2 w-2 ${
@@ -129,7 +129,7 @@ const CaseList = () => {
             </div>
 
             <div className="mt-4">
-              的挖掘看得见啊大家看我的就打死你打完单，美味的阿达伟大阿瓦达1擦哇哇的
+              【选择合适的时间吃零食】零食一般放在两餐之间吃。起到少食多餐的效果，既能补充体能的需要，又能减少下次进餐的能量。很多人喜欢边看电视边吃零食，这是个很不好的习惯。我们看电视的时候注意力大都集中在电视内容上，会在不经意间吃进更多的零食。经常这样会导致能量过剩，引发肥胖或者其他慢性病。
             </div>
           </div>
         </div>
