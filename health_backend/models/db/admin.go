@@ -45,3 +45,22 @@ func PatientInfo() ([]models.Patient, error) {
 	err := global.DB.Model(&models.Patient{}).Find(&p).Error
 	return p, err
 }
+
+func DeleteDoctor(id int) error {
+	if err := global.DB.Model(&models.Doctor{}).Where("id = ?", id).Delete(&models.Doctor{}).Error; err != nil {
+		return err
+	}
+	d, err := GetUserIdById(uint(id))
+	if err != nil {
+		return err
+
+	}
+	if err := global.DB.Model(&models.User{}).Where("id = ?", d).Delete(&models.User{}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func DeletePatient(id int) error {
+	return global.DB.Model(&models.Patient{}).Where("id = ?", id).Delete(&models.Patient{}).Error
+}

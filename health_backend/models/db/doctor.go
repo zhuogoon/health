@@ -71,24 +71,6 @@ func FindIdByUserId() (uint, error) {
 	return d.ID, nil
 }
 
-func DeleteDoctor() error {
-	err := global.DB.Transaction(func(tx *gorm.DB) error {
-		err := tx.Model(&models.Doctor{}).Where("user_id = ?", global.UserId).Delete(&models.Doctor{}).Error
-		if err != nil {
-			return err
-		}
-		err = tx.Model(&models.User{}).Where("id = ?", global.UserId).Delete(&models.User{}).Error
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func AddCheck(ch *request.AddCheck) error {
 	c := &models.Check{
 		PatientId:      ch.PatientId,
@@ -142,4 +124,12 @@ func GetLatestCaseByUserID(userID uint) (*models.Case, error) {
 		return nil, nil
 	}
 	return &latestCase, nil
+}
+
+func GetUserIdById(id uint) (uint, error) {
+	d := &models.Doctor{}
+	if err := global.DB.Model(&models.Doctor{}).Where("id = ?", id).Find(&d).Error; err != nil {
+		return d.UserId, err
+	}
+	return d.UserId, nil
 }

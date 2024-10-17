@@ -53,6 +53,7 @@ const Admin = () => {
         data={data}
         location="/doctor"
         onDataUpdate={handleDataUpdate}
+        onDelete={handleDataUpdate}
       />
     </div>
   );

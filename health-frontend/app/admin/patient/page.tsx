@@ -33,6 +33,8 @@ const Admin = () => {
       setLoading(false);
     }
   };
+
+  const handleDataUpdate = async () => {};
   useEffect(() => {
     getData();
   }, []);
@@ -47,6 +49,7 @@ const Admin = () => {
         data={data}
         location="/patient"
         onDataUpdate={getData}
+        onDelete={handleDataUpdate}
       />
     </div>
   );

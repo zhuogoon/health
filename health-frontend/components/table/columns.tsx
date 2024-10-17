@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
+import { get } from "@/net";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -12,14 +13,8 @@ export type Item = {
   room: string;
 };
 
-const handleEdit = (item: Item) => {
-  // 处理编辑逻辑，例如打开编辑弹窗
-  console.log("Editing item:", item);
-};
-
-const handleDelete = (id: number) => {
-  // 处理删除逻辑，例如发送删除请求
-  console.log("Deleting item with ID:", id);
+const handleDelete = async (id: number) => {
+  await get(`/api/admin/delete?id=${id}`);
 };
 
 export const columns: ColumnDef<Item>[] = [
