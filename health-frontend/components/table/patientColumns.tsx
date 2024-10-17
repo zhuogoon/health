@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
+import { get } from "@/net";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -16,13 +17,8 @@ export type Patient = {
   address: string;
 };
 
-const handleEdit = (item: Patient) => {
-  // 处理修改逻辑，例如打开一个编辑对话框
-  console.log("Editing item:", item);
-};
-
-const handleDelete = (id: number) => {
-  // 处理删除逻辑，例如发送删除请求
+const handleDelete = async (id: number) => {
+  await get(`/api/admin/delpatient?id=${id}`);
   console.log("Deleting item with ID:", id);
 };
 
@@ -136,12 +132,6 @@ export const columns: ColumnDef<Patient>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex justify-center items-center space-x-3 w-full text-xl ">
-        <button
-          className="bg-blue-500  text-white rounded-xl h-10 w-16"
-          onClick={() => handleEdit(row.original)}
-        >
-          修改
-        </button>
         <button
           className="bg-red-500 text-white rounded-xl h-10 w-16"
           onClick={() => handleDelete(row.original.id)}

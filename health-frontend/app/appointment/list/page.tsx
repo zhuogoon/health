@@ -93,7 +93,11 @@ const AppointmentListPage = () => {
                       <div className="flex items-center gap-2">
                         <Image
                           className="rounded-full h-8 w-8 shadow-sm border-2 border-slate-200"
-                          src="/images/avatar.png"
+                          src={
+                            latestAppointment.doctor_avatar
+                              ? `http://localhost:8080/api/file?img=${latestAppointment.doctor_avatar}`
+                              : `/images/dr-remirez.png`
+                          }
                           width={20}
                           height={20}
                           alt="doctor"
@@ -123,7 +127,7 @@ const AppointmentListPage = () => {
             </div>
 
             <div className="mt-4">
-              的挖掘看得见啊大家看我的就打死你打完单，美味的阿达伟大阿瓦达1擦哇哇的
+              【柑橘含有丰富的柠檬酸】维生素以及钙、磷、镁、钠等人体必需的元素。它具有生津止咳的作用，用于胃肠燥热之症；有和胃利尿的功效，用于腹部不适、小便不利等症；有润肺化痰的作用，适于肺热咳嗽之症。
             </div>
           </div>
         </div>

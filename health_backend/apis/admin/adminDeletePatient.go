@@ -1,16 +1,27 @@
-package doctor
+package admin
 
 import (
 	"github.com/gin-gonic/gin"
 	"health_backend/models/db"
 	"health_backend/models/response"
 	"net/http"
+	"strconv"
 )
 
-// DeleteDoctor 删除医生
-func DeleteDoctor(c *gin.Context) {
+func DeletePatient(c *gin.Context) {
 	resp := &response.BaseResponse{}
-	err := db.DeleteDoctor()
+
+	id := c.Query("id")
+
+	idd, err := strconv.Atoi(id)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "参数错误"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
+	err = db.DeletePatient(idd)
 	if err != nil {
 		resp.Code = 450
 		resp.Msg = "删除失败"
@@ -18,15 +29,7 @@ func DeleteDoctor(c *gin.Context) {
 		return
 	}
 
-	token := c.GetHeader("Authorization")
-	if token == "" {
-		resp.Code = 450
-		resp.Msg = "你没登录"
-		c.AbortWithStatusJSON(http.StatusOK, resp)
-		return
-	}
-
-	resp.Code = 200
+	resp.Code = http.StatusOK
 	resp.Msg = "删除成功"
 	c.AbortWithStatusJSON(http.StatusOK, resp)
 	return

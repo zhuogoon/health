@@ -21,6 +21,10 @@ func CreatePatient(c *gin.Context) {
 		return
 	}
 
+	if len(req.Phone) >= 11 {
+		req.Phone = req.Phone[len(req.Phone)-11:]
+	}
+
 	err = db.CreatePatient(req)
 	if err != nil {
 		resp.Code = 450

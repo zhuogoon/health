@@ -5,6 +5,7 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { get } from "http";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -22,9 +23,8 @@ const handleEdit = (item: Doctor) => {
   console.log("Editing item:", item);
 };
 
-const handleDelete = (id: number) => {
-  // 处理删除逻辑，例如发送删除请求
-  console.log("Deleting item with ID:", id);
+const handleDelete = async (id: number) => {
+  await get(`/api/admin/deldoctor?id=${id}`);
 };
 
 export const columns: ColumnDef<Doctor>[] = [
@@ -98,12 +98,6 @@ export const columns: ColumnDef<Doctor>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex justify-center items-center space-x-3 w-full text-xl ">
-        <button
-          className="bg-blue-500  text-white rounded-xl h-10 w-16"
-          onClick={() => handleEdit(row.original)}
-        >
-          修改
-        </button>
         <button
           className="bg-red-500 text-white rounded-xl h-10 w-16"
           onClick={() => handleDelete(row.original.id)}

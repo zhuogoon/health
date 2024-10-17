@@ -88,7 +88,7 @@ export function SettingsForm({
         height: data.height,
         weight: data.weight,
         birthday: data.birthday ? new Date(data.birthday) : new Date(),
-        sex: data.sex,
+        sex: data.sex === "男" ? true : false,
         phone: data.phone,
         address: data.address,
         allergens: data.allergens,
