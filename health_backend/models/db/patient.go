@@ -76,3 +76,23 @@ func GetPatientIdByUserId() (uint, error) {
 	}
 	return p.ID, nil
 }
+
+func GetCheckInfoByPatientId() ([]response.CheckInfo, error) {
+	var check []response.CheckInfo
+	patientId, err := GetPatientIdByUserId()
+	if err != nil {
+		return nil, err
+	}
+	err = global.DB.Model(&models.Check{}).Select("checks.id,checks.created_at,checks.status,check_projects.name,check_projects.room").Joins("JOIN check_projects ON checks.check_project_id = check_projects.id").
+		Where("checks.patient_id = ?", patientId).
+		Order("CASE WHEN checks.status = '未检查' THEN 1 ELSE 0 END, checks.created_at").
+		Find(&check).Error
+	if err != nil {
+		return nil, err
+	}
+	return check, nil
+}
+
+func FinshStatus(id uint) error {
+	return global.DB.Model(&models.Check{}).Where("id = ?", id).Update("status", "已完成").Error
+}
