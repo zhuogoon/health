@@ -25,7 +25,7 @@ export default function RootLayout({
     const fetchCounts = async () => {
       try {
         const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjkwNDg0OTcsImlhdCI6MTcyODQ0MzY5NywidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJwYXRpZW50In0.OtH757YSFTa405SMj-cO5mLyK4D7Csayw-x0nYdu-Ng";
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjk2ODUyMjAsImlhdCI6MTcyOTA4MDQyMCwidXNlcm5hbWUiOiJjaGVuIn0.U8iMSxTTHMrT10TWg35xHXiCB8R97m00KHlksKWlmQI";
 
         const response = await fetch("http://127.0.0.1:8080/api/admin/count", {
           method: "GET",

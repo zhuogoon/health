@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/table/DataTable";
 import { columns } from "@/components/table/columns";
+import { get } from "@/net";
 // import { get } from "@/net";
 
 interface Item {
@@ -22,23 +23,8 @@ const Admin = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjkyMTc5NTQsImlhdCI6MTcyODYxMzE1NCwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiIifQ.RHbKA2uYk6fmjnCPoA-b189KePAEVBLb3oG0AzOWI8I";
-
-        const response = await fetch("http://127.0.0.1:8080/api/admin/info", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`, // 在请求头中添加token
-            "Content-Type": "application/json", // 可选：根据需要添加其他头部
-          },
-        }); // 替换为你的 API URL
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result: Data = await response.json();
-        setData(result.data);
-        console.log("Data fetched:", result);
+        const res = await get("/api/admin/info");
+        setData(res);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("无法获取数据");
@@ -55,7 +41,7 @@ const Admin = () => {
 
   return (
     <div className="flex w-full h-full">
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={data} location="/" />
     </div>
   );
 };

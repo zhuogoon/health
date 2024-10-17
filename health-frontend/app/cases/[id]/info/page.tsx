@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { get } from "@/net";
 import { log } from "console";
 
-interface CheckItem {
+export interface CheckItem {
   name: string;
   room: string;
   img: string;
@@ -16,12 +16,20 @@ interface CheckItem {
   time: string;
 }
 
-interface CaseInfo {
+export interface CaseInfo {
   id: string;
   title: string;
   doctor_name: string;
+  doctor_type: string;
+  doctor_id: string;
   check_project: CheckItem[];
   content: string;
+  sex: boolean;
+  patient_name: string;
+  patient_id: string;
+  age: number;
+  date: string;
+  check_id: string;
 }
 
 const formatDate = (date: Date) => {
@@ -39,7 +47,6 @@ const CaseInfo = () => {
   };
   useEffect(() => {
     getInfo();
-    console.log("id:", id);
   }, []);
   return (
     <div className="h-screen w-screen bg-zinc-200 flex flex-col">

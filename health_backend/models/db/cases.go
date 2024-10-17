@@ -19,7 +19,6 @@ func CaseIncrease(patientID uint, doctorID uint, title string, content string) e
 		return err
 	}
 	return nil
-
 }
 
 // CaseList 2.获取病例
@@ -53,8 +52,8 @@ func CaseDelete(id uint) error {
 }
 
 // CaseUpdate 修改病例
-func CaseUpdate(id uint, content string) error {
-	err := global.DB.Model(&models.Case{}).Where("id = ?", id).Update("content", content).Error
+func CaseUpdate(id uint, content string, title string, checkIds string) error {
+	err := global.DB.Model(&models.Case{}).Where("id = ?", id).Update("check_id", checkIds).Update("content", content).Update("title", title).Update("status", true).Error
 	if err != nil {
 		return err
 	}

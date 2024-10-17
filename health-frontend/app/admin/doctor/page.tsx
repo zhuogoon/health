@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/table/DataTable";
 import { columns } from "@/components/table/doctorColumns";
+import { get } from "@/net";
+import { getDate } from "date-fns";
 // import { get } from "@/net";
 
 interface Item {
@@ -22,34 +24,22 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const handleDataUpdate = async () => {
+    await getData();
+  };
+  const getData = async () => {
+    try {
+      const res = await get("/api/admin/doctor");
+      setData(res);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError("无法获取数据");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjkwNDg0OTcsImlhdCI6MTcyODQ0MzY5NywidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJwYXRpZW50In0.OtH757YSFTa405SMj-cO5mLyK4D7Csayw-x0nYdu-Ng";
-
-        const response = await fetch("http://127.0.0.1:8080/api/admin/doctor", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`, // 在请求头中添加token
-            "Content-Type": "application/json", // 可选：根据需要添加其他头部
-          },
-        }); // 替换为你的 API URL
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result: Data = await response.json();
-        setData(result.data);
-        console.log("Data fetched:", result);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError("无法获取数据");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     getData();
   }, []);
 
@@ -58,7 +48,12 @@ const Admin = () => {
 
   return (
     <div className="flex w-full h-full">
-      <DataTable columns={columns} data={data} />
+      <DataTable
+        columns={columns}
+        data={data}
+        location="/doctor"
+        onDataUpdate={handleDataUpdate}
+      />
     </div>
   );
 };

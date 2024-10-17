@@ -5,6 +5,7 @@ import (
 	"health_backend/models"
 	"health_backend/models/request"
 	"health_backend/models/response"
+	"time"
 )
 
 func CreatePatient(p *request.CreatePatient) error {
@@ -46,14 +47,25 @@ func GetInfoById() (*models.User, error) {
 }
 
 func UpdatePatient(p *request.CreatePatient) error {
-	return global.DB.Model(&models.Patient{}).Where("user_id = ?", global.UserId).Updates(&p).Error
+	return global.DB.Model(&models.Patient{}).Where("user_id = ?", global.UserId).Select("address", "allergens", "birthday", "height", "medical_history", "name", "phone", "sex", "weight").Updates(&p).Error
 }
 
-func GetPatientInfoById(id uint) ([]response.GetInfoByIdResp, error) {
-	var p []response.GetInfoByIdResp
-	if err := global.DB.Model(&models.Patient{}).Select("phone,address,height,weight,medical_history,allergens").Where("id = ?", id).Find(&p).Error; err != nil {
+func GetPatientInfoById(id string) (*response.GetInfoByIdResp, error) {
+	p := &response.GetInfoByIdResp{}
+	if err := global.DB.Model(&models.Patient{}).Select("phone, address, height, weight, medical_history, allergens, sex, name, birthday").Where("id = ?", id).Find(&p).Error; err != nil {
 		return nil, err
 	}
+
+	// Calculate the age based on the birthday
+	if p.Birthday != nil {
+		today := time.Now()
+		age := today.Year() - p.Birthday.Year()
+		if today.YearDay() < p.Birthday.YearDay() {
+			age--
+		}
+		p.Age = age
+	}
+
 	return p, nil
 }
 

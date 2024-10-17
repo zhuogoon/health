@@ -24,12 +24,16 @@ type PatientInfo struct {
 }
 
 type GetInfoByIdResp struct {
-	Phone          string `json:"phone"`
-	Address        string `json:"address"`
-	Height         string `json:"height"`
-	Weight         string `json:"weight"`
-	MedicalHistory string `json:"medical_history"`
-	Allergens      string `json:"allergens"`
+	Phone          string     `json:"phone"`
+	Address        string     `json:"address"`
+	Height         string     `json:"height"`
+	Weight         string     `json:"weight"`
+	MedicalHistory string     `json:"medical_history"`
+	Allergens      string     `json:"allergens"`
+	Sex            string     `json:"sex"`
+	Name           string     `json:"name"`
+	Age            int        `json:"age"`
+	Birthday       *time.Time `json:"birthday"`
 }
 type GetAppointmentInfoByIdResp struct {
 	TimeId int64 `json:"time_id"`

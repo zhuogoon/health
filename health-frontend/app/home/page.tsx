@@ -266,7 +266,7 @@ const Home = () => {
                 </div>
                 <div className="mt-2">
                   <div className="text-lg">{LatestCase.title}</div>
-                  <div className="text-zinc-400 dark:text-zinc-300">
+                  <div className="text-zinc-400 dark:text-zinc-300 line-clamp-1">
                     {LatestCase.content}
                   </div>
                 </div>

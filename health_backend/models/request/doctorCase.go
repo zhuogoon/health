@@ -1,4 +1,4 @@
-package response
+package request
 
 type DoctorCase struct {
 	Id          uint   `json:"id"`

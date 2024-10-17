@@ -3,23 +3,15 @@ package patient
 import (
 	"github.com/gin-gonic/gin"
 	"health_backend/models/db"
-	"health_backend/models/request"
 	"health_backend/models/response"
 	"net/http"
 )
 
 func GetInfoById(c *gin.Context) {
-	req := &request.GetInfoById{}
+	pid := c.Query("pid")
 	resp := &response.BaseResponse{}
 
-	err := c.ShouldBindBodyWithJSON(&req)
-	if err != nil {
-		resp.Code = 450
-		resp.Msg = "参数错误"
-		c.AbortWithStatusJSON(http.StatusOK, resp)
-		return
-	}
-	id, err := db.GetPatientInfoById(req.Id)
+	id, err := db.GetPatientInfoById(pid)
 	if err != nil {
 		resp.Code = 450
 		resp.Msg = "无"

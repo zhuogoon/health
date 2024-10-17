@@ -31,15 +31,20 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import AddInfoCard from "../ui/AddInfoCard";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  location: string;
+  onDataUpdate: () => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  location,
+  onDataUpdate,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -65,10 +70,9 @@ export function DataTable<TData, TValue>({
       columnVisibility,
     },
   });
-
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4 gap-4">
         <Input
           placeholder="搜索名字"
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -77,7 +81,12 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+
+        {(location === "/" || location === "/doctor") && (
+          <AddInfoCard path={location} onDataUpdate={onDataUpdate} />
+        )}
       </div>
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="ml-auto">
@@ -102,6 +111,7 @@ export function DataTable<TData, TValue>({
             })}
         </DropdownMenuContent>
       </DropdownMenu>
+
       <div className="rounded-md border w-full">
         <Table>
           <TableHeader>
