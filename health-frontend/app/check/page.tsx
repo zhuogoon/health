@@ -1,6 +1,7 @@
 "use client";
 
 import CheckCard from "@/components/ui/CheckCard";
+import { get } from "@/net";
 import { useEffect, useState } from "react";
 
 interface CheckProps {
@@ -18,9 +19,9 @@ const Check = () => {
     getList();
   };
 
-  const getList = () => {
-    // get("/api/check")
-    // setCheck(data);
+  const getList = async () => {
+    const data = await get("/api/patient/checkinfo");
+    setCheck(data);
   };
 
   useEffect(() => {
@@ -33,14 +34,21 @@ const Check = () => {
       </h1>
       <div className="flex-grow h-full flex justify-center">
         <div className="w-[86%] h-full grid grid-cols-2 gap-4 p-2 overflow-y-auto custom-scrollbar">
-          <CheckCard
-            id="1"
-            name="血检"
-            room="血检A室"
-            status="已完成"
-            date="2024-05-23"
-            update={handleUpdate}
-          />
+          {Check.length > 0 ? (
+            Check.map((item) => (
+              <CheckCard
+                key={item.id}
+                id={item.id}
+                name={item.name}
+                room={item.room}
+                status={item.status}
+                date={item.date}
+                update={handleUpdate}
+              />
+            ))
+          ) : (
+            <>暂无数据哦</>
+          )}
         </div>
       </div>
     </div>

@@ -103,9 +103,9 @@ export function NavigationMenuDemo() {
               <ListItem href="/cases/list" title="查看我的病例单">
                 在这里可以找到在本院就诊的所有病例单
               </ListItem>
-              {/* <ListItem href="/docs/installation" title="导出我的病例单">
-                在这里你可以预约到本院所有的医生，为你提供专业的医疗服务
-              </ListItem> */}
+              <ListItem href="/check" title="查看我的病例单">
+                在这里可以找到在本院开出的检查项目，就诊时请在这里确认
+              </ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>

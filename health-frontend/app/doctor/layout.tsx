@@ -16,7 +16,7 @@ export default function DoctorLayout({
   return (
     <div className="flex flex-col h-screen">
       <div className="flex justify-between px-3 py-3">
-        <Link href={"/home"} className="flex items-center gap-2">
+        <Link href={"/doctor/home"} className="flex items-center gap-2">
           <Image
             src="/images/icon.png"
             width={100}
@@ -24,10 +24,13 @@ export default function DoctorLayout({
             alt="icon"
             className="w-10 h-10 rounded-2xl"
           />
-          <div className="text-2xl font-semibold">智慧医疗系统</div>
+          <div className="text-3xl font-semibold">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-teal-500">
+              智慧医疗系统
+            </span>
+          </div>
         </Link>
 
-        <DoctorNavbar />
         <div className="flex items-center gap-6">
           <ModeToggle />
           <PatientProvider>

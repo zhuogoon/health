@@ -169,7 +169,7 @@ const DocgtorHomePage = () => {
               今日预约患者信息
             </div>
             <div className="space-y-3 mt-2 overflow-y-auto custom-scrollbar h-[90%]">
-              {appointments.length > 0 ? (
+              {appointments && appointments.length > 0 ? (
                 appointments.map((appointment) => (
                   <AppointmentInfoCard
                     name={appointment.patient_name}

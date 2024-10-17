@@ -20,8 +20,8 @@ const CheckCard = ({
   date,
   update,
 }: CheckCardProps) => {
-  const finish = () => {
-    get(`/api/finish?id=${id}`);
+  const finish = async () => {
+    await get(`/api/patient/finsh?id=${id}`);
     if (update) {
       update();
     }
