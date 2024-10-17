@@ -19,14 +19,13 @@ export interface Appointment {
   time_id: number;
 }
 
+export interface Doctor {
+  id: string;
+  name: string;
+  job_type: string;
+  job_title: string;
+}
 const AppointmentPage = () => {
-  interface Doctor {
-    id: string;
-    name: string;
-    job_type: string;
-    job_title: string;
-  }
-
   const [doctorList, setDoctorList] = useState<Doctor[]>([]);
   const [appointment, setAppointment] = useState<Appointment[]>([]);
   const [query, setQuery] = useState({
@@ -94,7 +93,6 @@ const AppointmentPage = () => {
                   doctor_name: e.target.value,
                 }))
               } // 在输入框变化时更新 query.doctor_name
-
             />
             <div className="h-20 mt-3 m-10 flex w-[90%] justify-between">
               <DoctorCombobox query={query} setQuery={setQuery} />
@@ -121,7 +119,6 @@ const AppointmentPage = () => {
           </div>
         </div>
         <div className="w-1/4 bg-gradient-to-r from-teal-500 to-green-300 flex flex-col rounded-lg shadow-lg">
-
           <h1 className="text-2xl font-bold text-left w-[90%] mb-2 mt-4 text-zinc-50 ml-4">
             我的预约
             <div className="mb-4 text-sm text-zinc-100 font-normal mt-2">
@@ -130,20 +127,23 @@ const AppointmentPage = () => {
           </h1>
 
           <div className="flex-grow w-full bg-zinc-100 rounded-lg overflow-y-auto custom-scrollbar p-4 flex flex-col gap-2">
-            {appointment.map((appointment) => (
-              <AppointmentCard
-                key={appointment.id}
-                id={appointment.id}
-                doctorName={appointment.doctor_name}
-                doctorImg={appointment.doctor_avatar}
-                date={appointment.date}
-                status={appointment.status}
-                type={appointment.doctor_type}
-                title={appointment.doctor_title}
-                deleteAppointment={deleteAppointment}
-              />
-            ))}
-
+            {appointment ? (
+              appointment.map((appointment) => (
+                <AppointmentCard
+                  key={appointment.id}
+                  id={appointment.id}
+                  doctorName={appointment.doctor_name}
+                  doctorImg={appointment.doctor_avatar}
+                  date={appointment.date}
+                  status={appointment.status}
+                  type={appointment.doctor_type}
+                  title={appointment.doctor_title}
+                  deleteAppointment={deleteAppointment}
+                />
+              ))
+            ) : (
+              <>当前还没有预约哦</>
+            )}
           </div>
         </div>
       </div>

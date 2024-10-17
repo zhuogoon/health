@@ -10,7 +10,7 @@ func Admin(r *gin.RouterGroup) {
 	r.POST("login", admin.Log)
 	r.POST("add", admin.AddCheckProject)
 	r.POST("update", admin.UpdateCheck)
-	r.POST("delete", admin.DeleteCheck)
+	r.GET("delete", admin.DeleteCheck)
 	r.GET("info", admin.GetCheckInfo)
 	r.GET("count", admin.GetCount)
 	r.GET("doctor", admin.GetDoctor)

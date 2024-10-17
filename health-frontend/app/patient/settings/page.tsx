@@ -13,7 +13,7 @@ export interface PatientInfo {
   height: number;
   weight: number;
   birthday: string;
-  sex: boolean;
+  sex: string;
   phone: string;
   address: string;
   allergens: string;
@@ -128,13 +128,13 @@ const Settings = () => {
                 {data?.name}
               </span>
               <span className="space-x-5">
-                {data?.sex ? (
-                  <span className="text-blue-400 text-2xl font-semibold ">
-                    ♂
-                  </span>
-                ) : (
-                  <span className="text-red-400 text-2xl font-semibold">♀</span>
-                )}
+                <span
+                  className={`text-lg font-semibold ${
+                    data?.sex === "男" ? "text-blue-400" : "text-red-500"
+                  }`}
+                >
+                  {data?.sex === "男" ? "♂" : "♀"}
+                </span>
                 <span className="text-zinc-500 font-mono">
                   {data?.age} 周岁
                 </span>

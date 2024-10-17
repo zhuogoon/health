@@ -2,6 +2,7 @@ package appointment
 
 import (
 	"github.com/gin-gonic/gin"
+	"health_backend/global"
 	"health_backend/models"
 	"health_backend/models/db"
 	"health_backend/models/request"
@@ -34,6 +35,7 @@ func Increase(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusOK, resp)
 		return
 	}
+
 	appointment := &models.Appointment{
 		DoctorID:  req.DoctorId,
 		PatientID: id,
@@ -50,9 +52,28 @@ func Increase(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusOK, resp)
 		return
 	}
+
+	// Create a new case record with initial status 0
+	caseRecord := &models.Case{
+		DoctorID:  req.DoctorId,
+		PatientID: id,
+		Status:    false,
+	}
+
+	err = CreateCase(caseRecord)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "病例记录添加失败"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
 	resp.Code = http.StatusOK
 	resp.Msg = "success"
 	c.AbortWithStatusJSON(http.StatusOK, resp)
 	return
+}
 
+func CreateCase(caseRecord *models.Case) error {
+	return global.DB.Create(caseRecord).Error
 }

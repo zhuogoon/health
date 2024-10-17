@@ -1,10 +1,25 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Success = () => {
+  const Router = useRouter();
+
+  const back = () => {
+    Router.push("/appointment");
+  };
+
   return (
-    <div className="flex h-screen max-h-screen px-[5%] justify-center items-center">
+    <div className="flex h-screen max-h-screen px-[5%] justify-center items-center relative">
+      <div
+        className="absolute left-2 top-3 text-teal-400 hover:text-teal-600 cursor-pointer"
+        onClick={back}
+      >
+        👈 返回预约界面
+      </div>
       <div className="flex justify-center flex-col items-center">
         <Link
           className="flex items-center text-3xl text-zinc-700 font-semibold gap-4 mr-10"

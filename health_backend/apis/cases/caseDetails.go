@@ -8,6 +8,7 @@ import (
 	"health_backend/models/response"
 	"net/http"
 	"strings"
+	"time"
 )
 
 func GetCaseDetails(c *gin.Context) {
@@ -31,12 +32,35 @@ func GetCaseDetails(c *gin.Context) {
 		return
 	}
 
+	var patient models.Patient
+	err = global.DB.Table("patients").Where("id = ?", caseQuery.PatientID).First(&patient).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	checkID := caseQuery.CheckID
 	if checkID == "" {
+		caseInfo := request.ResponseCaseInfo{
+			Id:           caseQuery.Id,
+			Title:        caseQuery.Title,
+			Content:      caseQuery.Content,
+			DoctorName:   doctor.Name,
+			DoctorID:     doctor.ID,
+			CheckProject: []request.CheckInfo{},
+			CheckID:      caseQuery.CheckID,
+			PatientName:  patient.Name,
+			PatientID:    patient.ID,
+			Sex:          patient.Sex,
+			Age:          calculateAge(patient.Birthday),
+			DoctorType:   doctor.JobType,
+			Date:         caseQuery.CreatedAt.Format("2006-01-02 15:04:05"),
+		}
+
 		c.JSON(http.StatusOK, response.BaseResponse{
 			Code: 200,
 			Msg:  "Query successful",
-			Data: caseQuery,
+			Data: caseInfo,
 		})
 		return
 	}
@@ -81,8 +105,15 @@ func GetCaseDetails(c *gin.Context) {
 		Title:        caseQuery.Title,
 		Content:      caseQuery.Content,
 		DoctorName:   doctor.Name,
-		CheckID:      caseQuery.CheckID,
+		DoctorID:     doctor.ID,
 		CheckProject: checkInfos,
+		CheckID:      caseQuery.CheckID,
+		PatientName:  patient.Name,
+		PatientID:    patient.ID,
+		Sex:          patient.Sex,
+		Age:          calculateAge(patient.Birthday),
+		DoctorType:   doctor.JobType,
+		Date:         caseQuery.CreatedAt.Format("2006-01-02 15:04:05"),
 	}
 
 	c.JSON(http.StatusOK, response.BaseResponse{
@@ -90,4 +121,16 @@ func GetCaseDetails(c *gin.Context) {
 		Msg:  "Query successful",
 		Data: caseInfo,
 	})
+}
+
+func calculateAge(birthday *time.Time) int {
+	if birthday == nil {
+		return 0
+	}
+	today := time.Now()
+	age := today.Year() - birthday.Year()
+	if today.YearDay() < birthday.YearDay() {
+		age--
+	}
+	return age
 }

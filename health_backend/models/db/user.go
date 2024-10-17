@@ -102,3 +102,11 @@ func GetStatus(id uint) (bool, error) {
 	}
 	return user.Status, nil
 }
+
+func GetRole(userID uint) (string, error) {
+	var user models.User
+	if err := global.DB.First(&user, userID).Error; err != nil {
+		return "", err
+	}
+	return string(user.Role), nil
+}

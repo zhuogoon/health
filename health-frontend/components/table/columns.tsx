@@ -81,12 +81,6 @@ export const columns: ColumnDef<Item>[] = [
     cell: ({ row }) => (
       <div className="flex justify-center items-center space-x-3 w-full text-xl ">
         <button
-          className="bg-blue-500  text-white rounded-xl h-10 w-16"
-          onClick={() => handleEdit(row.original)}
-        >
-          修改
-        </button>
-        <button
           className="bg-red-500 text-white rounded-xl h-10 w-16"
           onClick={() => handleDelete(row.original.id)}
         >

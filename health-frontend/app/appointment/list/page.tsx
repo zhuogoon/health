@@ -77,38 +77,44 @@ const AppointmentListPage = () => {
                 查询
               </Button>
             </div>
-            <div className="p-4 bg-zinc-100 rounded-lg mt-6 shadow">
-              <div className="dark:bg-zinc-700/30">
-                <div className="flex justify-between items-end ">
-                  <span className="text-xl text-teal-400 font-semibold ">
-                    近期预约
-                  </span>
-                  <span className="text-zinc-400 text-sm">
-                    {latestAppointment?.date}
-                  </span>
-                </div>
-                <div className="flex items-center mt-2 justify-between">
-                  <div className="flex items-center gap-2">
-                    <Image
-                      className="rounded-full h-8 w-8 shadow-sm border-2 border-slate-200"
-                      src="/images/avatar.png"
-                      width={20}
-                      height={20}
-                      alt="doctor"
-                    />
-                    <div className="text-zinc-600 font-semibold dark:text-zinc-300">
-                      {latestAppointment?.doctor_name}
+            {latestAppointment ? (
+              <>
+                <div className="p-4 bg-zinc-100 rounded-lg mt-6 shadow">
+                  <div className="dark:bg-zinc-700/30">
+                    <div className="flex justify-between items-end ">
+                      <span className="text-xl text-teal-400 font-semibold ">
+                        近期预约
+                      </span>
+                      <span className="text-zinc-400 text-sm">
+                        {latestAppointment?.date}
+                      </span>
+                    </div>
+                    <div className="flex items-center mt-2 justify-between">
+                      <div className="flex items-center gap-2">
+                        <Image
+                          className="rounded-full h-8 w-8 shadow-sm border-2 border-slate-200"
+                          src="/images/avatar.png"
+                          width={20}
+                          height={20}
+                          alt="doctor"
+                        />
+                        <div className="text-zinc-600 font-semibold dark:text-zinc-300">
+                          {latestAppointment?.doctor_name}
+                        </div>
+                      </div>
+                      <div className="dark:text-zinc-200 text-zinc-600">
+                        {latestAppointment?.doctor_type}
+                      </div>
                     </div>
                   </div>
-                  <div className="dark:text-zinc-200 text-zinc-600">
-                    {latestAppointment?.doctor_type}
-                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="text-right font-mono text-sm text-zinc-500 mt-1">
-              更新于 {latestAppointment?.date}
-            </div>
+                <div className="text-right font-mono text-sm text-zinc-500 mt-1">
+                  更新于 {latestAppointment?.date}
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
 
           <div className="bg-zinc-50 shadow-sm w-[90%] rounded-lg flex-grow p-4 mt-3">

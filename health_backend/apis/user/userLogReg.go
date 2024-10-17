@@ -9,7 +9,6 @@ import (
 	"net/http"
 )
 
-// RegLog 判断注册登录，没注册直接注册，注册了直接登录
 func RegLog(c *gin.Context) {
 	req := &request.UserRegisterReq{}
 	resp := &response.BaseResponse{}
@@ -70,11 +69,20 @@ func RegLog(c *gin.Context) {
 			return
 		}
 
+		role, err := db.GetRole(id)
+		if err != nil {
+			resp.Code = 450
+			resp.Msg = "获取角色失败"
+			c.AbortWithStatusJSON(http.StatusOK, resp)
+			return
+		}
+
 		userresp := response.User{
 			Id:       id,
 			Username: req.Username,
 			Jwt:      jwt,
 			Status:   status,
+			Role:     role,
 		}
 
 		resp.Code = 200
@@ -118,11 +126,20 @@ func RegLog(c *gin.Context) {
 		return
 	}
 
+	role, err := db.GetRole(id)
+	if err != nil {
+		resp.Code = 450
+		resp.Msg = "获取角色失败"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+
 	userresp := response.User{
 		Id:       id,
 		Username: req.Username,
 		Jwt:      jwt,
 		Status:   status,
+		Role:     role,
 	}
 
 	resp.Code = 200
@@ -130,5 +147,4 @@ func RegLog(c *gin.Context) {
 	resp.Data = userresp
 	c.AbortWithStatusJSON(http.StatusOK, resp)
 	return
-
 }

@@ -3,15 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/table/DataTable";
 import { columns } from "@/components/table/columns";
-// import { get } from "@/net";
+import { get } from "@/net";
 
 interface Item {
   id: number;
   name: string;
   room: string;
-}
-interface Data {
-  data: Item[];
 }
 
 const Admin = () => {
@@ -19,43 +16,38 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const getData = async () => {
+    try {
+      const res = await get("/api/admin/info");
+      setData(res);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError("无法获取数据");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjkyMTc5NTQsImlhdCI6MTcyODYxMzE1NCwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiIifQ.RHbKA2uYk6fmjnCPoA-b189KePAEVBLb3oG0AzOWI8I";
-
-        const response = await fetch("http://127.0.0.1:8080/api/admin/info", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`, // 在请求头中添加token
-            "Content-Type": "application/json", // 可选：根据需要添加其他头部
-          },
-        }); // 替换为你的 API URL
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result: Data = await response.json();
-        setData(result.data);
-        console.log("Data fetched:", result);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError("无法获取数据");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     getData();
   }, []);
+
+  const handleDataUpdate = async () => {
+    await getData();
+  };
 
   if (loading) return <div>加载中...</div>;
   if (error) return <div>错误: {error}</div>;
 
   return (
     <div className="flex w-full h-full">
-      <DataTable columns={columns} data={data} />
+      <DataTable
+        columns={columns}
+        data={data}
+        location="/"
+        onDataUpdate={handleDataUpdate}
+        onDelete={handleDataUpdate} // 传递 handleDataUpdate 作为 onDelete 回调
+      />
     </div>
   );
 };

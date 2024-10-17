@@ -138,5 +138,8 @@ func GetLatestCaseByUserID(userID uint) (*models.Case, error) {
 	if err != nil {
 		return nil, err
 	}
+	if latestCase.ID == 0 {
+		return nil, nil
+	}
 	return &latestCase, nil
 }

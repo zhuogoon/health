@@ -25,13 +25,12 @@ export default function RootLayout({
             alt="icon"
             className="w-10 h-10 rounded-2xl"
           />
-          <a
-            href="/home"
+          <div
             className="text-2xl font-semibold"
             onClick={() => router.push("/home")}
           >
             智慧医疗系统
-          </a>
+          </div>
         </Link>
 
         <NavigationMenuDemo />

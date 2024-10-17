@@ -12,6 +12,8 @@ func Router(r *gin.Engine) {
 	admin := r.Group("/api/admin")
 	cases := r.Group("/api/cases")
 	appointment := r.Group("/api/appointment")
+	checkProject := r.Group("/api/checkProject")
+	check := r.Group("/api/check")
 
 	apis.User(user)
 	apis.Doctor(doctor)
@@ -19,5 +21,6 @@ func Router(r *gin.Engine) {
 	apis.Admin(admin)
 	apis.Appointment(appointment)
 	apis.Cases(cases)
-
+	apis.CheckProject(checkProject)
+	apis.Check(check)
 }

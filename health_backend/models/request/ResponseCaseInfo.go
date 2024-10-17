@@ -7,6 +7,13 @@ type ResponseCaseInfo struct {
 	DoctorName   string      `json:"doctor_name"`
 	CheckProject []CheckInfo `json:"check_project"`
 	CheckID      string      `json:"check_id"`
+	PatientName  string      `json:"patient_name"`
+	PatientID    uint        `json:"patient_id"`
+	Sex          bool        `json:"sex"`
+	Age          int         `json:"age"`
+	DoctorType   string      `json:"doctor_type"`
+	Date         string      `json:"date"`
+	DoctorID     uint        `json:"doctor_id"`
 }
 
 type CheckInfo struct {

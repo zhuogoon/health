@@ -4,6 +4,10 @@ import Image from "next/image";
 import StarCard from "@/components/ui/StarCard";
 
 import React, { useEffect, useState } from "react";
+import { NavigationMenuDemo } from "@/components/ui/navbarMenu";
+import { ModeToggle } from "@/components/ui/modeToggle";
+import { useRouter } from "next/navigation";
+import { get } from "@/net";
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -20,29 +24,17 @@ export default function RootLayout({
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjkwNDg0OTcsImlhdCI6MTcyODQ0MzY5NywidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJwYXRpZW50In0.OtH757YSFTa405SMj-cO5mLyK4D7Csayw-x0nYdu-Ng";
+        const data = await get("/api/admin/count");
 
-        const response = await fetch("http://127.0.0.1:8080/api/admin/count", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`, // 在请求头中添加token
-            "Content-Type": "application/json", // 可选：根据需要添加其他头部
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
         setCounts({
-          appointments: result.data.check_project_count, // 根据实际返回数据字段调整
-          patients: result.data.patient_count, // 根据实际返回数据字段调整
-          doctors: result.data.doctor_count, // 根据实际返回数据字段调整
+          appointments: data.check_project_count, // 根据实际返回数据字段调整
+          patients: data.patient_count, // 根据实际返回数据字段调整
+          doctors: data.doctor_count, // 根据实际返回数据字段调整
         });
       } catch (error) {
         console.error("Error fetching counts:", error);
@@ -60,19 +52,27 @@ export default function RootLayout({
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
-      <div className="flex justify-center">
-        <header className="admin-header flex w-[900px] justify-between items-center bg-gray-300 border-b-2 rounded-3xl p-2">
-          <Link href="/home" className="cursor-pointer">
-            <Image
-              src="/images/icon.png" // 确保图像路径正确
-              width={100}
-              height={100}
-              alt="GoDoc logo"
-              className="h-8 w-fit"
-            />
-          </Link>
-          <p className="text-16-semibold">Admin Dashboard</p>
-        </header>
+      <div className="flex justify-between px-3 py-3">
+        <Link href="/home" className="flex items-center gap-2 cursor-pointer">
+          <Image
+            src="/images/icon.png"
+            width={100}
+            height={100}
+            alt="icon"
+            className="w-10 h-10 rounded-2xl"
+          />
+          <div
+            className="text-2xl font-semibold"
+            onClick={() => router.push("/home")}
+          >
+            <div className="text-3xl font-semibold">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-teal-500">
+                智慧医疗系统
+              </span>
+            </div>
+          </div>
+        </Link>
+        <ModeToggle />
       </div>
 
       <section className="w-full space-y-4">
@@ -80,7 +80,7 @@ export default function RootLayout({
         <p>从管理检查项目、患者、医生等信息，开始新的一天。</p>
       </section>
       <div className="flex w-full space-x-4 mt-10">
-        <div className="flex flex-1 py-5 rounded-3xl bg-yellow-200 items-center justify-center">
+        <div className="flex flex-1 py-5 rounded-3xl bg-gradient-to-r from-green-300 to-teal-400 items-center justify-center">
           <a href="/admin">
             <StarCard
               type="appointments"
@@ -90,7 +90,7 @@ export default function RootLayout({
             />
           </a>
         </div>
-        <div className="flex flex-1 py-5 rounded-3xl bg-yellow-400 items-center justify-center">
+        <div className="flex flex-1 py-5 rounded-3xl bg-gradient-to-r from-green-300 to-teal-400 items-center justify-center">
           <a href="/admin/patient">
             <StarCard
               type="patients"
@@ -100,7 +100,7 @@ export default function RootLayout({
             />
           </a>
         </div>
-        <div className="flex flex-1 py-5 rounded-3xl bg-yellow-600 items-center justify-center">
+        <div className="flex flex-1 py-5 rounded-3xl bg-gradient-to-r from-green-300 to-teal-400 items-center justify-center">
           <a href="/admin/doctor">
             <StarCard
               type="doctors"
