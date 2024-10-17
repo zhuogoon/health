@@ -4,15 +4,11 @@ import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/table/DataTable";
 import { columns } from "@/components/table/columns";
 import { get } from "@/net";
-// import { get } from "@/net";
 
 interface Item {
   id: number;
   name: string;
   room: string;
-}
-interface Data {
-  data: Item[];
 }
 
 const Admin = () => {
@@ -31,12 +27,15 @@ const Admin = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     getData();
   }, []);
+
   const handleDataUpdate = async () => {
     await getData();
   };
+
   if (loading) return <div>加载中...</div>;
   if (error) return <div>错误: {error}</div>;
 
@@ -47,6 +46,7 @@ const Admin = () => {
         data={data}
         location="/"
         onDataUpdate={handleDataUpdate}
+        onDelete={handleDataUpdate} // 传递 handleDataUpdate 作为 onDelete 回调
       />
     </div>
   );

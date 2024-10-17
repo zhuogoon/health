@@ -22,7 +22,7 @@ func UpdateCheck(id uint, name, room string) error {
 	return global.DB.Model(&models.CheckProject{}).Where("id = ?", id).Updates(ch).Error
 }
 
-func DeleteCheck(id uint) error {
+func DeleteCheck(id string) error {
 	return global.DB.Model(&models.CheckProject{}).Where("id = ?", id).Delete(&models.CheckProject{}).Error
 }
 

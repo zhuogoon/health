@@ -38,6 +38,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   location: string;
   onDataUpdate: () => void;
+  onDelete: (id: number) => void; // 添加 onDelete 回调
 }
 
 export function DataTable<TData, TValue>({
@@ -45,6 +46,7 @@ export function DataTable<TData, TValue>({
   data,
   location,
   onDataUpdate,
+  onDelete, // 接受 onDelete 回调
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 

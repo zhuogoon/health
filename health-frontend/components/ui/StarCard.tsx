@@ -21,7 +21,7 @@ const StarCard = ({ count = 0, label, icon, type }: StatCardProps) => {
         <Image src={icon} height={32} width={32} alt={label} className="mr-2" />
         <h2 className="text-32-bold text-blue-500 font-bold">{count}</h2>
       </div>
-      <p className="text-14-regular mt-3">{label}</p>
+      <p className="text-lg mt-3 text-zinc-700 font-semibold">{label}</p>
     </div>
   );
 };

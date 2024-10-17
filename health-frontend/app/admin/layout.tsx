@@ -80,7 +80,7 @@ export default function RootLayout({
         <p>从管理检查项目、患者、医生等信息，开始新的一天。</p>
       </section>
       <div className="flex w-full space-x-4 mt-10">
-        <div className="flex flex-1 py-5 rounded-3xl bg-green-200 items-center justify-center">
+        <div className="flex flex-1 py-5 rounded-3xl bg-gradient-to-r from-green-300 to-teal-400 items-center justify-center">
           <a href="/admin">
             <StarCard
               type="appointments"
@@ -90,7 +90,7 @@ export default function RootLayout({
             />
           </a>
         </div>
-        <div className="flex flex-1 py-5 rounded-3xl bg-green-300 items-center justify-center">
+        <div className="flex flex-1 py-5 rounded-3xl bg-gradient-to-r from-green-300 to-teal-400 items-center justify-center">
           <a href="/admin/patient">
             <StarCard
               type="patients"
@@ -100,7 +100,7 @@ export default function RootLayout({
             />
           </a>
         </div>
-        <div className="flex flex-1 py-5 rounded-3xl bg-green-400 items-center justify-center">
+        <div className="flex flex-1 py-5 rounded-3xl bg-gradient-to-r from-green-300 to-teal-400 items-center justify-center">
           <a href="/admin/doctor">
             <StarCard
               type="doctors"
