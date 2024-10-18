@@ -53,7 +53,7 @@ export default function RootLayout({
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
       <div className="flex justify-between px-3 py-3">
-        <Link href="/home" className="flex items-center gap-2 cursor-pointer">
+        <Link href="/admin" className="flex items-center gap-2 cursor-pointer">
           <Image
             src="/images/icon.png"
             width={100}

@@ -7,8 +7,11 @@ import (
 	"health_backend/models/db"
 	"health_backend/models/request"
 	"health_backend/models/response"
+	"health_backend/utils"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 )
 
 // Increase 添加新预约
@@ -16,13 +19,29 @@ func Increase(c *gin.Context) {
 	req := &request.Increase{}
 	resp := &response.BaseResponse{}
 
-	err := c.ShouldBindBodyWithJSON(req)
+	err := c.ShouldBindJSON(req)
 	if err != nil {
 		resp.Code = 450
 		resp.Msg = "参数错误"
 		c.AbortWithStatusJSON(http.StatusOK, resp)
 		return
 	}
+
+	// 获取分布式锁
+	lockKey := "appointment_lock" + strconv.Itoa(int(req.DoctorId))
+	locked, err := utils.ObtainLock(lockKey, 10*time.Second)
+	if err != nil || !locked {
+		resp.Code = 450
+		resp.Msg = "资源争抢失败，请稍后再试"
+		c.AbortWithStatusJSON(http.StatusOK, resp)
+		return
+	}
+	defer func(key string) {
+		err := utils.ReleaseLock(key)
+		if err != nil {
+
+		}
+	}(lockKey)
 
 	data := strings.Split(req.Time, "-")
 	year := data[0]
@@ -53,7 +72,7 @@ func Increase(c *gin.Context) {
 		return
 	}
 
-	// Create a new case record with initial status 0
+	// 创建一个新的病例记录，初始状态为0
 	caseRecord := &models.Case{
 		DoctorID:  req.DoctorId,
 		PatientID: id,
