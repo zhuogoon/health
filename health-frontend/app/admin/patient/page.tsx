@@ -1,10 +1,10 @@
 "use client";
 
-import { columns } from "@/components/table/patientColumns";
 import { DataTable } from "@/components/table/DataTable";
+import { columns } from "@/components/table/patientColumns";
 
-import React, { useEffect, useState } from "react";
 import { get } from "@/net";
+import { useEffect, useState } from "react";
 interface Item {
   id: number;
   name: string;
@@ -13,9 +13,6 @@ interface Item {
   sex: string; // 修改性别属性为布尔值
   phone: string;
   address: string;
-}
-interface Data {
-  data: Item[];
 }
 
 const Admin = () => {

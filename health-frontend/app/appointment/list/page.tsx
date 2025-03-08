@@ -3,11 +3,10 @@
 import AppointmentCard from "@/components/ui/AppointmentCard";
 import { Button } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
-import Image from "next/image";
 import TypeCombobox from "@/components/ui/TypeCombobox";
+import { get, post } from "@/net";
 import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { get, post } from "@/net";
 import { Appointment } from "../page";
 
 const AppointmentListPage = () => {

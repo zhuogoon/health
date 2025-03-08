@@ -1,29 +1,28 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "@/components/ui/use-toast";
 import {
-  BarChart,
+  Calendar,
+  Clipboard,
+  Clock,
+  FileText,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import {
   Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
 } from "recharts";
-import { get } from "@/net";
-import { Button } from "@/components/ui/button";
-import {
-  Clock,
-  Users,
-  Calendar,
-  FileText,
-  Clipboard,
-  TrendingUp,
-} from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
 
 // 为图表准备的模拟数据
 const weeklyAppointmentData = [

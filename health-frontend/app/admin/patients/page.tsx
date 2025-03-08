@@ -1,36 +1,22 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import EditItemModal from "@/components/ui/EditItemModal";
 import { Button } from "@/components/ui/button";
 import {
-  Plus,
-  Edit,
-  Trash2,
-  Search,
-  Filter,
-  MoreHorizontal,
-  Calendar,
-  Scroll,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { get, post } from "@/net";
-import { toast } from "@/components/ui/use-toast";
-import EditItemModal from "@/components/ui/EditItemModal";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -39,13 +25,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Calendar as CalendarIcon } from "lucide-react";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { toast } from "@/components/ui/use-toast";
+import { get, post } from "@/net";
+import {
+  Calendar as CalendarIcon,
+  Edit,
+  Filter,
+  MoreHorizontal,
+  Plus,
+  Scroll,
+  Search,
+  Trash2,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface Patient {
   id: string;

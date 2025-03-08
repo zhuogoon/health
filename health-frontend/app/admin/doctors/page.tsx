@@ -1,20 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Plus, Edit, Trash2, Search, MoreHorizontal } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { get, post } from "@/net";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
 import EditItemModal from "@/components/ui/EditItemModal";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import { get, post } from "@/net";
+import { Edit, MoreHorizontal, Plus, Search, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface Doctor {
   id: string;
@@ -37,22 +37,6 @@ export default function DoctorsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
-
-  // 将中文性别映射为数字值
-  const mapGenderToValue = (gender: string | undefined): string => {
-    if (!gender) return "0";
-    if (gender === "男") return "1";
-    if (gender === "女") return "2";
-    return "0"; // 默认为其他
-  };
-
-  // 将数字值映射回中文显示
-  const mapValueToGender = (value: string | undefined): string => {
-    if (!value) return "其他";
-    if (value === "1") return "男";
-    if (value === "2") return "女";
-    return "其他";
-  };
 
   const fields = [
     {

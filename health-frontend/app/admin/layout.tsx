@@ -1,13 +1,13 @@
 "use client";
-import Link from "next/link";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { ModeToggle } from "@/components/ui/modeToggle";
-import { useRouter, usePathname } from "next/navigation";
-import { get } from "@/net";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/ui/modeToggle";
 import { Toaster } from "@/components/ui/toaster";
+import { get } from "@/net";
 import { LogOut } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 export default function AdminLayout({
   children,
@@ -23,7 +23,7 @@ export default function AdminLayout({
     patients: 0,
     doctors: 0,
   });
-  const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -41,8 +41,6 @@ export default function AdminLayout({
       } catch (error) {
         console.error("Error fetching counts:", error);
         setError("无法获取统计数据");
-      } finally {
-        setLoading(false);
       }
     };
 

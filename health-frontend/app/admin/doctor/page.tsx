@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/table/DataTable";
 import { columns } from "@/components/table/doctorColumns";
 import { get } from "@/net";
-import { getDate } from "date-fns";
+import { useEffect, useState } from "react";
 // import { get } from "@/net";
 
 interface Item {

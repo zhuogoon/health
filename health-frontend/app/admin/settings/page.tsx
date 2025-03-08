@@ -1,12 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { post, get } from "@/net";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
   CardContent,
@@ -15,14 +9,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import {
-  RefreshCw,
+  AlertTriangle,
   Database,
   Download,
+  RefreshCw,
   Upload,
-  AlertTriangle,
 } from "lucide-react";
+import { useState } from "react";
 
 const AdminSettings = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
