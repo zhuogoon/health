@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
-import Image from "next/image";
-import { PatientProvider } from "@/context/PatientContext";
+import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/modeToggle";
-import { Avatar } from "@/components/ui/avatar";
-import { DoctorNavbar } from "@/components/ui/DoctorNavbar";
+import { get } from "@/net";
+import { LogOut } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 // DoctorLayout 组件
 export default function DoctorLayout({
@@ -13,6 +14,20 @@ export default function DoctorLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await get("/api/auth/logout");
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("role");
+      localStorage.removeItem("token");
+      router.push("/");
+    } catch (error) {
+      console.error("退出登录失败:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen">
       <div className="flex justify-between px-3 py-3">
@@ -23,7 +38,6 @@ export default function DoctorLayout({
             height={100}
             alt="icon"
             className="w-10 h-10 rounded-2xl"
-            unoptimized
           />
           <div className="text-3xl font-semibold">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-teal-500">
@@ -31,7 +45,18 @@ export default function DoctorLayout({
             </span>
           </div>
         </Link>
-        <ModeToggle />
+        <div className="flex items-center gap-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleLogout}
+            className="text-red-600 dark:text-red-400 border-gray-200 dark:border-gray-700"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            退出登录
+          </Button>
+          <ModeToggle />
+        </div>
       </div>
       <div
         className="flex-grow bg-zinc-50/50"

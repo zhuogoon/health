@@ -7,6 +7,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { get } from "@/net";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
+import { LogOut } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -54,6 +55,21 @@ export default function AdminLayout({
       return pathname === "/admin";
     }
     return pathname?.startsWith(path);
+  };
+
+  // 添加退出登录函数
+  const handleLogout = async () => {
+    try {
+      await get("/api/auth/logout");
+      // 清除本地存储
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("role");
+      localStorage.removeItem("token");
+      // 跳转到登录页
+      router.push("/");
+    } catch (error) {
+      console.error("退出登录失败:", error);
+    }
   };
 
   if (error) return <div>错误: {error}</div>;
@@ -254,6 +270,17 @@ export default function AdminLayout({
                 className="text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700"
               >
                 返回前台
+              </Button>
+
+              {/* 添加退出登录按钮 */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="text-red-600 dark:text-red-400 border-gray-200 dark:border-gray-700"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                退出登录
               </Button>
             </div>
           </header>

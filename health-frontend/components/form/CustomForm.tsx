@@ -60,6 +60,7 @@ export function CustomForm() {
       const userid = result.data.id;
       const jwt = result.data.token;
       localStorage.setItem("jwt", jwt);
+      localStorage.setItem("role", result.data.role);
       if (result.data.status && result.data.role === "patient") {
         Router.push("/home");
       } else if (result.data.status && result.data.role === "doctor") {

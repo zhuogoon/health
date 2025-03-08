@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import RouteGuard from "@/components/auth/RouteGuard";
+import dynamic from "next/dynamic";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -14,6 +16,12 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
+
+// 动态导入RouteGuard以避免服务器端渲染问题
+const DynamicRouteGuard = dynamic(
+  () => import("@/components/auth/RouteGuard"),
+  { ssr: false }
+);
 
 export const metadata: Metadata = {
   title: "智慧医疗系统",
@@ -36,7 +44,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <DynamicRouteGuard>{children}</DynamicRouteGuard>
         </ThemeProvider>
         <Toaster />
       </body>

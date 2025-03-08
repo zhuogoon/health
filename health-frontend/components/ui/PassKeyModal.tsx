@@ -52,12 +52,16 @@ export default function PassKeyModal() {
         username: "admin",
         key: passkey,
       }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     const data = await res.json();
-    console.log(res);
+    console.log(data);
     if (data.code === 200) {
-      const jwt = data.data;
+      const jwt = data.data.token;
       localStorage.setItem("jwt", jwt);
+      localStorage.setItem("role", data.data.role);
       setOpen(false);
     } else {
       setError("Error: Invalid passkey");
