@@ -11,7 +11,7 @@ export const Avatar: React.FC = () => {
     <div className="flex gap-3 justify-end items-center">
       <div className="text-right space-y-0.5">
         <div className="flex justify-center items-center gap-2">
-          <div className="text-zinc-700 font-mono font-semibold">
+          <div className="text-zinc-700 font-mono font-semibold dark:text-zinc-300">
             {data.name}
           </div>
           <div
@@ -27,13 +27,11 @@ export const Avatar: React.FC = () => {
         </div>
       </div>
       <Image
-        src={`http://localhost:8080/api/user/avatar?token=Bearer ${localStorage.getItem(
-          "jwt"
-        )}`}
+        src={`http://localhost:8080/api/user/images/${data?.avatar}`}
         alt="avatar"
         height={200}
         width={200}
-        className="w-11 h-11 rounded-full border border-zinc-500 shadow-md"
+        className="w-11 h-11 rounded-full border border-zinc-500 shadow-md dark:border-zinc-300"
         unoptimized
       />
     </div>

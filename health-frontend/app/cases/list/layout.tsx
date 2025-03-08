@@ -1,9 +1,12 @@
 "use client";
 
 import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/modeToggle";
 import { NavigationMenuDemo } from "@/components/ui/navbarMenu";
 import { PatientProvider } from "@/context/PatientContext";
+import { get } from "@/net";
+import { LogOut } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -14,6 +17,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await get("/api/auth/logout");
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("role");
+      localStorage.removeItem("token");
+      router.push("/");
+    } catch (error) {
+      console.error("退出登录失败:", error);
+    }
+  };
   return (
     <div className="flex flex-col h-screen">
       <div className="flex justify-between px-3 py-3">
@@ -40,6 +55,15 @@ export default function RootLayout({
 
         <NavigationMenuDemo />
         <div className="flex items-center gap-6">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleLogout}
+            className="text-red-600 dark:text-red-400 border-gray-200 dark:border-gray-700"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            退出登录
+          </Button>
           <ModeToggle />
           <PatientProvider>
             <Avatar />

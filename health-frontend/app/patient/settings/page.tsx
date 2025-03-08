@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
-import { LogOut } from "lucide-react";
 
 export interface PatientInfo {
   name: string;
@@ -22,6 +21,7 @@ export interface PatientInfo {
   allergens: string;
   medical_history: string;
   age: number;
+  avatar: string;
 }
 
 const Settings = () => {
@@ -61,18 +61,27 @@ const Settings = () => {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8080/api/user/upload", {
-        method: "POST",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
+      const response = await fetch(
+        "http://localhost:8080/api/user/upload-avatar",
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
 
       const result = await response.json();
 
       if (response.ok) {
         console.log("上传成功:", result);
+        toast({
+          title: "上传成功",
+          description: "头像上传成功",
+        });
+
+        fetchData();
       } else {
         console.error("上传失败:", result.msg);
       }
@@ -85,49 +94,18 @@ const Settings = () => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   };
 
-  // 添加退出登录功能
-  const handleLogout = async () => {
-    try {
-      await get("/api/auth/logout");
-      localStorage.removeItem("jwt");
-      localStorage.removeItem("token");
-      router.push("/");
-      toast({
-        title: "退出成功",
-        description: "您已成功退出登录",
-      });
-    } catch (error) {
-      console.error("退出登录失败:", error);
-      toast({
-        title: "退出失败",
-        description: "退出登录时发生错误，请重试",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <div className="flex flex-col md:flex-row h-full gap-6 p-6 bg-white dark:bg-gray-950 transition-colors duration-200">
       {/* 左侧表单区域 */}
       <div className="flex-1 overflow-y-auto custom-scrollbar rounded-2xl bg-white dark:bg-gray-900 shadow-sm border border-gray-100 dark:border-gray-800">
         <div className="flex justify-center items-center">
           <div className="w-full max-w-3xl px-6 py-8">
-            <div className="flex justify-between items-center">
-              <h1 className="text-3xl font-medium tracking-tight text-gray-900 dark:text-gray-50">
-                设置
-                <span className="ml-2 text-teal-500 dark:text-teal-400">
-                  个人信息
-                </span>
-              </h1>
-              <Button
-                variant="outline"
-                onClick={handleLogout}
-                className="text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-red-800 dark:hover:bg-red-900/20 flex items-center gap-1"
-              >
-                <LogOut className="h-4 w-4" />
-                退出登录
-              </Button>
-            </div>
+            <h1 className="text-3xl font-medium tracking-tight text-gray-900 dark:text-gray-50">
+              设置
+              <span className="ml-2 text-teal-500 dark:text-teal-400">
+                个人信息
+              </span>
+            </h1>
             <p className="mt-2 text-gray-500 dark:text-gray-400 text-sm">
               这里可以修改您之前的设置信息
             </p>
@@ -145,13 +123,7 @@ const Settings = () => {
           <div className="flex flex-col items-center mb-8">
             <div className="relative">
               <Image
-                src={`http://localhost:8080/api/user/avatar?token=Bearer ${localStorage.getItem(
-                  "jwt"
-                )}`}
-                // loader={({ src, width, quality }) => {
-                //   const jwt = localStorage.getItem("jwt");
-                //   return `${src}?w=${width}&q=${quality || 75}&token=Bearer ${jwt}`
-                // }}
+                src={`http://localhost:8080/api/user/images/${data?.avatar}`}
                 alt="头像"
                 className="w-24 h-24 rounded-full object-cover border-2 border-gray-100 dark:border-gray-800 shadow-sm"
                 width={96}

@@ -7,6 +7,10 @@ import { PatientProvider } from "@/context/PatientContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { get } from "@/net";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function RootLayout({
   children,
@@ -14,6 +18,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await get("/api/auth/logout");
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("role");
+      localStorage.removeItem("token");
+      router.push("/");
+    } catch (error) {
+      console.error("退出登录失败:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen">
       <div className="flex justify-between px-3 py-3">
@@ -40,18 +57,23 @@ export default function RootLayout({
 
         <NavigationMenuDemo />
         <div className="flex items-center gap-6">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleLogout}
+            className="text-red-600 dark:text-red-400 border-gray-200 dark:border-gray-700"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            退出登录
+          </Button>
           <ModeToggle />
           <PatientProvider>
             <Avatar />
           </PatientProvider>
         </div>
       </div>
-      <div
-        className="flex-grow bg-blue-50/50 dark:bg-zinc-950"
-        style={{ height: "calc(100vh - 5rem)" }}
-      >
-        {children}
-      </div>
+      <div className="flex-grow bg-blue-50/50 dark:bg-zinc-950">{children}</div>
+      <Toaster />
     </div>
   );
 }
