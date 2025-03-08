@@ -103,7 +103,7 @@ export function NavigationMenuDemo() {
               <ListItem href="/cases/list" title="查看我的病例单">
                 在这里可以找到在本院就诊的所有病例单
               </ListItem>
-              <ListItem href="/check" title="查看我的病例单">
+              <ListItem href="/check" title="查看我的检查">
                 在这里可以找到在本院开出的检查项目，就诊时请在这里确认
               </ListItem>
             </ul>

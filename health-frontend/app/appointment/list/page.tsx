@@ -53,105 +53,119 @@ const AppointmentListPage = () => {
   };
 
   const deleteAppointment = (id: string) => {
-    const data = get(`/api/appointment/delete?id=${id}`);
-    console.log(data);
+    get(`/api/appointment/delete?id=${id}`).then(() => {
+      getAppointment();
+    });
   };
 
   useEffect(() => {
-    getLastestAppointment();
     getAppointment();
+    getLastestAppointment();
   }, []);
 
   return (
-    <div className="bg-slate-100 h-full flex">
-      <div className="w-1/3 flex justify-center">
-        <div className="w-[90%] flex flex-col items-center bg-blue-200 mt-2 rounded-xl shadow-md">
-          <div className="w-[90%] mt-8">
-            <TypeCombobox updateStatus={updateStatus} />
-            <div className="flex justify-between items-end">
-              <DatePickerWithRange
-                className="w-max-[70%] mt-3"
-                onDateChange={handleDateChange}
-              />
-              <Button onClick={handleSearch} className="w-[90px] bg-teal-500">
+    <div className="h-full bg-gray-50 dark:bg-gray-950 p-6 transition-colors duration-200">
+      <div className="flex flex-col h-full gap-6">
+        {/* 顶部搜索区域 */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h1 className="text-2xl font-medium text-gray-900 dark:text-gray-50 mb-6">
+            我的预约记录
+          </h1>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+            <div className="md:col-span-5">
+              <label className="text-sm text-gray-500 dark:text-gray-400 mb-2 block">
+                选择日期范围
+              </label>
+              <DatePickerWithRange onDateChange={handleDateChange} />
+            </div>
+
+            <div className="md:col-span-3">
+              <label className="text-sm text-gray-500 dark:text-gray-400 mb-2 block">
+                预约状态
+              </label>
+              <TypeCombobox updateStatus={updateStatus} />
+            </div>
+
+            <div className="md:col-span-4 flex justify-end">
+              <Button
+                onClick={handleSearch}
+                className="bg-teal-500 hover:bg-teal-600 text-white transition-colors w-full md:w-auto"
+              >
                 查询
               </Button>
             </div>
-            {latestAppointment ? (
-              <>
-                <div className="p-4 bg-zinc-100 rounded-lg mt-6 shadow">
-                  <div className="dark:bg-zinc-700/30">
-                    <div className="flex justify-between items-end ">
-                      <span className="text-xl text-teal-400 font-semibold ">
-                        近期预约
-                      </span>
-                      <span className="text-zinc-400 text-sm">
-                        {latestAppointment?.date}
-                      </span>
-                    </div>
-                    <div className="flex items-center mt-2 justify-between">
-                      <div className="flex items-center gap-2">
-                        <Image
-                          className="rounded-full h-8 w-8 shadow-sm border-2 border-slate-200"
-                          src={
-                            latestAppointment.doctor_avatar
-                              ? `http://localhost:8080/api/file?img=${latestAppointment.doctor_avatar}`
-                              : `/images/dr-remirez.png`
-                          }
-                          width={20}
-                          height={20}
-                          alt="doctor"
-                        />
-                        <div className="text-zinc-600 font-semibold dark:text-zinc-300">
-                          {latestAppointment?.doctor_name}
-                        </div>
-                      </div>
-                      <div className="dark:text-zinc-200 text-zinc-600">
-                        {latestAppointment?.doctor_type}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="text-right font-mono text-sm text-zinc-500 mt-1">
-                  更新于 {latestAppointment?.date}
-                </div>
-              </>
-            ) : (
-              <></>
+          </div>
+        </div>
+
+        {/* 预约列表区域 */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex-1 overflow-hidden flex flex-col">
+          <div className="p-6 pb-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 flex items-center">
+              <span>全部预约</span>
+              {appointment.length > 0 && (
+                <span className="ml-2 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 text-xs font-medium px-2 py-0.5 rounded-full">
+                  {appointment.length}
+                </span>
+              )}
+            </h2>
+
+            {latestAppointment && (
+              <div className="bg-blue-50 dark:bg-blue-900/20 px-3 py-1.5 rounded-full flex items-center">
+                <span className="text-xs text-blue-600 dark:text-blue-400 font-medium mr-2">
+                  最近预约:
+                </span>
+                <span className="text-sm text-gray-700 dark:text-gray-300 truncate max-w-xs">
+                  {latestAppointment.doctor_name} ({latestAppointment.date})
+                </span>
+              </div>
             )}
           </div>
 
-          <div className="bg-zinc-50 shadow-sm w-[90%] rounded-lg flex-grow p-4 mt-3">
-            <div className="text-center text-lg font-semibold text-teal-400">
-              健康小知识
-            </div>
-
-            <div className="mt-4">
-              【柑橘含有丰富的柠檬酸】维生素以及钙、磷、镁、钠等人体必需的元素。它具有生津止咳的作用，用于胃肠燥热之症；有和胃利尿的功效，用于腹部不适、小便不利等症；有润肺化痰的作用，适于肺热咳嗽之症。
-            </div>
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-6 pt-4">
+            {appointment && appointment.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {appointment.map((item) => (
+                  <AppointmentCard
+                    key={item.id}
+                    id={item.id}
+                    doctorName={item.doctor_name}
+                    doctorImg={item.doctor_avatar}
+                    date={item.date}
+                    status={item.status}
+                    type={item.doctor_type}
+                    title={item.doctor_title}
+                    deleteAppointment={deleteAppointment}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-64 text-gray-400 dark:text-gray-500">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-16 w-16 mb-4 opacity-40"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <p className="text-lg mb-2">暂无预约记录</p>
+                <p className="text-sm">您目前没有任何预约记录</p>
+                <Button
+                  onClick={() => (window.location.href = "/appointment")}
+                  className="mt-4 bg-teal-500 hover:bg-teal-600 text-white transition-colors"
+                >
+                  前往预约
+                </Button>
+              </div>
+            )}
           </div>
-        </div>
-      </div>
-      <div className="w-2/3 overflow-y-auto custom-scrollbar">
-        <div className="text-3xl font-semibold pt-5 pl-1">
-          我的<span className="text-teal-400 ml-1">预约</span>
-        </div>
-        <div className="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
-          {appointment
-            ? appointment.map((appointment) => (
-                <AppointmentCard
-                  key={appointment.id}
-                  id={appointment.id}
-                  doctorName={appointment.doctor_name}
-                  doctorImg={appointment.doctor_avatar}
-                  date={appointment.date}
-                  status={appointment.status}
-                  type={appointment.doctor_type}
-                  title={appointment.doctor_title}
-                  deleteAppointment={deleteAppointment}
-                />
-              ))
-            : ""}
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ const DoctorInfoPage = () => {
           alt="doctor"
           layout="fill" // 使用 layout="fill" 使图片填充父容器
           objectFit="cover" // 保持图片比例填充容器
+          unoptimized
         />
       </div>
       <div className="h-5/5 w-2/3 bg-zinc-200/60 m-5 rounded-xl">

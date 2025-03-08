@@ -24,6 +24,7 @@ export default function RootLayout({
             height={100}
             alt="icon"
             className="w-10 h-10 rounded-2xl"
+            unoptimized
           />
           <div
             className="text-2xl font-semibold"

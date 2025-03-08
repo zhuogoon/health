@@ -1,5 +1,6 @@
 import Link from "next/link";
-
+import { format } from "date-fns";
+import { parseISO } from "date-fns";
 interface CaseCardProps {
   cid: string;
   name: string;
@@ -15,7 +16,9 @@ const CaseCard = ({ cid, name, date, doctor_say }: CaseCardProps) => {
           <div className="text-2xl font-semibold">
             {name ? name : "主治医师还未填写病历单"}
           </div>
-          <div className="text-xl font-mono">{date}</div>
+          <div className="text-xl font-mono">
+            {format(parseISO(date), "yyyy-MM-dd HH:mm:ss")}
+          </div>
         </div>
         {name && (
           <div className="flex justify-between items-end">

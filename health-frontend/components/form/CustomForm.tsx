@@ -58,8 +58,7 @@ export function CustomForm() {
 
       const result = await response.json();
       const userid = result.data.id;
-      const jwt = result.data.jwt;
-
+      const jwt = result.data.token;
       localStorage.setItem("jwt", jwt);
       if (result.data.status && result.data.role === "patient") {
         Router.push("/home");

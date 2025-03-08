@@ -3,14 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
   Card,
   CardContent,
   CardDescription,
@@ -29,10 +21,10 @@ import { get, post } from "@/net";
 import { useEffect, useState } from "react";
 
 interface CheckItem {
-  ID: number;
-  CreatedAt: string;
-  DeletedAt: string | null;
-  UpdatedAt: string;
+  id: number;
+  createdAt: string;
+  deletedAt: string | null;
+  updatedAt: string;
   img: string;
   name: string;
   room: string;
@@ -58,7 +50,7 @@ export function AddCheckCard({
       const data = await get("/api/checkProject/list");
       setCheck(data);
     } catch (error) {
-      console.error("Error fetching check projects:", error);
+      console.error("Error:", error);
     }
   };
 
@@ -66,67 +58,112 @@ export function AddCheckCard({
     setCheckId(Number(value));
   };
 
-  const Submit = async () => {
-    try {
-      await post("/api/check/add", {
-        case_id,
-        doctor_id,
-        patient_id,
-        check_project_id: check_id,
-      });
-      onClose();
-    } catch (error) {
-      console.error("Error adding check project:", error);
-    }
-  };
-
   useEffect(() => {
     getProject();
   }, []);
 
+  const Submit = async () => {
+    try {
+      if (!check_id) {
+        console.error("No Check ID");
+        return;
+      }
+      const data = await post("/api/check/addCheck", {
+        doctor_id,
+        patient_id,
+        check_id,
+        case_id,
+      });
+      onClose();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button className="bg-teal-400 text-zinc-100" variant="outline">
-          添加检查项
+    <Card className="w-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-5 h-5 mr-2 text-teal-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+            />
+          </svg>
+          添加检查项目
+        </CardTitle>
+        <CardDescription className="text-gray-500 dark:text-gray-400 text-sm">
+          请为患者选择需要进行的检查项目
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid w-full items-center gap-4">
+          <div className="flex flex-col space-y-1.5">
+            <Label
+              htmlFor="select-project"
+              className="text-gray-700 dark:text-gray-300"
+            >
+              检查项目
+            </Label>
+            <Select onValueChange={handleValueChange}>
+              <SelectTrigger
+                id="select-project"
+                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200"
+              >
+                <SelectValue placeholder="请在这里选择一个检查" />
+              </SelectTrigger>
+              <SelectContent
+                position="popper"
+                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700"
+              >
+                {check?.map((item) => {
+                  if (!item.id) return null;
+                  const itemValue = item.id.toString();
+                  if (!itemValue) return null;
+
+                  return (
+                    <SelectItem
+                      key={item.id}
+                      value={itemValue}
+                      className="text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    >
+                      {item.room || `检查项目 ${itemValue}`}
+                    </SelectItem>
+                  );
+                })}
+                {(!check || check.length === 0) && (
+                  <div className="py-2 px-2 text-sm text-gray-500 dark:text-gray-400">
+                    无可用检查项目
+                  </div>
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-end pt-3 border-t border-gray-100 dark:border-gray-800">
+        <Button
+          onClick={onClose}
+          variant="outline"
+          className="mr-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+        >
+          取消
         </Button>
-      </SheetTrigger>
-      <SheetContent side="left">
-        <SheetHeader>
-          <SheetTitle>添加检查项</SheetTitle>
-          <SheetDescription>在这里为患者添加一个检查项目.</SheetDescription>
-        </SheetHeader>
-        <Card className="w-[350px] mt-3">
-          <CardHeader>
-            <CardTitle>创建检查</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form>
-              <div className="grid w-full items-center gap-4">
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="framework">检查</Label>
-                  <Select onValueChange={handleValueChange}>
-                    <SelectTrigger id="check">
-                      <SelectValue placeholder="请在这里选择一个检查" />
-                    </SelectTrigger>
-                    <SelectContent position="popper">
-                      {check?.map((item) => (
-                        <SelectItem key={item.ID} value={item.ID.toFixed()}>
-                          {item.room}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </form>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button variant="outline">取消</Button>
-            <Button onClick={Submit}>创建</Button>
-          </CardFooter>
-        </Card>
-      </SheetContent>
-    </Sheet>
+        <Button
+          onClick={Submit}
+          className="bg-teal-500 hover:bg-teal-600 text-white"
+        >
+          添加
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

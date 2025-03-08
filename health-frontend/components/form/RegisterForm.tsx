@@ -204,6 +204,7 @@ export function RegisterForm() {
           <div>
             <div className="flex items-center gap-1 rounded-md border border-zinc-200 w-[45%] h-9">
               <Image
+                unoptimized
                 src="/icons/calendar.svg"
                 height={20}
                 width={20}

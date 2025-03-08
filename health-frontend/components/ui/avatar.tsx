@@ -27,11 +27,14 @@ export const Avatar: React.FC = () => {
         </div>
       </div>
       <Image
-        src="http://localhost:8080/api/user/avatar"
+        src={`http://localhost:8080/api/user/avatar?token=Bearer ${localStorage.getItem(
+          "jwt"
+        )}`}
         alt="avatar"
         height={200}
         width={200}
         className="w-11 h-11 rounded-full border border-zinc-500 shadow-md"
+        unoptimized
       />
     </div>
   );

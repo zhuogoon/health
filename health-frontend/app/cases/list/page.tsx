@@ -57,100 +57,101 @@ const CaseList = () => {
   };
 
   useEffect(() => {
-    getLastestCase();
     queryCase();
+    getLastestCase();
   }, []);
 
   return (
-    <div className="bg-slate-100 h-full flex">
-      <div className="w-1/3 flex justify-center">
-        <div className="w-[90%] flex flex-col items-center bg-blue-200 mt-2 rounded-xl shadow-md">
-          <div className="w-[90%] mt-8">
-            <Input
-              className="h-12 bg-slate-50 rounded-lg"
-              placeholder="搜索..."
-              onChange={(e) =>
-                (query.title = (e.target as HTMLInputElement).value)
-              }
-            />
-            <div className="flex justify-between items-end">
-              <DatePickerWithRange
-                className="w-max-[70%] mt-3"
-                onDateChange={handleDateChange}
-              />
-              <Button onClick={handleSearch} className="w-[90px] bg-teal-500">
-                查询
-              </Button>
+    <div className="h-full bg-gray-50 dark:bg-gray-950 p-6 transition-colors duration-200">
+      <div className="flex flex-col h-full gap-6">
+        {/* 顶部搜索区域 */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+          <h1 className="text-2xl font-medium text-gray-900 dark:text-gray-50 mb-6">
+            病例记录
+          </h1>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="col-span-2">
+              <label className="text-sm text-gray-500 dark:text-gray-400 mb-2 block">
+                选择日期范围
+              </label>
+              <DatePickerWithRange onDateChange={handleDateChange} />
             </div>
-            <div className="p-4 bg-zinc-100 rounded-lg mt-6 shadow">
-              <div className="text-teal-400 text-xl font-semibold flex justify-between">
-                <span>上次就诊结果</span>
-                {LatestCase ? (
-                  <span className="flex gap-2 items-center">
-                    <div
-                      className={`h-2 w-2 ${
-                        LatestCase?.status ? "bg-green-400" : "bg-red-500"
-                      } rounded-full`}
-                    ></div>
-                    <span className="text-zinc-500 text-sm">
-                      {LatestCase?.status ? "已出结果" : "未出结果"}
-                    </span>
-                  </span>
-                ) : (
-                  <div className="text-sm text-zinc-600 font-medium">
-                    暂无病例记录哦
-                  </div>
-                )}
+
+            <div className="flex flex-col">
+              <label className="text-sm text-gray-500 dark:text-gray-400 mb-2 block">
+                病例标题
+              </label>
+              <div className="flex gap-2 h-full">
+                <Input
+                  placeholder="请输入病例标题..."
+                  className="flex-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                  onChange={(e) => (query.title = e.target.value)}
+                />
+                <Button
+                  onClick={handleSearch}
+                  className="bg-teal-500 hover:bg-teal-600 text-white transition-colors"
+                >
+                  查询
+                </Button>
               </div>
-              {LatestCase?.status && (
-                <div>
-                  <div className="mt-3 text-xl">{LatestCase?.title}</div>
-                  <div className="mt-4">
-                    <div>
-                      <span className="text-lg">医嘱:</span>
-                    </div>
-                    <div className="line-clamp-3 text-justify underline underline-offset-4 indent-8">
-                      {LatestCase?.content}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
+          </div>
+        </div>
+
+        {/* 病例列表区域 */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex-1 overflow-hidden flex flex-col">
+          <div className="p-6 pb-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50">
+              全部病例
+            </h2>
+
             {LatestCase && (
-              <div className="text-right font-mono text-sm text-zinc-500 mt-1">
-                更新于 {LatestCase?.UpdatedAt}
+              <div className="bg-blue-50 dark:bg-blue-900/20 px-3 py-1.5 rounded-full flex items-center">
+                <span className="text-xs text-blue-600 dark:text-blue-400 font-medium mr-2">
+                  最新病例:
+                </span>
+                <span className="text-sm text-gray-700 dark:text-gray-300 truncate max-w-xs">
+                  {LatestCase.title || "主治医师还未填写病历单"}
+                </span>
               </div>
             )}
           </div>
 
-          <div className="bg-zinc-50 shadow-sm w-[90%] rounded-lg flex-grow p-4 mt-3">
-            <div className="text-center text-lg font-semibold text-teal-400">
-              健康小知识
-            </div>
-
-            <div className="mt-4">
-              【选择合适的时间吃零食】零食一般放在两餐之间吃。起到少食多餐的效果，既能补充体能的需要，又能减少下次进餐的能量。很多人喜欢边看电视边吃零食，这是个很不好的习惯。我们看电视的时候注意力大都集中在电视内容上，会在不经意间吃进更多的零食。经常这样会导致能量过剩，引发肥胖或者其他慢性病。
-            </div>
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-6 pt-4">
+            {caseList && caseList.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {caseList.map((item, index) => (
+                  <CaseCard
+                    key={index}
+                    cid={item.ID}
+                    name={item.title}
+                    date={item.UpdatedAt}
+                    doctor_say={item.content}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-64 text-gray-400 dark:text-gray-500">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 mb-4 opacity-50"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                <p>暂无病例记录</p>
+              </div>
+            )}
           </div>
         </div>
-      </div>
-      <div className="w-2/3 overflow-y-auto custom-scrollbar">
-        <div className="text-3xl font-semibold pt-5 pl-1">
-          我的<span className="text-teal-400 ml-1">病例单</span>
-        </div>
-        {caseList.length > 0 ? (
-          caseList.map((c) => (
-            <CaseCard
-              key={c.ID}
-              cid={c.ID}
-              name={c.title}
-              date={c.CreatedAt}
-              doctor_say={c.content}
-            />
-          ))
-        ) : (
-          <div className="m-2 text-zinc-600">目前还没有病例信息哦</div>
-        )}
       </div>
     </div>
   );

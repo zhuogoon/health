@@ -27,12 +27,11 @@ func Increase(c *gin.Context) {
 		return
 	}
 
-	// 获取分布式锁
 	lockKey := "appointment_lock" + strconv.Itoa(int(req.DoctorId))
 	locked, err := utils.ObtainLock(lockKey, 10*time.Second)
 	if err != nil || !locked {
 		resp.Code = 450
-		resp.Msg = "资源争抢失败，请稍后再试"
+		resp.Msg = "预约失败"
 		c.AbortWithStatusJSON(http.StatusOK, resp)
 		return
 	}

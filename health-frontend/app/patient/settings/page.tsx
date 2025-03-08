@@ -82,149 +82,210 @@ const Settings = () => {
   };
 
   return (
-    <div className="flex h-full gap-3">
-      <div className="flex-1 mx-3 overflow-y-auto custom-scrollbar border border-zinc-200 dark:border-zinc-800 shadow-md rounded-xl">
+    <div className="flex flex-col md:flex-row h-full gap-6 p-6 bg-white dark:bg-gray-950 transition-colors duration-200">
+      {/* 左侧表单区域 */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar rounded-2xl bg-white dark:bg-gray-900 shadow-sm border border-gray-100 dark:border-gray-800">
         <div className="flex justify-center items-center">
-          <div className="w-[90%] h-[94%] overflow-y-auto custom-scrollbar">
-            <div className="text-4xl font-semibold mt-16 ml-4">
+          <div className="w-full max-w-3xl px-6 py-8">
+            <h1 className="text-3xl font-medium tracking-tight text-gray-900 dark:text-gray-50">
               设置
-              <span className="text-teal-400">个人信息📄</span>
+              <span className="ml-2 text-teal-500 dark:text-teal-400">
+                个人信息
+              </span>
+            </h1>
+            <p className="mt-2 text-gray-500 dark:text-gray-400 text-sm">
+              这里可以修改您之前的设置信息
+            </p>
+            <div className="mt-8">
+              <SettingsForm data={data} onSuccess={fetchData} />
             </div>
-            <div className="text-zinc-600 ml-4 mt-3">
-              这里可以修改您之前的设置
-            </div>
-            <SettingsForm data={data} onSuccess={fetchData} />
           </div>
         </div>
       </div>
-      <div className="flex-1 mx-3 flex p-3 custom-scrollbar overflow-y-auto border border-zinc-200 dark:border-zinc-800 shadow-md rounded-xl">
-        <div className="flex flex-col items-center w-full mt-4">
-          <img
-            width={64}
-            height={64}
-            src="http://localhost:8080/api/user/avatar"
-            alt="avatar"
-            className="w-16 h-16 rounded-full"
-          />
-          <input
-            type="file"
-            ref={fileInputRef}
-            style={{ display: "none" }}
-            onChange={handleFileChange}
-          />
-          <Button
-            onClick={handleButtonClick}
-            className="m-3 bg-teal-300 text-zinc-700 w-16 h-6 hover:bg-teal-500 "
-          >
-            修改头像
-          </Button>
-          <div className="w-[80%] border-t-2 border-zinc-200 pt-4 mt-2 flex flex-col">
-            <div className="space-x-1 m-3">
-              <span className="text-2xl font-semibold">🧑</span>
-              <span className="text-2xl font-semibold">个人信息</span>
+
+      {/* 右侧信息展示区域 */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar rounded-2xl bg-white dark:bg-gray-900 shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="flex flex-col items-center w-full p-6">
+          {/* 头像区域 */}
+          <div className="flex flex-col items-center mb-8">
+            <div className="relative">
+              <Image
+                src={`http://localhost:8080/api/user/avatar?token=Bearer ${localStorage.getItem(
+                  "jwt"
+                )}`}
+                // loader={({ src, width, quality }) => {
+                //   const jwt = localStorage.getItem("jwt");
+                //   return `${src}?w=${width}&q=${quality || 75}&token=Bearer ${jwt}`
+                // }}
+                alt="头像"
+                className="w-24 h-24 rounded-full object-cover border-2 border-gray-100 dark:border-gray-800 shadow-sm"
+                width={96}
+                height={96}
+              />
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+              />
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-zinc-700 text-xl font-semibold">
-                {data?.name}
+            <Button
+              onClick={handleButtonClick}
+              className="mt-4 bg-teal-500 hover:bg-teal-600 text-white rounded-full px-4 py-2 text-sm font-medium transition-colors"
+            >
+              更换头像
+            </Button>
+          </div>
+
+          {/* 个人信息区域 */}
+          <div className="w-full max-w-md">
+            <div className="flex items-center mb-5">
+              <div className="mr-2 bg-teal-100 dark:bg-teal-900/40 w-8 h-8 rounded-full flex items-center justify-center">
+                <span className="text-teal-600 dark:text-teal-300">🧑</span>
+              </div>
+              <h2 className="text-xl font-medium text-gray-900 dark:text-gray-50">
+                个人信息
+              </h2>
+            </div>
+
+            <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 mb-5">
+              <span className="text-gray-900 dark:text-gray-100 text-lg font-medium">
+                {data?.name || "未设置"}
               </span>
-              <span className="space-x-5">
+              <div className="flex items-center space-x-3">
                 <span
-                  className={`text-lg font-semibold ${
-                    data?.sex === "男" ? "text-blue-400" : "text-red-500"
+                  className={`text-lg font-medium ${
+                    data?.sex === "男" ? "text-blue-500" : "text-pink-500"
                   }`}
                 >
                   {data?.sex === "男" ? "♂" : "♀"}
                 </span>
-                <span className="text-zinc-500 font-mono">
+                <span className="text-gray-500 dark:text-gray-400 font-mono text-sm">
                   {data?.age} 周岁
                 </span>
-              </span>
-            </div>
-            <div className="w-full h-[160px] mt-2 p-2 rounded-xl shadow-md bg-zinc-100/90 flex flex-col gap-4">
-              <div className="text-zinc-600 text-lg font-semibold">
-                基础信息
-              </div>
-              <div className="flex h-[40px] gap-3">
-                <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
-                  <Image
-                    src="/icons/phone.svg"
-                    width={24}
-                    height={24}
-                    alt="phone"
-                  />
-                  <span className="text-zinc-700 text-lg font-mono">
-                    {data?.phone}
-                  </span>
-                </div>
-                <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
-                  <Image
-                    src="/icons/address.svg"
-                    width={24}
-                    height={24}
-                    alt="address"
-                  />
-                  <span className="text-zinc-700 text-lg">{data?.address}</span>
-                </div>
-              </div>
-              <div className="flex h-[40px] gap-3">
-                <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
-                  <Image
-                    src="/icons/日历.png"
-                    width={24}
-                    height={24}
-                    alt="birthday"
-                  />
-                  <span className="text-zinc-700 text-lg font-mono">
-                    {" "}
-                    {data?.birthday ? formatDate(new Date(data.birthday)) : ""}
-                  </span>
-                </div>
-                <div className="flex-1 bg-zinc-100/90 rounded-lg"></div>
               </div>
             </div>
 
-            <div className="w-full h-[240px] mt-5 p-2 rounded-xl shadow-md bg-zinc-100/90 flex flex-col gap-4">
-              <div className="text-zinc-600 text-lg font-semibold">
+            {/* 基础信息卡片 */}
+            <div className="p-5 rounded-xl bg-gray-50 dark:bg-gray-800/50 mb-5">
+              <h3 className="text-gray-700 dark:text-gray-300 font-medium mb-4">
+                基础信息
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-3 flex items-center shadow-sm">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3">
+                    <Image
+                      unoptimized
+                      src="/icons/phone.svg"
+                      width={16}
+                      height={16}
+                      alt="电话"
+                      className="opacity-70"
+                    />
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300 text-sm font-mono">
+                    {data?.phone || "未设置"}
+                  </span>
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-3 flex items-center shadow-sm">
+                  <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-3">
+                    <Image
+                      unoptimized
+                      src="/icons/address.svg"
+                      width={16}
+                      height={16}
+                      alt="地址"
+                      className="opacity-70"
+                    />
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300 text-sm truncate">
+                    {data?.address || "未设置"}
+                  </span>
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-3 flex items-center shadow-sm">
+                  <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mr-3">
+                    <Image
+                      unoptimized
+                      src="/icons/日历.png"
+                      width={16}
+                      height={16}
+                      alt="生日"
+                      className="opacity-70"
+                    />
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300 text-sm font-mono">
+                    {data?.birthday
+                      ? formatDate(new Date(data.birthday))
+                      : "未设置"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 医疗信息卡片 */}
+            <div className="p-5 rounded-xl bg-gray-50 dark:bg-gray-800/50">
+              <h3 className="text-gray-700 dark:text-gray-300 font-medium mb-4">
                 医疗信息
-              </div>
-              <div className="flex h-[40px] gap-3">
-                <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
-                  <Image
-                    src="/icons/身高.svg"
-                    width={24}
-                    height={24}
-                    alt="身高"
-                  />
-                  <span className="text-zinc-700 text-lg font-mono">
-                    {data?.height}cm
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-3 flex items-center shadow-sm">
+                  <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-3">
+                    <Image
+                      unoptimized
+                      src="/icons/身高.svg"
+                      width={16}
+                      height={16}
+                      alt="身高"
+                      className="opacity-70"
+                    />
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300 text-sm font-mono">
+                    {data?.height ? `${data.height} cm` : "未设置"}
                   </span>
                 </div>
-                <div className="flex-1 bg-zinc-200 rounded-lg flex justify-center items-center gap-2">
-                  <Image
-                    src="/icons/体重.svg"
-                    width={24}
-                    height={24}
-                    alt="体重"
-                  />
-                  <span className="text-zinc-700 text-lg font-mono">
-                    {data?.weight}kg
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-3 flex items-center shadow-sm">
+                  <div className="w-8 h-8 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center mr-3">
+                    <Image
+                      unoptimized
+                      src="/icons/体重.svg"
+                      width={16}
+                      height={16}
+                      alt="体重"
+                      className="opacity-70"
+                    />
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300 text-sm font-mono">
+                    {data?.weight ? `${data.weight} kg` : "未设置"}
                   </span>
                 </div>
               </div>
-              <div className="flex h-[40px] gap-3 flex-grow">
-                <div className="flex-1 bg-zinc-200 rounded-lg p-2 gap-2">
-                  过敏源 😣:
-                  <div className="text-zinc-700 line-clamp-3">
-                    {data?.allergens ? data.allergens : "还没有信息哦"}
+
+              <div className="grid grid-cols-1 gap-4">
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+                  <div className="flex items-center mb-2">
+                    <span className="text-amber-600 dark:text-amber-400 mr-2">
+                      😣
+                    </span>
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">
+                      过敏源:
+                    </span>
                   </div>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">
+                    {data?.allergens || "还没有相关信息"}
+                  </p>
                 </div>
-                <div className="flex-1 bg-zinc-200 rounded-lg p-2 gap-2">
-                  过往病史 📄:
-                  <div className="text-zinc-700 line-clamp-3">
-                    {data?.medical_history
-                      ? data.medical_history
-                      : "还没有信息哦"}
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+                  <div className="flex items-center mb-2">
+                    <span className="text-blue-600 dark:text-blue-400 mr-2">
+                      📄
+                    </span>
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">
+                      过往病史:
+                    </span>
                   </div>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">
+                    {data?.medical_history || "还没有相关信息"}
+                  </p>
                 </div>
               </div>
             </div>

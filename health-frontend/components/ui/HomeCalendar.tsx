@@ -9,7 +9,13 @@ const HomeCalendar = () => {
       mode="single"
       selected={date}
       onSelect={setDate}
-      className="rounded-lg mt-4 bg-zinc-100 shadow dark:bg-zinc-800/40"
+      className="border-none bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200"
+      classNames={{
+        day_selected: "bg-teal-500 text-white hover:bg-teal-600",
+        day_today:
+          "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100",
+        day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
+      }}
     />
   );
 };

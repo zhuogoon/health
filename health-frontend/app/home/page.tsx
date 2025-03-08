@@ -8,7 +8,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Case } from "../cases/list/page";
 import { Appointment, Doctor } from "../appointment/page";
-import { set } from "date-fns";
+import { format } from "date-fns";
 
 const Home = () => {
   const [doctorList, setDoctorList] = useState<Doctor[]>([]);
@@ -53,7 +53,11 @@ const Home = () => {
 
   const getDoctorByQuery = async () => {
     const data = await post(`/api/doctor/query`, query);
-    setDoctorList(data.slice(0, 3));
+    if (data) {
+      setDoctorList(data.slice(0, 3));
+    } else {
+      setDoctorList([]);
+    }
   };
 
   const getLastestCase = async () => {
@@ -78,213 +82,222 @@ const Home = () => {
     getLastestCase();
     getSum();
   }, []);
-  return (
-    <div
-      className="flex h-full justify-center bg-cover bg-center"
-      // style={{ backgroundImage: "url(/images/cool-background.png)" }}
-    >
-      <div className="flex-1 flex h-full justify-center items-center relative">
-        <div className="w-[90%] h-[96%] bg-zinc-200/50 dark:bg-zinc-700/40 p-4 rounded-lg shadow backdrop-blur-sm">
-          <div className="text-2xl font-semibold text-teal-400">我的病例单</div>
-          <div className="flex flex-col gap-4 mt-5 overflow-y-auto custom-scrollbar">
-            {caseList.length > 0 ? (
-              caseList.map((item, _) => (
-                <div className="bg-zinc-50 p-2 shadow-md rounded-md dark:bg-zinc-700/30">
-                  <div className="flex justify-between items-end ">
-                    <span className="text-xl font-semibold">{item.title}</span>
-                    <span className="text-zinc-400 text-sm">
-                      {item.UpdatedAt}
-                    </span>
-                  </div>
-                  <div className="mt-2">
-                    <div className="text-lg">{item.title}</div>
-                    <div className="text-zinc-400 dark:text-zinc-300  line-clamp-3">
-                      {item.content}
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div>目前还没有病例信息哦~</div>
-            )}
-          </div>
-        </div>
-        <a
-          className="absolute bottom-8 right-12 h-10 text-teal-400 hover:text-teal-500 dark:text-teal-500 dark:hover:text-teal-600 cursor-pointer"
-          onClick={() => Router.push(`/cases/list`)}
-        >
-          查看更多 →
-        </a>
-      </div>
-      <div className="flex-1 h-full flex items-center">
-        <div className="h-[96%] w-full bg-zinc-200/50 shadow rounded-lg p-4 flex flex-col backdrop-blur-sm">
-          <div className="text-teal-400 text-2xl font-semibold">预约</div>
-          <div className=" flex-grow mt-4 flex justify-center">
-            <div className="w-[90%] h-full flex flex-col gap-4">
-              <div className="flex flex-col flex-1 bg-zinc-300/70 rounded-xl p-3 relative">
-                <div className="text-zinc-800 font-semibold text-xl">
-                  我的预约
-                </div>
-                <div className="flex gap-2 flex-grow mt-2">
-                  <div className="w-2/3 h-full flex flex-col gap-2">
-                    {appointment.length > 0 ? (
-                      appointment.map((item, _) => (
-                        <div className="flex-1 bg-gradient-to-r from-green-300 to-green-100 rounded-lg flex justify-between items-center px-4">
-                          <div className=" flex justify-center items-center gap-2">
-                            <Image
-                              src="/images/dr-remirez.png"
-                              height={100}
-                              width={100}
-                              alt="doctor"
-                              className="h-8 w-fit border border-zinc-700 rounded-full"
-                            />
-                            <div className="text-zinc-700 font-semibold">
-                              {item.doctor_name}
-                            </div>
-                          </div>
-                          <div className="flex gap-2 justify-end">
-                            {/* <Image
-                            src="/icons/日历.png"
-                            height={24}
-                            width={24}
-                            alt="calender"
-                            className="text-black"
-                          /> */}
-                            <div className="text-zinc-600 font-mono font-semibold max-w-[50%]">
-                              {item.date}
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="">暂无预约记录哦~</div>
-                    )}
-                  </div>
-                  <div className="w-1/3 h-full bg-gradient-to-b from-green-300 to-teal-500 rounded-lg">
-                    <div className="text-2xl text-zinc-700/90 p-4 font-semibold">
-                      您已在本院预约
-                    </div>
-                    <div className="text-center text-zinc-200 mt-4">
-                      <span className="text-4xl text-zinc-100/80 mr-2 font-mono">
-                        {sum}
-                      </span>
-                      次
-                    </div>
-                  </div>
-                </div>
 
-                <a
-                  className="absolute top-4 right-3 text-teal-400"
-                  href="/appointment"
+  return (
+    <div className="h-full bg-gray-50 dark:bg-gray-950 p-6 transition-colors duration-200">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+        {/* 左侧病例卡片 */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col h-full overflow-hidden">
+          <div className="p-6 pb-0">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-medium text-gray-900 dark:text-gray-50">
+                我的病例单
+              </h2>
+              <button
+                onClick={() => Router.push("/cases/list")}
+                className="text-sm font-medium text-teal-500 dark:text-teal-400 hover:text-teal-600 dark:hover:text-teal-300 transition-colors flex items-center"
+              >
+                查看全部
+                <svg
+                  className="ml-1 w-4 h-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
                 >
-                  查看更多 →
-                </a>
-              </div>
-              <div className="flex flex-col flex-1 bg-zinc-300/70 rounded-xl p-3 relative">
-                <div className="text-zinc-800 font-semibold text-xl">
-                  名医坐诊
-                </div>
-                <div className="flex flex-col gap-2 flex-grow mt-2">
-                  {doctorList.map((item, _) => (
-                    <div className="flex-1 bg-zinc-100 rounded-lg flex items-center justify-between">
-                      <div className="flex gap-2 items-center ml-3">
-                        <Image
-                          src={"/images/dr-remirez.png"}
-                          height={80}
-                          width={80}
-                          alt="avatar"
-                          className="rounded-full h-10 w-10"
-                        />
-                        <div className="text-lg text-zinc-700">{item.name}</div>
-                      </div>
-                      <div className="text-zinc-600 mr-2">
-                        <div className="">{item.job_type}</div>
-                        <div className="text-sm text-right">
-                          {item.job_title}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <a
-                  className="absolute top-4 right-3 text-teal-400"
-                  href="/appointment"
-                >
-                  查看更多 →
-                </a>
-              </div>
+                  <path
+                    fillRule="evenodd"
+                    d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="w-1/4 flex flex-col items-center gap-5">
-        <div className="">
-          <HomeCalendar />
-        </div>
-        <div className="flex h-grow h-full w-full justify-center">
-          <div className="w-[86%] bg-zinc-200/50 dark:bg-zinc-800/40 m-4 p-3 rounded-xl flex flex-col gap-4">
-            {latestAppointment ? (
-              <div className="bg-slate-100 p-2 shadow-md rounded-md dark:bg-zinc-700/30">
-                <div className="flex justify-between items-end ">
-                  <span className="text-xl text-teal-400 font-semibold ">
-                    近期预约
-                  </span>
-                  <span className="text-zinc-400 text-sm">
-                    {latestAppointment.date}
-                  </span>
-                </div>
-                <div className="flex items-center mt-2 justify-between">
-                  <div className="flex items-center gap-2">
-                    <Image
-                      className="rounded-full h-8 w-8 shadow-sm border-2 border-slate-200"
-                      src="/images/dr-remirez.png"
-                      width={20}
-                      height={20}
-                      alt="doctor"
-                    />
-                    <div className="text-zinc-600 font-semibold dark:text-zinc-300">
-                      {latestAppointment.doctor_name}
+
+          <div className="px-6 pb-6 flex-1 overflow-y-auto custom-scrollbar">
+            {caseList && caseList.length > 0 ? (
+              <div className="space-y-4">
+                {caseList.map((item, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 shadow-sm transition-all hover:shadow-md"
+                  >
+                    <div className="flex justify-between items-center mb-3">
+                      <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                        {item.title || "医生暂未处理"}
+                      </h3>
+                      <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                        {format(new Date(item.UpdatedAt), "yyyy-MM-dd")}
+                      </span>
                     </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
+                      {item.content || "医生暂未添加内容"}
+                    </p>
                   </div>
-                  <div className="dark:text-zinc-200 text-zinc-600">
-                    {latestAppointment.doctor_type}
-                  </div>
-                </div>
+                ))}
               </div>
             ) : (
-              <>欢迎您使用本医疗系统</>
-            )}
-            {LatestCase && (
-              <div className="bg-slate-100 p-2 shadow-md rounded-md dark:bg-zinc-700/30">
-                <div className="flex justify-between items-end ">
-                  <span className="text-xl text-teal-400 font-semibold">
-                    最新报告
-                  </span>
-                  <span className="text-zinc-400 text-sm">
-                    {LatestCase.UpdatedAt}
-                  </span>
-                </div>
-                <div className="mt-2">
-                  <div className="text-lg">{LatestCase.title}</div>
-                  <div className="text-zinc-400 dark:text-zinc-300 line-clamp-1">
-                    {LatestCase.content}
-                  </div>
-                </div>
+              <div className="flex flex-col items-center justify-center h-64 text-gray-400 dark:text-gray-500">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 mb-4 opacity-50"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                <p>目前还没有病例信息</p>
               </div>
             )}
+          </div>
+        </div>
 
-            {(LatestCase || latestAppointment) && (
+        {/* 右侧预约和快速查看区域 */}
+        <div className="flex flex-col gap-6 h-full">
+          {/* 预约卡片 */}
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col">
+            <div className="p-6 pb-4">
+              <h2 className="text-xl font-medium text-gray-900 dark:text-gray-50 mb-4">
+                我的预约
+              </h2>
+
+              <div className="grid grid-cols-1 gap-4">
+                {appointment.length > 0 ? (
+                  appointment.map((item, index) => (
+                    <div
+                      key={index}
+                      className="bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 rounded-xl p-4 flex items-center justify-between shadow-sm"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <Image
+                            src="/images/dr-remirez.png"
+                            height={40}
+                            width={40}
+                            alt={`${item.doctor_name}医生`}
+                            className="rounded-full object-cover border border-white dark:border-gray-700"
+                            unoptimized
+                          />
+                          <div
+                            className={`absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-white dark:border-gray-700 ${
+                              item.status ? "bg-green-500" : "bg-amber-500"
+                            }`}
+                          ></div>
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900 dark:text-gray-100">
+                            {item.doctor_name}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {item.doctor_type}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <rect
+                            width="18"
+                            height="18"
+                            x="3"
+                            y="4"
+                            rx="2"
+                            ry="2"
+                          />
+                          <line x1="16" x2="16" y1="2" y2="6" />
+                          <line x1="8" x2="8" y1="2" y2="6" />
+                          <line x1="3" x2="21" y1="10" y2="10" />
+                        </svg>
+                        <span className="font-mono">{item.date}</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-8 text-gray-400 dark:text-gray-500">
+                    <p>暂无预约信息</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="px-6 pb-6 pt-2 flex justify-end">
               <Button
-                onClick={() => goto("/appointment/list")}
-                className="h-10 bg-teal-400 hover:bg-teal-500 dark:bg-teal-500 dark:text-zinc-200 dark:hover:bg-teal-600"
+                onClick={() => Router.push("/appointment")}
+                className="bg-teal-500 hover:bg-teal-600 text-white rounded-full text-sm font-medium px-4"
               >
-                查看更多 →
+                预约挂号
               </Button>
-            )}
+            </div>
+          </div>
+
+          {/* 统计卡片 */}
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 flex-1">
+            <h2 className="text-xl font-medium text-gray-900 dark:text-gray-50 mb-6">
+              健康概览
+            </h2>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 flex flex-col">
+                <span className="text-blue-600 dark:text-blue-400 text-sm font-medium">
+                  总预约次数
+                </span>
+                <span className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mt-2">
+                  {sum}
+                </span>
+              </div>
+
+              <div className="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-4 flex flex-col">
+                <span className="text-amber-600 dark:text-amber-400 text-sm font-medium">
+                  最近预约
+                </span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">
+                  {latestAppointment ? latestAppointment.doctor_name : "暂无"}
+                </span>
+              </div>
+
+              <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4 flex flex-col">
+                <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium">
+                  最新病例
+                </span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-2 truncate">
+                  {LatestCase ? LatestCase.title || "未命名" : "暂无"}
+                </span>
+              </div>
+
+              <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 flex flex-col">
+                <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
+                  快速检查
+                </span>
+                <div className="mt-2">
+                  <button
+                    onClick={() => Router.push("/check")}
+                    className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300"
+                  >
+                    查看我的检查 →
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
 export default Home;

@@ -19,6 +19,7 @@ export default function Home({ searchParams }: SearchParamsProps) {
       <div className="flex-1 p-3">
         <div className="icon flex items-center gap-2 ">
           <Image
+            unoptimized
             src="/images/icon.png"
             width={100}
             height={100}

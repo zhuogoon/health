@@ -25,6 +25,7 @@ export interface Doctor {
   job_type: string;
   job_title: string;
 }
+
 const AppointmentPage = () => {
   const [doctorList, setDoctorList] = useState<Doctor[]>([]);
   const [appointment, setAppointment] = useState<Appointment[]>([]);
@@ -76,73 +77,129 @@ const AppointmentPage = () => {
   }, []);
 
   return (
-    <div className="h-full flex items-center">
-      <div className="h-[96%] w-full flex">
-        <div className="w-1/4 bg-zinc-50 shadow-lg rounded-lg">
-          <div className="h-20 flex flex-col items-center">
-            <h1 className="text-2xl font-bold text-left w-[90%] mb-12 mt-4 text-teal-400">
-              预约挂号
-            </h1>
-            <Input
-              placeholder="搜索医生姓名..."
-              className="bg-zinc-50 h-16 w-[90%]"
-              value={query.doctor_name} // 绑定输入框的值到 query.doctor_name
-              onChange={(e) =>
-                setQuery((prevQuery) => ({
-                  ...prevQuery,
-                  doctor_name: e.target.value,
-                }))
-              } // 在输入框变化时更新 query.doctor_name
-            />
-            <div className="h-20 mt-3 m-10 flex w-[90%] justify-between">
-              <DoctorCombobox query={query} setQuery={setQuery} />
-              <Button
-                className="bg-teal-400 w-20 hover:bg-teal-500"
-                onClick={getDoctorByQuery}
-              >
-                搜索
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className="w-2/4 my-4 overflow-y-auto custom-scrollbar">
-          <div className="flex items-center flex-col gap-3 mt-3">
-            {doctorList.map((doctor) => (
-              <DoctorAppointmentCard
-                key={doctor.id}
-                id={doctor.id}
-                name={doctor.name}
-                type={doctor.job_type}
-                title={doctor.job_title}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="w-1/4 bg-gradient-to-r from-teal-500 to-green-300 flex flex-col rounded-lg shadow-lg">
-          <h1 className="text-2xl font-bold text-left w-[90%] mb-2 mt-4 text-zinc-50 ml-4">
-            我的预约
-            <div className="mb-4 text-sm text-zinc-100 font-normal mt-2">
-              以下是我已有的预约
-            </div>
+    <div className="h-full flex items-center p-6 bg-white dark:bg-gray-950 transition-colors duration-200">
+      <div className="h-full w-full flex flex-col lg:flex-row gap-6">
+        {/* 左侧搜索区域 */}
+        <div className="lg:w-1/4 w-full bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-5 flex flex-col">
+          <h1 className="text-2xl font-medium tracking-tight text-gray-900 dark:text-gray-50 mb-6">
+            预约挂号
           </h1>
 
-          <div className="flex-grow w-full bg-zinc-100 rounded-lg overflow-y-auto custom-scrollbar p-4 flex flex-col gap-2">
-            {appointment ? (
-              appointment.map((appointment) => (
-                <AppointmentCard
-                  key={appointment.id}
-                  id={appointment.id}
-                  doctorName={appointment.doctor_name}
-                  doctorImg={appointment.doctor_avatar}
-                  date={appointment.date}
-                  status={appointment.status}
-                  type={appointment.doctor_type}
-                  title={appointment.doctor_title}
-                  deleteAppointment={deleteAppointment}
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm text-gray-500 dark:text-gray-400 mb-1 block">
+                医生姓名
+              </label>
+              <Input
+                placeholder="搜索医生姓名..."
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl"
+                value={query.doctor_name}
+                onChange={(e) =>
+                  setQuery((prevQuery) => ({
+                    ...prevQuery,
+                    doctor_name: e.target.value,
+                  }))
+                }
+              />
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-500 dark:text-gray-400 mb-1 block">
+                医生类型
+              </label>
+              <DoctorCombobox query={query} setQuery={setQuery} />
+            </div>
+
+            <Button
+              className="mt-4 w-full bg-teal-500 hover:bg-teal-600 text-white rounded-xl font-medium transition-colors"
+              onClick={getDoctorByQuery}
+            >
+              查找医生
+            </Button>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+            <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+              提示
+            </h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              您可以通过医生姓名或科室筛选医生，点击医生卡片可以进行预约挂号。
+            </p>
+          </div>
+        </div>
+
+        {/* 中间医生列表区域 */}
+        <div className="lg:w-2/4 w-full overflow-y-auto custom-scrollbar bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-5">
+          <h2 className="text-xl font-medium tracking-tight text-gray-900 dark:text-gray-50 mb-4">
+            可预约医生
+          </h2>
+
+          <div className="grid grid-cols-1 gap-4 mt-3">
+            {doctorList.length > 0 ? (
+              doctorList.map((doctor) => (
+                <DoctorAppointmentCard
+                  key={doctor.id}
+                  id={doctor.id}
+                  name={doctor.name}
+                  type={doctor.job_type}
+                  title={doctor.job_title}
                 />
               ))
             ) : (
-              <>当前还没有预约哦</>
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                未找到符合条件的医生，请尝试其他搜索条件
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 右侧我的预约区域 */}
+        <div className="lg:w-1/4 w-full rounded-2xl shadow-sm overflow-hidden flex flex-col border border-gray-100 dark:border-gray-800">
+          <div className="bg-gradient-to-r from-teal-500 to-teal-400 p-5">
+            <h2 className="text-xl font-medium text-white mb-1">我的预约</h2>
+            <p className="text-sm text-teal-100 mb-0">查看已预约的就诊信息</p>
+          </div>
+
+          <div className="flex-grow bg-white dark:bg-gray-900 overflow-y-auto custom-scrollbar p-4">
+            {appointment && appointment.length > 0 ? (
+              <div className="grid grid-cols-1 gap-3">
+                {appointment.map((item) => (
+                  <AppointmentCard
+                    key={item.id}
+                    id={item.id}
+                    doctorName={item.doctor_name}
+                    doctorImg={item.doctor_avatar}
+                    date={item.date}
+                    status={item.status}
+                    type={item.doctor_type}
+                    title={item.doctor_title}
+                    deleteAppointment={deleteAppointment}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-40 text-gray-500 dark:text-gray-400">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mb-3 opacity-40"
+                >
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                  <path d="M12 11h4" />
+                  <path d="M12 16h4" />
+                  <path d="M8 11h.01" />
+                  <path d="M8 16h.01" />
+                  <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
+                </svg>
+                <p>当前还没有预约</p>
+              </div>
             )}
           </div>
         </div>

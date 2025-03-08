@@ -19,6 +19,7 @@ export default function RootLayout({
       <div className="flex justify-between px-3 py-3">
         <Link href="/home" className="flex items-center gap-2 cursor-pointer">
           <Image
+            unoptimized
             src="/images/icon.png"
             width={100}
             height={100}

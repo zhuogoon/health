@@ -1,12 +1,11 @@
 "use client";
 
-import { ModeToggle } from "@/components/ui/modeToggle";
-import Link from "next/link";
 import CheckInfoCard from "@/components/ui/CheckInfoCard";
+import { ModeToggle } from "@/components/ui/modeToggle";
+import { get } from "@/net";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { get } from "@/net";
-import { log } from "console";
 
 export interface CheckItem {
   name: string;
@@ -21,7 +20,7 @@ export interface CaseInfo {
   title: string;
   doctor_name: string;
   doctor_type: string;
-  doctor_id: string;
+  doctorId: string;
   check_project: CheckItem[];
   content: string;
   sex: boolean;

@@ -36,9 +36,6 @@ func Info(c *gin.Context) {
 	}
 
 	phone := patient.Phone
-	if len(phone) > 11 {
-		phone = phone[len(phone)-11:] // 保留最后 11 位
-	}
 	pat := &response.PatientInfo{
 		Id:             patient.ID,
 		UserId:         patient.UserID,
