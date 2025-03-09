@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/modeToggle";
+import { Toaster } from "@/components/ui/toaster";
 import { get } from "@/net";
 import { LogOut } from "lucide-react";
 import Image from "next/image";
@@ -63,6 +64,7 @@ export default function DoctorLayout({
         style={{ height: "calc(100vh - 5rem)" }}
       >
         {children}
+        <Toaster />
       </div>
     </div>
   );

@@ -321,7 +321,7 @@ export function SettingsForm({
       </Form>
 
       <div className="flex justify-between items-center mt-10">
-        <div className="text-zinc-600">©2024 智慧医疗系统</div>
+        <div className="text-zinc-600">©2025慧医智慧医疗系统</div>
       </div>
     </div>
   );

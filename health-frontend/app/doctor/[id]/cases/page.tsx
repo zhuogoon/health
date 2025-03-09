@@ -9,12 +9,14 @@ import { TodoCase } from "../../home/page";
 import { get, post } from "@/net";
 import { useParams } from "next/navigation";
 import { CaseInfo } from "@/app/cases/[id]/info/page";
+import { useToast } from "@/components/ui/use-toast";
 
 const CasePage = () => {
   const { id } = useParams();
   const [todoCase, setTodoCase] = useState<TodoCase[]>([]);
   const [pid, setPid] = useState<string | string[]>(id);
   const [showAddCheck, setShowAddCheck] = useState(false);
+  const { toast } = useToast();
 
   const getTodoCases = async () => {
     try {
@@ -62,6 +64,11 @@ const CasePage = () => {
 
   const Submit = async () => {
     await post("/api/cases/update", patientInfo);
+    toast({
+      title: "保存成功",
+      description: "病例已保存",
+      variant: "default",
+    });
     getPatientInfo(pid);
   };
 

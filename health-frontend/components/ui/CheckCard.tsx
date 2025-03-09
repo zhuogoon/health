@@ -27,10 +27,10 @@ const CheckCard = ({
     }
   };
   return (
-    <div className="bg-white h-[80px] rounded-xl shadow-xl flex justify-between items-start pt-3 px-8">
+    <div className="bg-white h-[80px] rounded-xl shadow-xl flex justify-between items-start pt-3 px-8 dark:bg-gray-800">
       <div className="">
-        <div className="text-lg">{name}</div>
-        <div>{room}</div>
+        <div className="text-lg text-zinc-600 dark:text-zinc-400">{name}</div>
+        <div className="text-sm text-zinc-600 dark:text-zinc-400">{room}</div>
       </div>
       <div className="text-right">
         <div className="flex gap-5 items-end">
@@ -42,7 +42,9 @@ const CheckCard = ({
             ></div>
             <div className="">{status === "已完成" ? "已完成" : "未完成"}</div>
           </div>
-          <div className="font-mono text-zinc-600 ">{date}</div>
+          <div className="font-mono text-zinc-600 dark:text-zinc-400">
+            {date}
+          </div>
         </div>
         <Button onClick={finish} className="text-teal-400" variant="ghost">
           完成👉

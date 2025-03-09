@@ -198,7 +198,7 @@ const AppointmentPage = () => {
                   <path d="M8 16h.01" />
                   <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
                 </svg>
-                <p>当前还没有预约</p>
+                <p>当前还没有未完成预约</p>
               </div>
             )}
           </div>

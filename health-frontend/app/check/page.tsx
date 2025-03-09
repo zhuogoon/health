@@ -29,21 +29,21 @@ const Check = () => {
   }, []);
 
   return (
-    <div className="h-full bg-gray-50 dark:bg-gray-950 p-6 transition-colors duration-200">
+    <div className="h-full bg-gray-50 dark:bg-gray-950 p-3 sm:p-4 transition-colors duration-200">
       <div className="flex flex-col h-full">
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 mb-6">
-          <h1 className="text-2xl font-medium text-gray-900 dark:text-gray-50">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-3 sm:mb-4">
+          <h1 className="text-xl font-medium text-gray-900 dark:text-gray-50">
             我的检查项目
           </h1>
-          <p className="mt-2 text-gray-500 dark:text-gray-400 text-sm">
+          <p className="mt-1 text-gray-500 dark:text-gray-400 text-sm">
             这里显示您的所有检查项目及状态
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex-1 overflow-hidden">
-          <div className="p-6 h-full">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex-1 overflow-hidden">
+          <div className="p-3 sm:p-4 h-full">
             {Check.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-full overflow-y-auto custom-scrollbar pr-2">
+              <div className="grid grid-cols-1 gap-2 sm:gap-3 h-full overflow-y-auto custom-scrollbar pr-1">
                 {Check.map((item) => (
                   <CheckCard
                     key={item.id}
@@ -60,7 +60,7 @@ const Check = () => {
               <div className="flex flex-col items-center justify-center h-full text-gray-400 dark:text-gray-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-16 w-16 mb-4 opacity-40"
+                  className="h-12 w-12 mb-3 opacity-40"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -72,8 +72,8 @@ const Check = () => {
                     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
                   />
                 </svg>
-                <p className="text-lg mb-2">暂无检查项目</p>
-                <p className="text-sm">您目前没有安排中的检查项目</p>
+                <p className="text-base mb-1">暂无检查项目</p>
+                <p className="text-xs">您目前没有安排中的检查项目</p>
               </div>
             )}
           </div>

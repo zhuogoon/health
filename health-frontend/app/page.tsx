@@ -26,12 +26,14 @@ export default function Home({ searchParams }: SearchParamsProps) {
             alt="icon"
             className="w-10 h-10 rounded-2xl"
           />
-          <div className="text-2xl font-semibold font-sans">智慧医疗系统</div>
+          <div className="text-2xl font-semibold font-sans">
+            慧医智慧医疗系统
+          </div>
         </div>
         <div className=" flex justify-center items-center">
           <div className="w-[90%] h-[94%] ">
             <div className="text-4xl font-semibold mt-16 ml-4">
-              Hi,欢迎使用智慧医疗系统 👋
+              Hi,欢迎使用慧医智慧医疗系统 👋
             </div>
             <div className="text-zinc-600 ml-4 mt-3 dark:text-zinc-400">
               开始你的智能医疗体验

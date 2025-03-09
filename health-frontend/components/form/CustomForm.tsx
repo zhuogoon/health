@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import { useToast } from "@/components/ui/use-toast";
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "用户名必须至少拥有2个字符.",
@@ -28,6 +27,7 @@ const formSchema = z.object({
 });
 
 export function CustomForm() {
+  const { toast } = useToast();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -128,7 +128,7 @@ export function CustomForm() {
       </Form>
 
       <div className="flex justify-between items-center mt-10">
-        <div className="text-zinc-600">©2024 智慧医疗系统</div>
+        <div className="text-zinc-600">©2025慧医智慧医疗系统</div>
         <Link
           onClick={() => {
             const res = fetch("http://localhost:8080/api/admin/getkey", {

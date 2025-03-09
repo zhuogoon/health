@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
-import RouteGuard from "@/components/auth/RouteGuard";
 import dynamic from "next/dynamic";
 
 const geistSans = localFont({
@@ -23,9 +22,12 @@ const DynamicRouteGuard = dynamic(
   { ssr: false }
 );
 
+// 动态导入Providers以避免服务器端渲染问题
+const DynamicProviders = dynamic(() => import("./providers"), { ssr: false });
+
 export const metadata: Metadata = {
-  title: "智慧医疗系统",
-  description: "智慧医疗系统",
+  title: "慧医智慧医疗系统",
+  description: "慧医智慧医疗系统",
 };
 
 export default function RootLayout({
@@ -44,7 +46,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <DynamicRouteGuard>{children}</DynamicRouteGuard>
+          <DynamicRouteGuard>
+            <DynamicProviders>{children}</DynamicProviders>
+          </DynamicRouteGuard>
         </ThemeProvider>
         <Toaster />
       </body>

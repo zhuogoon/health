@@ -23,8 +23,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { get } from "@/net";
 
 // 为图表准备的模拟数据
+// 这些数据将通过API获取，保留作为备用
 const weeklyAppointmentData = [
   { name: "周一", count: 12 },
   { name: "周二", count: 19 },
@@ -50,6 +52,25 @@ const monthlyPatientData = [
   { name: "12月", count: 120 },
 ];
 
+// 定义系统通知的接口
+interface SystemNotification {
+  id: number;
+  title: string;
+  content: string;
+  type: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
+// 将系统通知转换为前端显示格式的通知
+interface Alert {
+  id: number;
+  message: string;
+  type: string;
+  time: string;
+  isRead: boolean;
+}
+
 export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -73,76 +94,179 @@ export default function AdminDashboard() {
     },
   });
 
-  const [alerts, setAlerts] = useState([
-    {
-      id: 1,
-      message: "今日有5位患者等待预约确认",
-      type: "warning",
-      time: "10分钟前",
-    },
-    {
-      id: 2,
-      message: "检查项目「血常规」预约量已达今日上限",
-      type: "error",
-      time: "30分钟前",
-    },
-    {
-      id: 3,
-      message: "已完成今日所有预约安排",
-      type: "success",
-      time: "1小时前",
-    },
-  ]);
+  const [weeklyData, setWeeklyData] = useState(weeklyAppointmentData);
+  const [patientGrowthData, setPatientGrowthData] =
+    useState(monthlyPatientData);
+
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // 使用API获取仪表盘数据
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+
+      await noLoadingFetchData();
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      toast({
+        title: "数据加载失败",
+        description: "无法加载控制台数据，请刷新页面重试",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // 模拟加载数据
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        // 实际实现中应替换为真实API调用
-        // const data = await get('/api/admin/dashboard/stats');
-
-        // 模拟延迟
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // 模拟数据
-        setStats({
-          appointments: {
-            total: 1245,
-            todayPending: 18,
-            todayCompleted: 22,
-          },
-          patients: {
-            total: 3578,
-            newToday: 12,
-            activeMonth: 456,
-          },
-          records: {
-            total: 890,
-            todayCreated: 15,
-          },
-          checkProjects: {
-            total: 28,
-            mostPopular: "血常规检查",
-          },
-        });
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-        toast({
-          title: "数据加载失败",
-          description: "无法加载控制台数据，请刷新页面重试",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
+  // 定时刷新数据
+  useEffect(() => {
+    const interval = setInterval(() => {
+      noLoadingFetchData();
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const handleDismissAlert = (id: number) => {
-    setAlerts(alerts.filter((alert) => alert.id !== id));
+  // 不会修改loading的fetchData
+  const noLoadingFetchData = async () => {
+    try {
+      // 获取仪表盘综合数据
+      const dashboardData = await get("/api/admin/dashboard");
+      // 设置统计数据
+      setStats({
+        appointments: {
+          total: dashboardData.appointmentStats.total,
+          todayPending: dashboardData.appointmentStats.pending,
+          todayCompleted: dashboardData.appointmentStats.completed,
+        },
+        patients: {
+          total: dashboardData.patientStats.total,
+          newToday: dashboardData.patientStats.todayNew,
+          activeMonth: dashboardData.patientStats.monthlyActive,
+        },
+        records: {
+          total: dashboardData.medicalRecordStats.total,
+          todayCreated: dashboardData.medicalRecordStats.todayNew,
+        },
+        checkProjects: {
+          total: dashboardData.checkProjectStats.total,
+          mostPopular: dashboardData.checkProjectStats.mostPopular,
+        },
+      });
+
+      // 设置图表数据
+      if (dashboardData.weeklyDistribution) {
+        const weeklyChartData = dashboardData.weeklyDistribution.labels.map(
+          (label: string, index: number) => ({
+            name: label,
+            count: dashboardData.weeklyDistribution.data[index],
+          })
+        );
+        setWeeklyData(weeklyChartData);
+      }
+      if (dashboardData.patientGrowth) {
+        const growthChartData = dashboardData.patientGrowth.labels.map(
+          (label: string, index: number) => ({
+            name: label,
+            count: dashboardData.patientGrowth.data[index],
+          })
+        );
+        setPatientGrowthData(growthChartData);
+      }
+
+      // 获取最新系统通知
+      await fetchLatestNotifications();
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      toast({
+        title: "数据加载失败",
+        description: "无法加载控制台数据，请刷新页面重试",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // 获取最新系统通知
+  const fetchLatestNotifications = async () => {
+    try {
+      // 获取最新通知，限制5条
+      const notifications: SystemNotification[] = await get(
+        "/api/system/notifications/latest?limit=5"
+      );
+
+      // 获取未读通知数量
+      const unreadCountData = await get(
+        "/api/system/notifications/unread-count"
+      );
+      setUnreadCount(unreadCountData);
+
+      // 转换通知格式
+      const formattedAlerts: Alert[] = notifications.map((notification) => {
+        // 计算时间差
+        const createdTime = new Date(notification.createdAt);
+        const now = new Date();
+        const diffMinutes = Math.floor(
+          (now.getTime() - createdTime.getTime()) / (1000 * 60)
+        );
+
+        let timeString;
+        if (diffMinutes < 1) {
+          timeString = "刚刚";
+        } else if (diffMinutes < 60) {
+          timeString = `${diffMinutes}分钟前`;
+        } else if (diffMinutes < 24 * 60) {
+          const hours = Math.floor(diffMinutes / 60);
+          timeString = `${hours}小时前`;
+        } else {
+          const days = Math.floor(diffMinutes / (24 * 60));
+          timeString = `${days}天前`;
+        }
+
+        // 转换通知类型
+        let alertType = "info";
+        if (notification.type === "WARNING") alertType = "warning";
+        if (notification.type === "ERROR") alertType = "error";
+        if (notification.type === "SUCCESS") alertType = "success";
+
+        return {
+          id: notification.id,
+          message: notification.title,
+          type: alertType,
+          time: timeString,
+          isRead: notification.isRead,
+        };
+      });
+
+      setAlerts(formattedAlerts);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
+  const handleDismissAlert = async (id: number) => {
+    try {
+      // 调用API标记通知为已读
+      await get(`/api/system/notifications/mark-read?id=${id}`);
+
+      // 更新本地状态
+      setAlerts(
+        alerts.map((alert) =>
+          alert.id === id ? { ...alert, isRead: true } : alert
+        )
+      );
+
+      // 更新未读通知数
+      if (unreadCount > 0) {
+        setUnreadCount(unreadCount - 1);
+      }
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+      // 即使API调用失败，也从界面上移除
+      setAlerts(alerts.filter((alert) => alert.id !== id));
+    }
   };
 
   return (
@@ -154,7 +278,7 @@ export default function AdminDashboard() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => window.location.reload()}
+          onClick={() => fetchData()}
           disabled={isLoading}
           className="border-gray-200 dark:border-gray-700"
         >
@@ -250,28 +374,33 @@ export default function AdminDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
+            <div className="h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
-                  data={weeklyAppointmentData}
-                  margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
+                  data={weeklyData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#eaeaea"
-                  />
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                   <XAxis
                     dataKey="name"
-                    tick={{ fontSize: 12 }}
-                    tickMargin={10}
+                    stroke="#888888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
                   />
-                  <YAxis tick={{ fontSize: 12 }} width={30} />
-                  <Tooltip
-                    formatter={(value: number) => [`${value} 个预约`, "数量"]}
-                    labelFormatter={(label: string) => `${label}`}
+                  <YAxis
+                    stroke="#888888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
                   />
-                  <Bar dataKey="count" fill="#38bdf8" radius={[4, 4, 0, 0]} />
+                  <Tooltip />
+                  <Bar
+                    dataKey="count"
+                    fill="rgba(59, 130, 246, 0.8)"
+                    radius={[4, 4, 0, 0]}
+                    name="预约数量"
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -281,39 +410,38 @@ export default function AdminDashboard() {
         <Card className="border-gray-200 dark:border-gray-800 hover:shadow-md transition-shadow">
           <CardHeader>
             <CardTitle className="text-base font-medium flex items-center">
-              <Users className="h-4 w-4 mr-2 text-teal-500" />
+              <TrendingUp className="h-4 w-4 mr-2 text-teal-500" />
               患者增长趋势
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
+            <div className="h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
-                  data={monthlyPatientData}
-                  margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
+                  data={patientGrowthData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#eaeaea"
-                  />
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                   <XAxis
                     dataKey="name"
-                    tick={{ fontSize: 12 }}
-                    tickMargin={10}
+                    stroke="#888888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
                   />
-                  <YAxis tick={{ fontSize: 12 }} width={30} />
-                  <Tooltip
-                    formatter={(value: number) => [`${value} 位患者`, "数量"]}
-                    labelFormatter={(label: string) => `${label}`}
+                  <YAxis
+                    stroke="#888888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
                   />
+                  <Tooltip />
                   <Line
                     type="monotone"
                     dataKey="count"
-                    stroke="#14b8a6"
+                    stroke="rgba(20, 184, 166, 0.8)"
                     strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
+                    name="患者数"
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -325,13 +453,24 @@ export default function AdminDashboard() {
       {/* 系统提醒部分 */}
       <Card className="border-gray-200 dark:border-gray-800 hover:shadow-md transition-shadow">
         <CardHeader>
-          <CardTitle className="text-base font-medium flex items-center">
-            <Clock className="mr-2 h-4 w-4 text-gray-500" />
-            系统提醒
+          <CardTitle className="text-base font-medium flex items-center justify-between">
+            <div className="flex items-center">
+              <Clock className="mr-2 h-4 w-4 text-gray-500" />
+              系统提醒
+            </div>
+            {unreadCount > 0 && (
+              <div className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center ml-2">
+                {unreadCount}
+              </div>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {alerts.length === 0 ? (
+          {isLoading ? (
+            <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+              加载中...
+            </p>
+          ) : alerts.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400 text-center py-4">
               暂无系统提醒
             </p>
@@ -356,6 +495,12 @@ export default function AdminDashboard() {
                         ? "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
                         : ""
                     }
+                    ${
+                      alert.type === "info"
+                        ? "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800"
+                        : ""
+                    }
+                    ${alert.isRead ? "opacity-70" : ""}
                   `}
                 >
                   <div className="flex items-start space-x-3">
@@ -364,11 +509,13 @@ export default function AdminDashboard() {
                         ${alert.type === "warning" ? "bg-amber-500" : ""} 
                         ${alert.type === "error" ? "bg-red-500" : ""} 
                         ${alert.type === "success" ? "bg-green-500" : ""}
+                        ${alert.type === "info" ? "bg-blue-500" : ""}
+                        ${alert.isRead ? "opacity-50" : ""}
                       `}
                     />
                     <div>
                       <p
-                        className={`text-sm 
+                        className={`text-sm font-medium
                         ${
                           alert.type === "warning"
                             ? "text-amber-800 dark:text-amber-300"
@@ -384,9 +531,18 @@ export default function AdminDashboard() {
                             ? "text-green-800 dark:text-green-300"
                             : ""
                         }
+                        ${
+                          alert.type === "info"
+                            ? "text-blue-800 dark:text-blue-300"
+                            : ""
+                        }
+                        ${alert.isRead ? "opacity-70" : ""}
                       `}
                       >
                         {alert.message}
+                        {!alert.isRead && (
+                          <span className="inline-block ml-2 bg-blue-500 rounded-full h-2 w-2"></span>
+                        )}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {alert.time}
@@ -399,7 +555,7 @@ export default function AdminDashboard() {
                     onClick={() => handleDismissAlert(alert.id)}
                     className="h-7 px-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
                   >
-                    关闭
+                    {alert.isRead ? "删除" : "标为已读"}
                   </Button>
                 </div>
               ))}
